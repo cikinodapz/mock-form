@@ -99,11 +99,18 @@ function renderFieldPreview(fields) {
 
 // ── Inject Photos Only ─────────────────────────────────────
 $('btn-inject-photos').addEventListener('click', async () => {
-  chrome.storage.local.get(['profiles'], async data => {
-    // Lebih fleksibel: cari di semua profil mana yang punya foto
+  chrome.storage.local.get(['profiles', 'activeProfileIndex'], async data => {
     const profiles = data.profiles || [];
-    const profileWithImage = profiles.find(p => p.image && p.image.length > 100);
-    const imageData = profileWithImage ? profileWithImage.image : null;
+    const activeIdx = data.activeProfileIndex || 0;
+    
+    // 1. Coba ambil dari profil aktif dulu
+    let imageData = profiles[activeIdx]?.image;
+    
+    // 2. Kalau profil aktif nggak punya foto, baru cari di profil lain
+    if (!imageData || imageData.length < 100) {
+      const pWithImg = profiles.find(p => p.image && p.image.length > 100);
+      imageData = pWithImg ? pWithImg.image : null;
+    }
     
     if (!imageData) {
       showStatus('fill-status', 'error', 'Tidak ada foto di profil manapun. Silakan upload ulang foto di tab Profil.');
@@ -113,7 +120,7 @@ $('btn-inject-photos').addEventListener('click', async () => {
     const btn = $('btn-inject-photos');
     btn.disabled = true;
     const oldHtml = btn.innerHTML;
-    btn.innerHTML = '<div class="loader" style="border-top-color:var(--success)"></div>';
+    btn.innerHTML = '<div class="loader"></div>';
 
     try {
       const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -132,12 +139,15 @@ $('btn-inject-photos').addEventListener('click', async () => {
 $('btn-fill').addEventListener('click', async () => {
   const instruction = $('instruction').value.trim();
 
-  chrome.storage.local.get(['apiKey', 'model', 'fillMode', 'profiles'], async data => {
+  chrome.storage.local.get(['apiKey', 'model', 'fillMode', 'profiles', 'activeProfileIndex'], async data => {
     if (!data.apiKey) { showStatus('fill-status', 'error', 'API Key belum diatur. Buka tab Setelan.'); return; }
     
     let finalInstruction = instruction;
     if (!finalInstruction) {
-      if (data.profiles && data.profiles.length > 0) {
+      const activeIdx = data.activeProfileIndex || 0;
+      if (data.profiles && data.profiles[activeIdx]) {
+        finalInstruction = `Isi form menggunakan data profil "${data.profiles[activeIdx].name}":\n${data.profiles[activeIdx].data}`;
+      } else if (data.profiles && data.profiles.length > 0) {
         finalInstruction = `Isi form menggunakan data profil "${data.profiles[0].name}":\n${data.profiles[0].data}`;
       } else {
         finalInstruction = "Isi form ini dengan data dummy yang masuk akal dan realistis.";
@@ -146,7 +156,7 @@ $('btn-fill').addEventListener('click', async () => {
 
     const btn = $('btn-fill');
     btn.disabled = true;
-    btn.innerHTML = '<div class="loader"></div> Memproses...';
+    btn.innerHTML = '<div class="loader"></div>';
     showStatus('fill-status', 'info', 'Memindai form dan menghubungi Gemini AI...');
 
     try {
@@ -339,20 +349,32 @@ Sertakan semua ${fields.length} field dalam array (index 0 sampai ${fields.lengt
 }
 
 // ── Profiles ───────────────────────────────────────────────
-function renderProfiles(profiles) {
+function renderProfiles(profiles, activeIdx = -1) {
   const list = $('profile-list');
+  
+  // Jika activeIdx tidak dikirim, ambil dari storage dulu
+  if (activeIdx === -1) {
+    chrome.storage.local.get(['activeProfileIndex'], data => {
+      renderProfiles(profiles, data.activeProfileIndex || 0);
+    });
+    return;
+  }
+
   if (!profiles?.length) {
     list.innerHTML = `<div class="empty-state"><div>Belum ada profil.<br>Tambah profil untuk mengisi form lebih cepat.</div></div>`;
     return;
   }
   list.innerHTML = profiles.map((p, i) => `
-    <div class="profile-card" data-index="${i}">
+    <div class="profile-card ${i === activeIdx ? 'active' : ''}" data-index="${i}">
       <div class="profile-avatar">${p.image ? `<img src="${p.image}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">` : p.name.charAt(0).toUpperCase()}</div>
       <div class="profile-info">
         <div class="profile-name">${p.name}</div>
         <div class="profile-desc">${p.data.split('\n')[0]}</div>
       </div>
       <div class="profile-actions">
+        <button class="icon-btn edit" data-action="edit" data-index="${i}" title="Edit">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+        </button>
         <button class="icon-btn use" data-action="use" data-index="${i}" title="Gunakan">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
         </button>
@@ -368,13 +390,36 @@ function renderProfiles(profiles) {
       const idx = parseInt(btn.dataset.index);
       chrome.storage.local.get(['profiles'], data => {
         const profiles = data.profiles || [];
-        if (btn.dataset.action === 'use') {
-          $('instruction').value = profiles[idx].data;
-          document.querySelector('[data-tab="fill"]').click();
-          showStatus('fill-status', 'success', `Profil "${profiles[idx].name}" dimuat!`);
+        const action = btn.dataset.action;
+
+        if (action === 'use') {
+          chrome.storage.local.set({ activeProfileIndex: idx }, () => {
+            $('instruction').value = profiles[idx].data;
+            document.querySelector('[data-tab="fill"]').click();
+            showStatus('fill-status', 'success', `Profil "${profiles[idx].name}" aktif!`);
+            renderProfiles(profiles, idx);
+          });
+        } else if (action === 'edit') {
+          const p = profiles[idx];
+          $('profile-name').value = p.name;
+          $('profile-data').value = p.data;
+          $('edit-index').value = idx;
+          $('form-title').innerText = 'Edit Profil: ' + p.name;
+          $('btn-save-profile').innerText = 'Update Profil';
+          $('btn-cancel-edit').style.display = 'block';
+          
+          if (p.image) {
+            $('image-preview').style.display = 'block';
+            $('image-preview').querySelector('img').src = p.image;
+          } else {
+            $('image-preview').style.display = 'none';
+          }
+          $('profile-name').scrollIntoView({ behavior: 'smooth' });
         } else {
           profiles.splice(idx, 1);
-          chrome.storage.local.set({ profiles }, () => renderProfiles(profiles));
+          chrome.storage.local.set({ profiles }, () => {
+            renderProfiles(profiles);
+          });
         }
       });
     });
@@ -423,32 +468,50 @@ $('profile-image').addEventListener('change', e => {
 $('btn-save-profile').addEventListener('click', () => {
   const name = $('profile-name').value.trim();
   const profileData = $('profile-data').value.trim();
-  const image = $('image-preview').querySelector('img').src;
+  const imagePreview = $('image-preview').querySelector('img').src;
+  const editIdx = parseInt($('edit-index').value);
 
   if (!name || !profileData) { showStatus('profile-status', 'error', 'Nama dan data profil harus diisi.'); return; }
   
   chrome.storage.local.get(['profiles'], data => {
     const profiles = data.profiles || [];
-    profiles.push({ 
+    const newProfile = { 
       name, 
       data: profileData, 
-      image: image.startsWith('data:') ? image : null 
-    });
+      image: imagePreview.startsWith('data:') ? imagePreview : null 
+    };
+
+    if (editIdx >= 0) {
+      profiles[editIdx] = newProfile;
+    } else {
+      profiles.push(newProfile);
+    }
+
     chrome.storage.local.set({ profiles }, () => {
       if (chrome.runtime.lastError) {
-        showStatus('profile-status', 'error', 'Gagal menyimpan profil (ukuran foto terlalu besar).');
+        showStatus('profile-status', 'error', 'Gagal menyimpan (ukuran foto terlalu besar).');
         return;
       }
+      resetProfileForm();
       renderProfiles(profiles);
-      $('profile-name').value = '';
-      $('profile-data').value = '';
-      $('profile-image').value = '';
-      $('image-preview').style.display = 'none';
-      $('image-preview').querySelector('img').src = '';
-      showStatus('profile-status', 'success', `Profil "${name}" disimpan!`);
+      showStatus('profile-status', 'success', editIdx >= 0 ? `Profil "${name}" diupdate!` : `Profil "${name}" disimpan!`);
     });
   });
 });
+
+$('btn-cancel-edit').addEventListener('click', resetProfileForm);
+
+function resetProfileForm() {
+  $('profile-name').value = '';
+  $('profile-data').value = '';
+  $('profile-image').value = '';
+  $('edit-index').value = '-1';
+  $('form-title').innerText = 'Tambah Profil Baru';
+  $('btn-save-profile').innerText = 'Simpan Profil';
+  $('btn-cancel-edit').style.display = 'none';
+  $('image-preview').style.display = 'none';
+  $('image-preview').querySelector('img').src = '';
+}
 
 // ── Clear form ─────────────────────────────────────────────
 $('btn-clear-all').addEventListener('click', async () => {
