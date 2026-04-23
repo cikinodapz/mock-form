@@ -273,23 +273,43 @@
   // ============================================================
   // FILL ENGINE
   // ============================================================
-  function fillFields(fillData, imageData) {
+  async function fillFields(fillData, imageData) {
     const allFields = getFormFields();
     const elementMap = buildElementMap(allFields);
     let filled = 0;
 
+    // 1. OTOMATIS: Suntik foto ke SEMUA input file yang terdeteksi
+    // Ini supaya nggak nunggu instruksi AI (kayak copas langsung)
+    if (imageData) {
+      for (let i = 0; i < allFields.length; i++) {
+        const field = allFields[i];
+        if (field.type === 'file') {
+          const el = elementMap.get(i);
+          if (el) {
+            const ok = await fillFile(el, imageData);
+            if (ok) {
+              filled++;
+              highlightElement(el);
+            }
+          }
+        }
+      }
+    }
+
+    // 2. PROSES AI: Untuk field teks, select, dll.
     for (const item of fillData) {
       const { index, value } = item;
       if (value === '' || value === null || value === undefined || index === undefined) continue;
 
       const field = allFields[index];
-      if (!field) continue;
+      // Skip jika ini file (sudah diisi di langkah 1)
+      if (!field || field.type === 'file') continue;
 
       const el = elementMap.get(index);
       if (!el) continue;
 
       try {
-        const ok = fillElement(el, field, value, item, imageData);
+        const ok = await fillElement(el, field, value, item, imageData);
         if (ok) {
           filled++;
           highlightElement(el);
@@ -302,7 +322,7 @@
     return filled;
   }
 
-  function fillElement(el, field, value, item, imageData) {
+  async function fillElement(el, field, value, item, imageData) {
     const tag = el.tagName;
     const type = (el.type || '').toLowerCase();
 
@@ -594,7 +614,7 @@
   }
 
   // ── COMBOBOX (aria) ───────────────────────────────────────
-  function fillCombobox(el, value) {
+  async function fillCombobox(el, value) {
     // Set input value first
     setNative(el, value);
     el.focus();
@@ -629,16 +649,39 @@
   // ── FILE INJECTION ────────────────────────────────────────
   async function fillFile(el, base64Data) {
     try {
+      if (!base64Data || !base64Data.startsWith('data:')) {
+        console.error('[GeminiAutoFill] Invalid image data');
+        return false;
+      }
+      
       const res = await fetch(base64Data);
       const blob = await res.blob();
-      const filename = blob.type.includes('jpeg') ? 'upload.jpg' : 'upload.png';
+      const extension = blob.type.split('/')[1] || 'jpg';
+      const filename = `upload_${Date.now()}.${extension}`;
       const file = new File([blob], filename, { type: blob.type });
 
       const dt = new DataTransfer();
       dt.items.add(file);
       el.files = dt.files;
 
-      triggerAll(el, ['input', 'change']);
+      // Trigger standard events
+      triggerAll(el, ['input', 'change', 'blur']);
+      
+      // Dispatch drop event specifically for custom uploaders
+      const dropEvent = new DragEvent('drop', { 
+        bubbles: true, 
+        cancelable: true,
+        dataTransfer: dt
+      });
+      el.dispatchEvent(dropEvent);
+
+      // Try to notify parents (for some drag-and-drop libs)
+      let parent = el.parentElement;
+      for (let i = 0; i < 3 && parent; i++) {
+        parent.dispatchEvent(new DragEvent('drop', { bubbles: true, dataTransfer: dt }));
+        parent = parent.parentElement;
+      }
+
       return true;
     } catch (e) {
       console.error('[GeminiAutoFill] File injection failed:', e);
@@ -664,7 +707,23 @@
     });
     try {
       el.dispatchEvent(new InputEvent('input', { bubbles: true, data: el.value }));
-    } catch { }
+    } catch {}
+
+    // Special handling for file inputs (custom uploaders often need ini)
+    if (el.type === 'file') {
+      // Dispatch drop event on the input itself AND its immediate parent
+      const dropEvent = new DragEvent('drop', { bubbles: true, cancelable: true });
+      el.dispatchEvent(dropEvent);
+      
+      const parent = el.parentElement;
+      if (parent) parent.dispatchEvent(new DragEvent('drop', { bubbles: true, cancelable: true }));
+
+      // If the input is hidden, try to find a visible container to highlight
+      const container = el.parentElement.closest('div, label, section, [class*="upload"], [class*="drop"]');
+      if (container && (window.getComputedStyle(el).display === 'none' || window.getComputedStyle(el).visibility === 'hidden')) {
+        highlightElement(container);
+      }
+    }
   }
 
   function highlightElement(el, color = 'rgba(124,106,247,0.75)') {
@@ -724,30 +783,44 @@
   // MESSAGE LISTENER
   // ============================================================
   chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    try {
-      if (message.action === 'scanFields') {
-        sendResponse({ fields: getFormFields() });
-      } else if (message.action === 'fillFields') {
-        fillFields(message.data || [], message.imageData).then(filled => {
-          // Send response after async fill (for file injection)
-          // Note: sendResponse is synchronous in some contexts, but we returned true
-        });
-        // We need to handle the async nature of file injection
-        (async () => {
-          const filled = await fillFields(message.data || [], message.imageData);
-          sendResponse({ filled });
-        })();
-        return true; // Keep channel open for async response
-      } else if (message.action === 'clearFields') {
-        sendResponse({ cleared: clearFields() });
-      } else {
-        sendResponse({ error: 'Unknown action' });
-      }
-    } catch (err) {
-      console.error('[GeminiAutoFill]', err);
-      sendResponse({ error: err.message });
+    if (message.action === 'injectPhotos') {
+      (async () => {
+        let filled = 0;
+        // BRUTE FORCE: Cari SEMUA input file di halaman, bodo amat dia sembunyi atau nggak
+        const allFileInputs = document.querySelectorAll('input[type="file"]');
+        
+        for (const el of allFileInputs) {
+          try {
+            const ok = await fillFile(el, message.imageData);
+            if (ok) filled++;
+          } catch (e) {
+            console.warn('[GeminiAutoFill] Gagal suntik ke satu input:', e);
+          }
+        }
+        sendResponse({ filled });
+      })();
+      return true;
     }
-    return true;
+
+    if (message.action === 'scanFields') {
+      sendResponse({ fields: getFormFields() });
+      return false;
+    } 
+
+    if (message.action === 'fillFields') {
+      fillFields(message.data || [], message.imageData)
+        .then(filled => sendResponse({ filled }))
+        .catch(err => sendResponse({ error: err.message }));
+      return true; // Keep channel open for async response
+    }
+
+    if (message.action === 'clearFields') {
+      sendResponse({ cleared: clearFields() });
+      return false;
+    }
+
+    sendResponse({ error: 'Unknown action' });
+    return false;
   });
 
   console.log('[GeminiAutoFill] v2 loaded — full HTML input support ✓');

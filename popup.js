@@ -97,6 +97,37 @@ function renderFieldPreview(fields) {
   $('detected-info').style.display = 'block';
 }
 
+// ── Inject Photos Only ─────────────────────────────────────
+$('btn-inject-photos').addEventListener('click', async () => {
+  chrome.storage.local.get(['profiles'], async data => {
+    // Lebih fleksibel: cari di semua profil mana yang punya foto
+    const profiles = data.profiles || [];
+    const profileWithImage = profiles.find(p => p.image && p.image.length > 100);
+    const imageData = profileWithImage ? profileWithImage.image : null;
+    
+    if (!imageData) {
+      showStatus('fill-status', 'error', 'Tidak ada foto di profil manapun. Silakan upload ulang foto di tab Profil.');
+      return;
+    }
+
+    const btn = $('btn-inject-photos');
+    btn.disabled = true;
+    const oldHtml = btn.innerHTML;
+    btn.innerHTML = '<div class="loader" style="border-top-color:var(--success)"></div>';
+
+    try {
+      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+      const res = await sendMessage(tab.id, { action: 'injectPhotos', imageData });
+      showStatus('fill-status', 'success', `Berhasil menyuntik ${res?.filled || 0} foto!`);
+    } catch (err) {
+      showStatus('fill-status', 'error', `Error: ${err.message}`);
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = oldHtml;
+    }
+  });
+});
+
 // ── Fill form ──────────────────────────────────────────────
 $('btn-fill').addEventListener('click', async () => {
   const instruction = $('instruction').value.trim();
@@ -355,8 +386,33 @@ $('profile-image').addEventListener('change', e => {
   if (file) {
     const reader = new FileReader();
     reader.onload = e => {
-      $('image-preview').style.display = 'block';
-      $('image-preview').querySelector('img').src = e.target.result;
+      // Resize image using Canvas to avoid chrome.storage limits
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const MAX_WIDTH = 800;
+        const MAX_HEIGHT = 800;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
+        } else {
+          if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        
+        // Convert to high-quality JPEG
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+        
+        $('image-preview').style.display = 'block';
+        $('image-preview').querySelector('img').src = dataUrl;
+      };
+      img.src = e.target.result;
     };
     reader.readAsDataURL(file);
   } else {
@@ -379,6 +435,10 @@ $('btn-save-profile').addEventListener('click', () => {
       image: image.startsWith('data:') ? image : null 
     });
     chrome.storage.local.set({ profiles }, () => {
+      if (chrome.runtime.lastError) {
+        showStatus('profile-status', 'error', 'Gagal menyimpan profil (ukuran foto terlalu besar).');
+        return;
+      }
       renderProfiles(profiles);
       $('profile-name').value = '';
       $('profile-data').value = '';
