@@ -1,5 +1,4 @@
-// ============================================================
-// Gemini AutoFill - popup.js (v2)
+// LazyFill Form - popup.js (v2)
 // ============================================================
 
 const $ = id => document.getElementById(id);

@@ -1,5 +1,4 @@
-// ============================================================
-// Gemini AutoFill - content.js  (v2 — Full HTML Input Support)
+// LazyFill Form - content.js (v2 — Full HTML Input Support)
 // ============================================================
 // Mendukung: text, email, tel, url, number, password, search,
 //   date, time, datetime-local, month, week, color, range,
@@ -315,7 +314,7 @@
           highlightElement(el);
         }
       } catch (e) {
-        console.warn('[GeminiAutoFill] Error filling field', index, e);
+        console.warn('[LazyFill] Error filling field', index, e);
       }
     }
 
@@ -650,7 +649,7 @@
   async function fillFile(el, base64Data) {
     try {
       if (!base64Data || !base64Data.startsWith('data:')) {
-        console.error('[GeminiAutoFill] Invalid image data');
+        console.error('[LazyFill] Invalid image data');
         return false;
       }
       
@@ -684,7 +683,7 @@
 
       return true;
     } catch (e) {
-      console.error('[GeminiAutoFill] File injection failed:', e);
+      console.error('[LazyFill] File injection failed:', e);
       return false;
     }
   }
@@ -794,7 +793,7 @@
             const ok = await fillFile(el, message.imageData);
             if (ok) filled++;
           } catch (e) {
-            console.warn('[GeminiAutoFill] Gagal suntik ke satu input:', e);
+            console.warn('[LazyFill] Gagal suntik ke satu input:', e);
           }
         }
         sendResponse({ filled });
@@ -823,5 +822,5 @@
     return false;
   });
 
-  console.log('[GeminiAutoFill] v2 loaded — full HTML input support ✓');
+  console.log('[LazyFill] v2 loaded — full HTML input support ✓');
 })();
