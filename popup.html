@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,7 +22,11 @@
       --radius: 6px;
     }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
     body {
       min-width: 300px;
@@ -48,14 +53,18 @@
     }
 
     .logo-icon {
-      width: 32px; height: 32px;
+      width: 32px;
+      height: 32px;
       background: var(--accent);
       border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .logo-icon svg {
-      width: 18px; height: 18px;
+      width: 18px;
+      height: 18px;
       color: #ffffff;
     }
 
@@ -101,8 +110,14 @@
     }
 
     /* Content */
-    .content { display: none; padding: 20px; }
-    .content.active { display: block; }
+    .content {
+      display: none;
+      padding: 20px;
+    }
+
+    .content.active {
+      display: block;
+    }
 
     /* Form Group */
     .form-group {
@@ -117,7 +132,10 @@
       margin-bottom: 6px;
     }
 
-    input[type="text"], input[type="password"], textarea, select {
+    input[type="text"],
+    input[type="password"],
+    textarea,
+    select {
       width: 100%;
       background: #ffffff;
       border: 1px solid var(--border);
@@ -130,11 +148,14 @@
       transition: border-color 0.2s, box-shadow 0.2s;
     }
 
-    input::placeholder, textarea::placeholder {
+    input::placeholder,
+    textarea::placeholder {
       color: var(--muted);
     }
 
-    input:focus, textarea:focus, select:focus {
+    input:focus,
+    textarea:focus,
+    select:focus {
       border-color: var(--accent);
       box-shadow: 0 0 0 3px var(--ring);
     }
@@ -150,20 +171,32 @@
       position: relative;
     }
 
-    .api-key-wrap input { padding-right: 36px; }
+    .api-key-wrap input {
+      padding-right: 36px;
+    }
 
     .toggle-vis {
       position: absolute;
-      right: 12px; top: 50%;
+      right: 12px;
+      top: 50%;
       transform: translateY(-50%);
       cursor: pointer;
       color: var(--muted);
       background: none;
       border: none;
-      display: flex; align-items: center; justify-content: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    .toggle-vis:hover { color: var(--text); }
-    .toggle-vis svg { width: 16px; height: 16px; }
+
+    .toggle-vis:hover {
+      color: var(--text);
+    }
+
+    .toggle-vis svg {
+      width: 16px;
+      height: 16px;
+    }
 
     /* Buttons */
     .btn {
@@ -182,7 +215,10 @@
       gap: 8px;
     }
 
-    .btn svg { width: 16px; height: 16px; }
+    .btn svg {
+      width: 16px;
+      height: 16px;
+    }
 
     .btn-primary {
       background: var(--accent);
@@ -220,23 +256,50 @@
       line-height: 1.5;
     }
 
-    .status.show { display: flex; }
-    .status.success { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; }
-    .status.error { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
-    .status.info { background: #f8fafc; border: 1px solid #e2e8f0; color: #334155; }
+    .status.show {
+      display: flex;
+    }
 
-    .status svg { width: 16px; height: 16px; flex-shrink: 0; margin-top: 1px; }
+    .status.success {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      color: #166534;
+    }
+
+    .status.error {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #991b1b;
+    }
+
+    .status.info {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      color: #334155;
+    }
+
+    .status svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
 
     /* Loader */
     .loader {
-      width: 12px; height: 12px;
-      border: 1.2px solid rgba(0,0,0,0.1);
+      width: 12px;
+      height: 12px;
+      border: 1.2px solid rgba(0, 0, 0, 0.1);
       border-top-color: currentColor;
       border-radius: 50%;
       animation: spin 0.6s linear infinite;
     }
 
-    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
 
     /* Fields preview */
     .fields-list {
@@ -258,7 +321,9 @@
       border-bottom: 1px solid var(--surface);
     }
 
-    .field-item:last-child { border-bottom: none; }
+    .field-item:last-child {
+      border-bottom: none;
+    }
 
     .field-badge {
       font-size: 10px;
@@ -286,7 +351,11 @@
     }
 
     /* Profile cards */
-    .profile-list { display: flex; flex-direction: column; gap: 10px; }
+    .profile-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
 
     .profile-card {
       background: #ffffff;
@@ -301,53 +370,90 @@
 
     .profile-card:hover {
       border-color: var(--accent);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    }
-    .profile-card.active { border-color: var(--accent); background: #f0f9ff; }
-    .profile-card.active::after {
-      content: 'Aktif';
-      position: absolute;
-      top: 6px; right: 38px;
-      font-size: 9px;
-      font-weight: 600;
-      color: var(--accent);
-      background: #e0f2fe;
-      padding: 1px 5px;
-      border-radius: 4px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
 
+    .profile-card.active {
+      border-color: var(--accent);
+      background: #f0f9ff;
+    }
+
+
+
     .profile-avatar {
-      width: 36px; height: 36px;
+      width: 36px;
+      height: 36px;
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-size: 14px;
       font-weight: 500;
       color: var(--text);
     }
 
-    .profile-info { flex: 1; min-width: 0; }
-    .profile-name { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 2px; }
-    .profile-desc { font-size: 11px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .profile-info {
+      flex: 1;
+      min-width: 0;
+    }
 
-    .profile-actions { display: flex; gap: 6px; }
+    .profile-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+
+    .profile-desc {
+      font-size: 11px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .profile-actions {
+      display: flex;
+      gap: 6px;
+    }
 
     .icon-btn {
       background: #ffffff;
       border: 1px solid var(--border);
       border-radius: 4px;
       color: var(--text-secondary);
-      width: 28px; height: 28px;
+      width: 28px;
+      height: 28px;
       cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       transition: all 0.15s;
     }
 
-    .icon-btn svg { width: 14px; height: 14px; }
-    .icon-btn:hover { background: var(--surface); color: var(--text); }
-    .icon-btn.delete:hover { color: var(--danger); border-color: var(--danger); background: #fef2f2; }
-    .icon-btn.use:hover { color: var(--success); border-color: var(--success); background: #f0fdf4; }
+    .icon-btn svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .icon-btn:hover {
+      background: var(--surface);
+      color: var(--text);
+    }
+
+    .icon-btn.delete:hover {
+      color: var(--danger);
+      border-color: var(--danger);
+      background: #fef2f2;
+    }
+
+    .icon-btn.use:hover {
+      color: var(--success);
+      border-color: var(--success);
+      background: #f0fdf4;
+    }
 
     .empty-state {
       text-align: center;
@@ -380,7 +486,8 @@
     }
 
     .dot {
-      width: 6px; height: 6px;
+      width: 6px;
+      height: 6px;
       border-radius: 50%;
       background: var(--success);
     }
@@ -396,11 +503,20 @@
       font-family: 'Inter', sans-serif;
     }
 
-    .link-btn:hover { color: var(--text); }
+    .link-btn:hover {
+      color: var(--text);
+    }
 
     /* Row buttons */
-    .btn-row { display: flex; gap: 10px; margin-top: 16px; }
-    .btn-row .btn { flex: 1; }
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .btn-row .btn {
+      flex: 1;
+    }
 
     /* Detected count */
     .detected-badge {
@@ -414,146 +530,175 @@
     }
   </style>
 </head>
+
 <body>
 
-<div class="header">
-  <div class="logo-row">
-    <div class="logo-icon">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
-    </div>
-    <div class="logo-text">
-      <h1>LazyFill Form</h1>
-      <p>AI Form Assistant</p>
-    </div>
-  </div>
-</div>
-
-<div class="tabs">
-  <div class="tab active" data-tab="fill">Isi Form</div>
-  <div class="tab" data-tab="profiles">Profil</div>
-  <div class="tab" data-tab="settings">Setelan</div>
-</div>
-
-<!-- TAB: FILL -->
-<div class="content active" id="tab-fill">
-  <div class="section-title">Instruksi untuk AI</div>
-  <div class="form-group">
-    <textarea id="instruction" placeholder="Contoh: Isi dengan data diri saya, nama John Doe, email john@email.com, perusahaan Acme Corp..." rows="4"></textarea>
-  </div>
-
-  <div id="detected-info" style="display:none;">
-    <div class="detected-badge">
-      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-      <span id="field-count">0 field terdeteksi</span>
-    </div>
-    <div class="fields-list" id="fields-preview"></div>
-  </div>
-
-  <div class="btn-row">
-    <button class="btn btn-secondary" id="btn-scan">Scan</button>
-    <button class="btn btn-secondary" id="btn-inject-photos" style="color:var(--success);border-color:var(--success);">Suntik Foto</button>
-    <button class="btn btn-primary" id="btn-fill">Isi Otomatis</button>
-  </div>
-
-  <div class="status" id="fill-status">
-    <span class="icon"></span>
-    <span class="msg"></span>
-  </div>
-</div>
-
-<!-- TAB: PROFILES -->
-<div class="content" id="tab-profiles">
-  <div class="section-title">Profil Tersimpan</div>
-  <div class="profile-list" id="profile-list">
-    <div class="empty-state">
-      Belum ada profil.<br>Tambah profil untuk mengisi form lebih cepat.
+  <div class="header">
+    <div class="logo-row">
+      <div class="logo-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+        </svg>
+      </div>
+      <div class="logo-text">
+        <h1>LazyFill Form</h1>
+        <p>AI Form Assistant</p>
+      </div>
     </div>
   </div>
 
-  <div class="divider"></div>
+  <div class="tabs">
+    <div class="tab active" data-tab="fill">Isi Form</div>
+    <div class="tab" data-tab="profiles">Profil</div>
+    <div class="tab" data-tab="settings">Setelan</div>
+  </div>
 
-  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-    <div class="section-title" id="form-title" style="margin-bottom:0;">Tambah Profil Baru</div>
-    <button id="btn-cancel-edit" class="btn-secondary" style="width:auto; padding:4px 8px; font-size:11px; display:none;">Batal</button>
-  </div>
-  <input type="hidden" id="edit-index" value="-1">
+  <!-- TAB: FILL -->
+  <div class="content active" id="tab-fill">
+    <div class="section-title">Instruksi untuk AI</div>
+    <div class="form-group">
+      <textarea id="instruction"
+        placeholder="Contoh: Isi dengan data diri saya, nama John Doe, email john@email.com, perusahaan Acme Corp..."
+        rows="4"></textarea>
+    </div>
 
-  <div class="form-group">
-    <label>Nama Profil</label>
-    <input type="text" id="profile-name" placeholder="cth: Profil Kerja, Profil Pribadi">
-  </div>
-  <div class="form-group">
-    <label>Data Profil</label>
-    <textarea id="profile-data" rows="4" placeholder="Nama: John Doe&#10;Email: john@email.com&#10;Telepon: 08123456789&#10;Perusahaan: Acme Corp&#10;Alamat: Jl. Sudirman No. 1, Jakarta"></textarea>
-  </div>
-  <div class="form-group">
-    <label>Lampiran File/Foto (Opsional)</label>
-    <input type="file" id="profile-image" accept="image/png, image/jpeg" style="font-size:11px;">
-    <div id="image-preview" style="margin-top:8px; display:none;">
-      <img src="" style="max-width:100%; max-height:80px; border-radius:4px; border:1px solid var(--border);">
+    <div id="detected-info" style="display:none;">
+      <div class="detected-badge">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <span id="field-count">0 field terdeteksi</span>
+      </div>
+      <div class="fields-list" id="fields-preview"></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-secondary" id="btn-scan">Scan</button>
+      <button class="btn btn-secondary" id="btn-inject-photos"
+        style="color:var(--success);border-color:var(--success);">Suntik Foto</button>
+      <button class="btn btn-primary" id="btn-fill">Isi Otomatis</button>
+    </div>
+
+    <div class="status" id="fill-status">
+      <span class="icon"></span>
+      <span class="msg"></span>
     </div>
   </div>
-  <button class="btn btn-primary" id="btn-save-profile">Simpan Profil</button>
 
-  <div class="status" id="profile-status"></div>
-</div>
-
-<!-- TAB: SETTINGS -->
-<div class="content" id="tab-settings">
-  <div class="section-title">API Key</div>
-  <div class="form-group">
-    <label>Google AI Studio API Key</label>
-    <div class="api-key-wrap">
-      <input type="password" id="api-key" placeholder="AIza...">
-      <button class="toggle-vis" id="toggle-key">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-      </button>
+  <!-- TAB: PROFILES -->
+  <div class="content" id="tab-profiles">
+    <div class="section-title">Profil Tersimpan</div>
+    <div class="profile-list" id="profile-list">
+      <div class="empty-state">
+        Belum ada profil.<br>Tambah profil untuk mengisi form lebih cepat.
+      </div>
     </div>
+
+    <div class="divider"></div>
+
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+      <div class="section-title" id="form-title" style="margin-bottom:0;">Tambah Profil Baru</div>
+      <button id="btn-cancel-edit" class="btn-secondary"
+        style="width:auto; padding:4px 8px; font-size:11px; display:none;">Batal</button>
+    </div>
+    <input type="hidden" id="edit-index" value="-1">
+
+    <div class="form-group">
+      <label>Nama Profil</label>
+      <input type="text" id="profile-name" placeholder="cth: Profil Kerja, Profil Pribadi">
+    </div>
+    <div class="form-group">
+      <label>Data Profil</label>
+      <textarea id="profile-data" rows="4"
+        placeholder="Nama: John Doe&#10;Email: john@email.com&#10;Telepon: 08123456789&#10;Perusahaan: Acme Corp&#10;Alamat: Jl. Sudirman No. 1, Jakarta"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Lampiran File/Foto (Opsional)</label>
+      <input type="file" id="profile-image" accept="image/png, image/jpeg" style="font-size:11px;">
+      <div id="image-preview" style="margin-top:8px; display:none;">
+        <img src="" style="max-width:100%; max-height:80px; border-radius:4px; border:1px solid var(--border);">
+      </div>
+    </div>
+    <button class="btn btn-primary" id="btn-save-profile">Simpan Profil</button>
+
+    <div class="status" id="profile-status"></div>
   </div>
 
-  <a href="https://aistudio.google.com/app/apikey" target="_blank" style="text-decoration:none;">
-    <button class="btn btn-secondary" style="margin-bottom: 16px;">Dapatkan API Key</button>
-  </a>
+  <!-- TAB: SETTINGS -->
+  <div class="content" id="tab-settings">
+    <div class="section-title">API Key</div>
+    <div class="form-group">
+      <label>Google AI Studio API Key</label>
+      <div class="api-key-wrap">
+        <input type="password" id="api-key" placeholder="AIza...">
+        <button class="toggle-vis" id="toggle-key">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+        </button>
+      </div>
+    </div>
 
-  <div class="divider" style="margin-top:0;"></div>
+    <a href="https://aistudio.google.com/app/apikey" target="_blank" style="text-decoration:none;">
+      <button class="btn btn-secondary" style="margin-bottom: 16px;">Dapatkan API Key</button>
+    </a>
 
-  <div class="section-title">Model</div>
-  <div class="form-group">
-    <label>Pilih Model Gemini</label>
-    <select id="model-select">
-      <option value="gemini-3.1-flash-lite-preview">Gemini 3.1 Flash Lite</option>
-      <option value="gemini-3-flash-preview">Gemini 3 Flash</option>
-      <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
-      <option value="gemini-2.5-flash-lite">Gemini 2.5 Flash Lite</option>
-      <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
-      <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
-    </select>
+    <div class="divider" style="margin-top:0;"></div>
+
+    <div class="section-title">Model</div>
+    <div class="form-group">
+      <label>Pilih Model Gemini</label>
+      <select id="model-select">
+        <option value="gemini-3.1-flash-lite-preview">Gemini 3.1 Flash Lite</option>
+        <option value="gemini-3-flash-preview">Gemini 3 Flash</option>
+        <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
+        <option value="gemini-2.5-flash-lite">Gemini 2.5 Flash Lite</option>
+        <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
+        <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
+      </select>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section-title">Tampilan Ekstensi</div>
+    <div class="form-group" style="margin-bottom: 20px;">
+      <label>Mode Tampilan (Berlaku setelah tab/browser direfresh)</label>
+      <select id="display-mode">
+        <option value="sidepanel">Side Panel (Panel Samping)</option>
+        <option value="popup">Popup Biasa (Klasik)</option>
+        <option value="widget">Widget Mengambang (Di Dalam Web)</option>
+        <option value="contextual">Ikon Kontekstual (Di Sebelah Form)</option>
+      </select>
+    </div>
+
+    <div class="section-title">Opsi Pengisian</div>
+    <div class="form-group" style="margin-bottom: 20px;">
+      <label>Mode Pengisian</label>
+      <select id="fill-mode">
+        <option value="smart">Smart — Deteksi konteks otomatis</option>
+        <option value="strict">Strict — Hanya field dengan label jelas</option>
+      </select>
+    </div>
+
+    <button class="btn btn-primary" id="btn-save-settings">Simpan Setelan</button>
+    <div class="status" id="settings-status"></div>
   </div>
 
-  <div class="divider"></div>
-
-  <div class="section-title">Opsi Pengisian</div>
-  <div class="form-group" style="margin-bottom: 20px;">
-    <label>Mode Pengisian</label>
-    <select id="fill-mode">
-      <option value="smart">Smart — Deteksi konteks otomatis</option>
-      <option value="strict">Strict — Hanya field dengan label jelas</option>
-    </select>
+  <!-- Footer -->
+  <div class="footer">
+    <div class="model-badge">
+      <div class="dot"></div>
+      <span id="footer-model">Gemini 2.5 Flash Lite</span>
+    </div>
+    <button class="link-btn" id="btn-clear-all">Bersihkan Form</button>
   </div>
 
-  <button class="btn btn-primary" id="btn-save-settings">Simpan Setelan</button>
-  <div class="status" id="settings-status"></div>
-</div>
-
-<!-- Footer -->
-<div class="footer">
-  <div class="model-badge">
-    <div class="dot"></div>
-    <span id="footer-model">Gemini 2.5 Flash Lite</span>
-  </div>
-  <button class="link-btn" id="btn-clear-all">Bersihkan Form</button>
-</div>
-
-<script src="popup.js"></script>
+  <script src="popup.js"></script>
 </body>
+
 </html>

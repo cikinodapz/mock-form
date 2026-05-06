@@ -19,10 +19,11 @@ $('toggle-key').addEventListener('click', () => {
 });
 
 // ── Load settings ──────────────────────────────────────────
-chrome.storage.local.get(['apiKey', 'model', 'fillMode', 'profiles'], data => {
+chrome.storage.local.get(['apiKey', 'model', 'fillMode', 'profiles', 'displayMode'], data => {
   if (data.apiKey) $('api-key').value = data.apiKey;
   if (data.model) $('model-select').value = data.model;
   if (data.fillMode) $('fill-mode').value = data.fillMode;
+  if (data.displayMode) $('display-mode').value = data.displayMode;
   renderProfiles(data.profiles || []);
   updateFooter(data.model);
 });
@@ -32,8 +33,9 @@ $('btn-save-settings').addEventListener('click', () => {
   const apiKey = $('api-key').value.trim();
   const model = $('model-select').value;
   const fillMode = $('fill-mode').value;
+  const displayMode = $('display-mode').value || 'sidepanel';
   if (!apiKey) { showStatus('settings-status', 'error', 'Masukkan API Key terlebih dahulu.'); return; }
-  chrome.storage.local.set({ apiKey, model, fillMode }, () => {
+  chrome.storage.local.set({ apiKey, model, fillMode, displayMode }, () => {
     showStatus('settings-status', 'success', 'Setelan berhasil disimpan!');
     updateFooter(model);
   });

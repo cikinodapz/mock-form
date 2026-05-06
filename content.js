@@ -818,9 +818,241 @@
       return false;
     }
 
+    if (message.action === 'toggleWidget') {
+      toggleWidget();
+      sendResponse({ status: 'ok' });
+      return false;
+    }
+
     sendResponse({ error: 'Unknown action' });
     return false;
   });
+
+  // ============================================================
+  // WIDGET INJECTION
+  // ============================================================
+  let widgetContainer = null;
+
+  function toggleWidget(options = {}) {
+    if (widgetContainer) {
+      widgetContainer.remove();
+      widgetContainer = null;
+      return;
+    }
+
+    widgetContainer = document.createElement('div');
+    widgetContainer.id = 'lazyfill-widget-container';
+    
+    // Styling for draggable floating widget
+    Object.assign(widgetContainer.style, {
+      position: options.position || 'fixed',
+      top: options.top || '20px',
+      right: options.right || '20px',
+      left: options.left || 'auto',
+      width: '360px',
+      height: '600px',
+      backgroundColor: 'white',
+      border: '1px solid #e2e8f0',
+      borderRadius: '12px',
+      boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
+      zIndex: '2147483647', // max z-index
+      display: 'flex',
+      flexDirection: 'column',
+      overflow: 'hidden'
+    });
+
+    const dragHandle = document.createElement('div');
+    Object.assign(dragHandle.style, {
+      height: '28px',
+      backgroundColor: '#f8fafc',
+      borderBottom: '1px solid #e2e8f0',
+      cursor: 'move',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      flexShrink: '0'
+    });
+    dragHandle.innerHTML = '<div style="width: 40px; height: 5px; background: #cbd5e1; border-radius: 3px;"></div><div style="position:absolute; right:10px; cursor:pointer; font-family:sans-serif; font-size:14px; font-weight:bold; color:#94a3b8;" id="lazyfill-widget-close">✕</div>';
+
+    const iframe = document.createElement('iframe');
+    iframe.src = chrome.runtime.getURL('popup.html');
+    Object.assign(iframe.style, {
+      width: '100%',
+      height: '100%',
+      border: 'none',
+      flex: '1'
+    });
+
+    widgetContainer.appendChild(dragHandle);
+    widgetContainer.appendChild(iframe);
+    document.body.appendChild(widgetContainer);
+
+    // Close button logic
+    widgetContainer.querySelector('#lazyfill-widget-close').addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleWidget();
+    });
+
+    // Draggable logic
+    let isDragging = false;
+    let currentX;
+    let currentY;
+    let initialX;
+    let initialY;
+    let xOffset = 0;
+    let yOffset = 0;
+
+    dragHandle.addEventListener('mousedown', dragStart);
+    document.addEventListener('mouseup', dragEnd);
+    document.addEventListener('mousemove', drag);
+
+    function dragStart(e) {
+      if (e.target.id === 'lazyfill-widget-close') return;
+      initialX = e.clientX - xOffset;
+      initialY = e.clientY - yOffset;
+      isDragging = true;
+      
+      // prevent iframe from capturing mouse events while dragging
+      iframe.style.pointerEvents = 'none'; 
+    }
+
+    function dragEnd(e) {
+      initialX = currentX;
+      initialY = currentY;
+      isDragging = false;
+      iframe.style.pointerEvents = 'auto';
+    }
+
+    function drag(e) {
+      if (isDragging) {
+        e.preventDefault();
+        currentX = e.clientX - initialX;
+        currentY = e.clientY - initialY;
+        xOffset = currentX;
+        yOffset = currentY;
+        widgetContainer.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
+      }
+    }
+  }
+
+  // ============================================================
+  // CONTEXTUAL MODE LOGIC
+  // ============================================================
+  let isContextualMode = false;
+  let activeInput = null;
+  let contextIcon = null;
+
+  chrome.storage.local.get(['displayMode'], (data) => {
+    isContextualMode = (data.displayMode === 'contextual');
+    if (isContextualMode) initContextualMode();
+  });
+
+  chrome.storage.onChanged.addListener((changes, area) => {
+    if (area === 'local' && changes.displayMode) {
+      isContextualMode = (changes.displayMode.newValue === 'contextual');
+      if (isContextualMode) initContextualMode();
+      else destroyContextualMode();
+    }
+  });
+
+  function initContextualMode() {
+    if (contextIcon) return;
+    
+    contextIcon = document.createElement('div');
+    contextIcon.id = 'lazyfill-context-icon';
+    Object.assign(contextIcon.style, {
+      position: 'absolute',
+      width: '28px',
+      height: '28px',
+      backgroundColor: '#7c6af7',
+      borderRadius: '6px',
+      display: 'none',
+      alignItems: 'center',
+      justifyContent: 'center',
+      cursor: 'pointer',
+      zIndex: '2147483646',
+      boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
+      color: 'white'
+    });
+    contextIcon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>`;
+    
+    document.body.appendChild(contextIcon);
+
+    document.addEventListener('focusin', handleFocusIn);
+    document.addEventListener('mousedown', handleMouseDown);
+    contextIcon.addEventListener('click', handleIconClick);
+  }
+
+  function destroyContextualMode() {
+    if (contextIcon) {
+      contextIcon.remove();
+      contextIcon = null;
+    }
+    document.removeEventListener('focusin', handleFocusIn);
+    document.removeEventListener('mousedown', handleMouseDown);
+  }
+
+  function handleFocusIn(e) {
+    if (!isContextualMode) return;
+    const el = e.target;
+    const tag = el.tagName;
+    const type = (el.type || '').toLowerCase();
+    
+    const isTextInput = (tag === 'INPUT' && !['radio', 'checkbox', 'submit', 'button', 'hidden', 'file'].includes(type)) || tag === 'TEXTAREA' || tag === 'SELECT' || el.getAttribute('contenteditable') === 'true';
+
+    if (isTextInput) {
+      activeInput = el;
+      showContextIcon(el);
+    }
+  }
+
+  function handleMouseDown(e) {
+    if (!isContextualMode) return;
+    if (activeInput && e.target !== activeInput && e.target !== contextIcon && !contextIcon.contains(e.target)) {
+      if (widgetContainer && widgetContainer.contains(e.target)) return;
+      contextIcon.style.display = 'none';
+      activeInput = null;
+      if (widgetContainer) {
+        toggleWidget(); // close if clicked outside everything
+      }
+    }
+  }
+
+  function showContextIcon(el) {
+    const rect = el.getBoundingClientRect();
+    const scrollX = window.scrollX || window.pageXOffset;
+    const scrollY = window.scrollY || window.pageYOffset;
+    
+    contextIcon.style.display = 'flex';
+    contextIcon.style.top = `${rect.top + scrollY + (rect.height / 2) - 14}px`;
+    contextIcon.style.left = `${rect.right + scrollX + 8}px`;
+  }
+
+  function handleIconClick(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (widgetContainer) {
+      toggleWidget();
+      return;
+    }
+
+    const rect = contextIcon.getBoundingClientRect();
+    let left = rect.left;
+    if (left + 360 > window.innerWidth) left = window.innerWidth - 380;
+    if (left < 0) left = 10;
+    
+    let top = rect.bottom + 8;
+    if (top + 600 > window.innerHeight) top = rect.top - 608;
+    if (top < 0) top = 10;
+
+    toggleWidget({
+      position: 'fixed',
+      top: `${top}px`,
+      left: `${left}px`,
+      right: 'auto'
+    });
+  }
 
   console.log('[LazyFill] v2 loaded — full HTML input support ✓');
 })();
