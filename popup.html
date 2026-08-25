@@ -21,7 +21,9 @@
       --radius: 8px;
     }
 
-    *, *::before, *::after {
+    *,
+    *::before,
+    *::after {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
@@ -322,7 +324,9 @@
     }
 
     @keyframes spin {
-      to { transform: rotate(360deg); }
+      to {
+        transform: rotate(360deg);
+      }
     }
 
     /* ─── Fields Preview ─── */
@@ -578,13 +582,16 @@
     ::-webkit-scrollbar {
       width: 3px;
     }
+
     ::-webkit-scrollbar-track {
       background: transparent;
     }
+
     ::-webkit-scrollbar-thumb {
       background: var(--border);
       border-radius: 3px;
     }
+
     ::-webkit-scrollbar-thumb:hover {
       background: var(--muted);
     }
@@ -724,7 +731,7 @@
 
     <div class="section-title">Tampilan Ekstensi</div>
     <div class="form-group" style="margin-bottom: 20px;">
-      <label>Mode Tampilan (Berlaku setelah tab/browser direfresh)</label>
+      <label>Mode Tampilan</label>
       <select id="display-mode">
         <option value="popup">Popup Biasa (Klasik)</option>
         <option value="widget">Widget Mengambang (Di Dalam Web)</option>
