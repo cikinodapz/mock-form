@@ -538,6 +538,7 @@ function showStatus(id, type, msg) {
 
   el.className = `status show ${type}`;
   el.innerHTML = `${iconSvg}<span>${msg}</span>`;
+  el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   if (type === 'success') setTimeout(() => el.classList.remove('show'), 4000);
 }
 
