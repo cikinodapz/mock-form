@@ -964,17 +964,15 @@
       position: 'absolute',
       width: '28px',
       height: '28px',
-      backgroundColor: '#7c6af7',
-      borderRadius: '6px',
       display: 'none',
       alignItems: 'center',
       justifyContent: 'center',
       cursor: 'pointer',
       zIndex: '2147483646',
-      boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
-      color: 'white'
+      filter: 'drop-shadow(0 2px 5px rgba(0,0,0,0.2))'
     });
-    contextIcon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>`;
+    const iconUrl = chrome.runtime.getURL('icons/logo-ui.png');
+    contextIcon.innerHTML = `<img src="${iconUrl}" style="width: 28px; height: 28px; object-fit: contain;" />`;
     
     document.body.appendChild(contextIcon);
 

@@ -2,7 +2,7 @@
 
 function updateDisplayMode(mode) {
   if (mode === 'popup' || mode === 'contextual') {
-    chrome.action.setPopup({ popup: "popup.html" });
+    chrome.action.setPopup({ popup: "popup.html?mode=popup" });
     chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: false }).catch(console.error);
   } else if (mode === 'widget') {
     chrome.action.setPopup({ popup: "" });

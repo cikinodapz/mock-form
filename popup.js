@@ -1,6 +1,14 @@
 // mock-form - popup.js
 // ============================================================
 
+const urlParams = new URLSearchParams(window.location.search);
+if (urlParams.get('mode') === 'popup') {
+  document.body.style.width = '360px';
+  document.body.style.height = '550px';
+  document.body.style.borderLeft = '1px solid var(--border)';
+  document.body.style.borderRight = '1px solid var(--border)';
+}
+
 const $ = id => document.getElementById(id);
 
 // ── Tab switching ──────────────────────────────────────────

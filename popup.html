@@ -3,13 +3,12 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>mock-form</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #ffffff;
-      --surface: #f8fafc;
+      --bg: #f8fafc;
+      --surface: #ffffff;
       --border: #e2e8f0;
       --accent: #0f172a;
       --accent-hover: #334155;
@@ -19,99 +18,102 @@
       --danger: #ef4444;
       --success: #10b981;
       --ring: rgba(15, 23, 42, 0.1);
-      --radius: 6px;
+      --radius: 8px;
     }
 
-    * {
+    *, *::before, *::after {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
 
-    html, body {
-      width: 360px;
-      height: 560px;
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: var(--bg);
     }
 
     body {
-      background: var(--bg);
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      background: var(--surface);
       color: var(--text);
-      font-family: 'Inter', sans-serif;
+      font-family: 'Inter', -apple-system, sans-serif;
       font-size: 13px;
+      line-height: 1.5;
       display: flex;
       flex-direction: column;
       overflow: hidden;
       -webkit-font-smoothing: antialiased;
     }
 
-    /* Header */
+    /* ─── Header ─── */
     .header {
       flex-shrink: 0;
-      padding: 16px 20px;
+      padding: 10px 14px;
       border-bottom: 1px solid var(--border);
-      background: #ffffff;
+      background: var(--surface);
     }
 
     .logo-row {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
 
     .logo-icon {
-      width: 32px;
-      height: 32px;
-      background: var(--accent);
-      border-radius: 8px;
+      width: 28px;
+      height: 28px;
+      flex-shrink: 0;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
-    .logo-icon svg {
-      width: 18px;
-      height: 18px;
-      color: #ffffff;
+    .logo-icon img {
+      width: 28px;
+      height: 28px;
+      object-fit: contain;
     }
 
     .logo-text h1 {
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 600;
       color: var(--text);
-      letter-spacing: -0.01em;
+      letter-spacing: -0.02em;
     }
 
     .logo-text p {
-      font-size: 11px;
-      color: var(--text-secondary);
-      margin-top: 2px;
+      font-size: 10.5px;
+      color: var(--muted);
+      margin-top: 1px;
     }
 
-    /* Tabs */
+    /* ─── Tabs ─── */
     .tabs {
       flex-shrink: 0;
       display: flex;
-      background: #ffffff;
+      background: var(--surface);
       border-bottom: 1px solid var(--border);
     }
 
     .tab {
       flex: 1;
-      padding: 12px 10px;
+      padding: 9px 0;
       text-align: center;
       font-size: 12px;
       font-weight: 500;
-      color: var(--text-secondary);
+      color: var(--muted);
       cursor: pointer;
       border-bottom: 2px solid transparent;
-      transition: all 0.2s;
+      transition: color 0.15s, border-color 0.15s;
+      user-select: none;
     }
 
     .tab:hover {
-      color: var(--text);
+      color: var(--text-secondary);
     }
 
     .tab.active {
@@ -119,29 +121,33 @@
       border-bottom-color: var(--accent);
     }
 
-    /* Content */
+    /* ─── Content ─── */
     .content {
       display: none;
-      padding: 20px;
+      padding: 14px;
+      overflow-x: hidden;
     }
 
     .content.active {
       display: block;
       flex: 1;
+      min-height: 0;
       overflow-y: auto;
+      overflow-x: hidden;
+      padding: 14px;
     }
 
-    /* Form Group */
+    /* ─── Form ─── */
     .form-group {
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
     label {
       display: block;
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 500;
       color: var(--text);
-      margin-bottom: 6px;
+      margin-bottom: 5px;
     }
 
     input[type="text"],
@@ -149,15 +155,15 @@
     textarea,
     select {
       width: 100%;
-      background: #ffffff;
+      background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
       color: var(--text);
-      font-family: 'Inter', sans-serif;
-      font-size: 13px;
-      padding: 10px 12px;
+      font-family: inherit;
+      font-size: 12.5px;
+      padding: 8px 10px;
       outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
+      transition: border-color 0.15s, box-shadow 0.15s;
     }
 
     input::placeholder,
@@ -169,16 +175,21 @@
     textarea:focus,
     select:focus {
       border-color: var(--accent);
-      box-shadow: 0 0 0 3px var(--ring);
+      box-shadow: 0 0 0 2px var(--ring);
     }
 
     textarea {
       resize: vertical;
-      min-height: 80px;
+      min-height: 72px;
       line-height: 1.5;
     }
 
-    /* API Key Input */
+    select {
+      appearance: auto;
+      cursor: pointer;
+    }
+
+    /* ─── API Key ─── */
     .api-key-wrap {
       position: relative;
     }
@@ -189,7 +200,7 @@
 
     .toggle-vis {
       position: absolute;
-      right: 12px;
+      right: 10px;
       top: 50%;
       transform: translateY(-50%);
       cursor: pointer;
@@ -199,6 +210,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      padding: 2px;
     }
 
     .toggle-vis:hover {
@@ -206,30 +218,32 @@
     }
 
     .toggle-vis svg {
-      width: 16px;
-      height: 16px;
+      width: 15px;
+      height: 15px;
     }
 
-    /* Buttons */
+    /* ─── Buttons ─── */
     .btn {
       width: 100%;
-      padding: 10px 14px;
+      padding: 8px 12px;
       border: none;
       border-radius: var(--radius);
-      font-family: 'Inter', sans-serif;
-      font-size: 13px;
+      font-family: inherit;
+      font-size: 12px;
       font-weight: 500;
       cursor: pointer;
-      transition: all 0.2s;
-      display: flex;
+      transition: all 0.15s;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 6px;
+      white-space: nowrap;
     }
 
     .btn svg {
-      width: 16px;
-      height: 16px;
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
     }
 
     .btn-primary {
@@ -242,29 +256,29 @@
     }
 
     .btn-secondary {
-      background: #ffffff;
+      background: var(--surface);
       border: 1px solid var(--border);
       color: var(--text);
     }
 
     .btn-secondary:hover {
-      background: var(--surface);
+      background: var(--bg);
     }
 
     .btn:disabled {
-      opacity: 0.6;
+      opacity: 0.5;
       cursor: not-allowed;
     }
 
-    /* Status */
+    /* ─── Status ─── */
     .status {
-      padding: 10px 12px;
+      padding: 8px 10px;
       border-radius: var(--radius);
-      font-size: 12px;
-      margin-top: 12px;
+      font-size: 11.5px;
+      margin-top: 10px;
       display: none;
       align-items: flex-start;
-      gap: 8px;
+      gap: 7px;
       line-height: 1.5;
     }
 
@@ -285,52 +299,50 @@
     }
 
     .status.info {
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      color: #334155;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
     }
 
     .status svg {
-      width: 16px;
-      height: 16px;
+      width: 14px;
+      height: 14px;
       flex-shrink: 0;
       margin-top: 1px;
     }
 
-    /* Loader */
+    /* ─── Loader ─── */
     .loader {
       width: 12px;
       height: 12px;
-      border: 1.2px solid rgba(0, 0, 0, 0.1);
+      border: 1.5px solid rgba(0, 0, 0, 0.08);
       border-top-color: currentColor;
       border-radius: 50%;
       animation: spin 0.6s linear infinite;
     }
 
     @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
+      to { transform: rotate(360deg); }
     }
 
-    /* Fields preview */
+    /* ─── Fields Preview ─── */
     .fields-list {
-      background: #ffffff;
+      background: var(--bg);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 8px;
-      margin-top: 12px;
-      max-height: 140px;
+      padding: 6px;
+      margin-top: 10px;
+      max-height: 130px;
       overflow-y: auto;
     }
 
     .field-item {
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding: 8px;
-      font-size: 12px;
-      border-bottom: 1px solid var(--surface);
+      gap: 8px;
+      padding: 6px 8px;
+      font-size: 11.5px;
+      border-bottom: 1px solid var(--border);
     }
 
     .field-item:last-child {
@@ -338,51 +350,52 @@
     }
 
     .field-badge {
-      font-size: 10px;
-      padding: 2px 6px;
+      font-size: 9.5px;
+      padding: 1px 5px;
       border-radius: 4px;
       background: var(--surface);
-      color: var(--text-secondary);
+      color: var(--muted);
       font-weight: 500;
       border: 1px solid var(--border);
+      flex-shrink: 0;
     }
 
-    /* Divider */
+    /* ─── Divider ─── */
     .divider {
       height: 1px;
       background: var(--border);
-      margin: 20px 0;
+      margin: 16px 0;
     }
 
-    /* Section title */
+    /* ─── Section Title ─── */
     .section-title {
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 600;
       color: var(--text);
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
-    /* Profile cards */
+    /* ─── Profiles ─── */
     .profile-list {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
     }
 
     .profile-card {
-      background: #ffffff;
+      background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 12px;
+      padding: 10px;
       display: flex;
       align-items: center;
-      gap: 12px;
-      transition: all 0.2s;
+      gap: 10px;
+      transition: border-color 0.15s, box-shadow 0.15s;
     }
 
     .profile-card:hover {
       border-color: var(--accent);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
     }
 
     .profile-card.active {
@@ -390,20 +403,19 @@
       background: #f0f9ff;
     }
 
-
-
     .profile-avatar {
-      width: 36px;
-      height: 36px;
-      background: var(--surface);
+      width: 32px;
+      height: 32px;
+      background: var(--bg);
       border: 1px solid var(--border);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 500;
-      color: var(--text);
+      color: var(--text-secondary);
+      flex-shrink: 0;
     }
 
     .profile-info {
@@ -412,15 +424,18 @@
     }
 
     .profile-name {
-      font-size: 13px;
+      font-size: 12.5px;
       font-weight: 500;
       color: var(--text);
-      margin-bottom: 2px;
+      margin-bottom: 1px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .profile-desc {
-      font-size: 11px;
-      color: var(--text-secondary);
+      font-size: 10.5px;
+      color: var(--muted);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -428,16 +443,17 @@
 
     .profile-actions {
       display: flex;
-      gap: 6px;
+      gap: 4px;
+      flex-shrink: 0;
     }
 
     .icon-btn {
-      background: #ffffff;
+      background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 4px;
-      color: var(--text-secondary);
-      width: 28px;
-      height: 28px;
+      border-radius: 5px;
+      color: var(--muted);
+      width: 26px;
+      height: 26px;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -446,12 +462,12 @@
     }
 
     .icon-btn svg {
-      width: 14px;
-      height: 14px;
+      width: 13px;
+      height: 13px;
     }
 
     .icon-btn:hover {
-      background: var(--surface);
+      background: var(--bg);
       color: var(--text);
     }
 
@@ -469,78 +485,108 @@
 
     .empty-state {
       text-align: center;
-      padding: 32px 20px;
-      color: var(--text-secondary);
-      font-size: 12px;
+      padding: 24px 16px;
+      color: var(--muted);
+      font-size: 11.5px;
       line-height: 1.6;
       border: 1px dashed var(--border);
       border-radius: var(--radius);
-      background: var(--surface);
+      background: var(--bg);
     }
 
-    /* Footer */
+    /* ─── Footer ─── */
     .footer {
       flex-shrink: 0;
       margin-top: auto;
-      padding: 12px 20px;
+      padding: 8px 14px;
       border-top: 1px solid var(--border);
-      background: var(--surface);
+      background: var(--bg);
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 8px;
     }
 
     .model-badge {
       display: flex;
       align-items: center;
-      gap: 6px;
-      font-size: 11px;
+      gap: 5px;
+      font-size: 10.5px;
       font-weight: 500;
-      color: var(--text-secondary);
+      color: var(--muted);
+      min-width: 0;
+    }
+
+    .model-badge span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .dot {
-      width: 6px;
-      height: 6px;
+      width: 5px;
+      height: 5px;
       border-radius: 50%;
       background: var(--success);
+      flex-shrink: 0;
     }
 
     .link-btn {
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 500;
-      color: var(--text-secondary);
+      color: var(--muted);
       text-decoration: none;
       cursor: pointer;
       background: none;
       border: none;
-      font-family: 'Inter', sans-serif;
+      font-family: inherit;
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: color 0.15s;
     }
 
     .link-btn:hover {
       color: var(--text);
     }
 
-    /* Row buttons */
+    /* ─── Button Row ─── */
     .btn-row {
       display: flex;
-      gap: 10px;
-      margin-top: 16px;
+      gap: 6px;
+      margin-top: 12px;
     }
 
     .btn-row .btn {
       flex: 1;
+      min-width: 0;
+      font-size: 11.5px;
+      padding: 8px 4px;
     }
 
-    /* Detected count */
+    /* ─── Detected Badge ─── */
     .detected-badge {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      font-size: 12px;
+      gap: 5px;
+      font-size: 11.5px;
       font-weight: 500;
-      color: var(--text);
-      margin-bottom: 8px;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+
+    /* ─── Scrollbar ─── */
+    ::-webkit-scrollbar {
+      width: 3px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--muted);
     }
   </style>
 </head>
@@ -550,10 +596,7 @@
   <div class="header">
     <div class="logo-row">
       <div class="logo-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-          stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-        </svg>
+        <img src="icons/logo-ui.png" alt="mock-form logo">
       </div>
       <div class="logo-text">
         <h1>mock-form</h1>
