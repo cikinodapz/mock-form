@@ -1278,7 +1278,7 @@ Sertakan semua ${fields.length} field dalam array (index 0 sampai ${fields.lengt
 
       isContextFilling = true;
       setContextIconState('loading');
-      showContextToast('Mengisi form dengan Gemini AI...', 'info', 0);
+      showContextToast('Mengisi otomatis...', 'info', 0);
 
       try {
         const activeIdx = data.activeProfileIndex || 0;
