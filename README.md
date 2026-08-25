@@ -107,7 +107,7 @@ Choose from a variety of free-tier Google Gemini models directly inside the exte
 
 - **No Remote Servers**: Requests go directly from your browser to Google AI Studio APIs (`https://generativelanguage.googleapis.com`).
 - **Local Storage Only**: Your API Key and saved profiles never leave your browser's local storage.
-- **Minimal Permissions**: Uses standard Chrome `activeTab`, `storage`, `scripting`, and `sidePanel` APIs.
+- **Minimal Permissions**: Uses standard Chrome `activeTab`, `storage`, and `scripting` APIs.
 
 ---
 

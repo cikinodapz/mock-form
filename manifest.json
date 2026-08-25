@@ -6,8 +6,7 @@
   "permissions": [
     "activeTab",
     "storage",
-    "scripting",
-    "sidePanel"
+    "scripting"
   ],
   "host_permissions": [
     "<all_urls>"
@@ -16,14 +15,12 @@
     "service_worker": "background.js"
   },
   "action": {
+    "default_popup": "popup.html",
     "default_icon": {
       "16": "icons/icon16.png",
       "48": "icons/icon48.png",
       "128": "icons/icon128.png"
     }
-  },
-  "side_panel": {
-    "default_path": "popup.html"
   },
   "content_scripts": [
     {

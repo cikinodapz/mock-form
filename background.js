@@ -1,28 +1,23 @@
 // mock-form - background.js
 
 function updateDisplayMode(mode) {
-  if (mode === 'popup' || mode === 'contextual') {
-    chrome.action.setPopup({ popup: "popup.html?mode=popup" });
-    chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: false }).catch(console.error);
-  } else if (mode === 'widget') {
+  if (mode === 'widget') {
     chrome.action.setPopup({ popup: "" });
-    chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: false }).catch(console.error);
   } else {
-    // Default: sidepanel
-    chrome.action.setPopup({ popup: "" });
-    chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true }).catch(console.error);
+    // Default: popup or contextual
+    chrome.action.setPopup({ popup: "popup.html" });
   }
 }
 
 // Init mode on startup
 chrome.storage.local.get(['displayMode'], (data) => {
-  updateDisplayMode(data.displayMode || 'sidepanel');
+  updateDisplayMode(data.displayMode || 'popup');
 });
 
 // Listen for mode changes
 chrome.storage.onChanged.addListener((changes, area) => {
   if (area === 'local' && changes.displayMode) {
-    updateDisplayMode(changes.displayMode.newValue || 'sidepanel');
+    updateDisplayMode(changes.displayMode.newValue || 'popup');
   }
 });
 

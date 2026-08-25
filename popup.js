@@ -1,14 +1,6 @@
 // mock-form - popup.js
 // ============================================================
 
-const urlParams = new URLSearchParams(window.location.search);
-if (urlParams.get('mode') === 'popup') {
-  document.body.style.width = '360px';
-  document.body.style.height = '550px';
-  document.body.style.borderLeft = '1px solid var(--border)';
-  document.body.style.borderRight = '1px solid var(--border)';
-}
-
 const $ = id => document.getElementById(id);
 
 // ── Tab switching ──────────────────────────────────────────
@@ -41,7 +33,7 @@ $('btn-save-settings').addEventListener('click', () => {
   const apiKey = $('api-key').value.trim();
   const model = $('model-select').value;
   const fillMode = $('fill-mode').value;
-  const displayMode = $('display-mode').value || 'sidepanel';
+  const displayMode = $('display-mode').value || 'popup';
   if (!apiKey) { showStatus('settings-status', 'error', 'Masukkan API Key terlebih dahulu.'); return; }
   chrome.storage.local.set({ apiKey, model, fillMode, displayMode }, () => {
     showStatus('settings-status', 'success', 'Setelan berhasil disimpan!');
