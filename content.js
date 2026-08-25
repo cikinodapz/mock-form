@@ -1,14 +1,14 @@
-// LazyFill Form - content.js (v2 — Full HTML Input Support)
+// mock-form - content.js (v2 — Full HTML Input Support)
 // ============================================================
-// Mendukung: text, email, tel, url, number, password, search,
+// Supports: text, email, tel, url, number, password, search,
 //   date, time, datetime-local, month, week, color, range,
 //   checkbox, radio, select (single & multiple), textarea,
 //   file (info-only), contenteditable, custom combobox/ARIA
 // ============================================================
 
 (function () {
-  if (window.__geminiAutoFillLoaded) return;
-  window.__geminiAutoFillLoaded = true;
+  if (window.__mockFormLoaded) return;
+  window.__mockFormLoaded = true;
 
   const SKIP_TYPES = new Set(['hidden', 'submit', 'button', 'reset', 'image']);
   const SKIP_CLASSES = ['captcha', 'honeypot', 'recaptcha', 'g-recaptcha', 'h-captcha'];
@@ -314,7 +314,7 @@
           highlightElement(el);
         }
       } catch (e) {
-        console.warn('[LazyFill] Error filling field', index, e);
+        console.warn('[MockForm] Error filling field', index, e);
       }
     }
 
@@ -649,7 +649,7 @@
   async function fillFile(el, base64Data) {
     try {
       if (!base64Data || !base64Data.startsWith('data:')) {
-        console.error('[LazyFill] Invalid image data');
+        console.error('[MockForm] Invalid image data');
         return false;
       }
       
@@ -683,7 +683,7 @@
 
       return true;
     } catch (e) {
-      console.error('[LazyFill] File injection failed:', e);
+      console.error('[MockForm] File injection failed:', e);
       return false;
     }
   }
@@ -793,7 +793,7 @@
             const ok = await fillFile(el, message.imageData);
             if (ok) filled++;
           } catch (e) {
-            console.warn('[LazyFill] Gagal suntik ke satu input:', e);
+            console.warn('[MockForm] Failed to inject into input:', e);
           }
         }
         sendResponse({ filled });
@@ -841,7 +841,7 @@
     }
 
     widgetContainer = document.createElement('div');
-    widgetContainer.id = 'lazyfill-widget-container';
+    widgetContainer.id = 'mockform-widget-container';
     
     // Styling for draggable floating widget
     Object.assign(widgetContainer.style, {
@@ -872,7 +872,7 @@
       justifyContent: 'center',
       flexShrink: '0'
     });
-    dragHandle.innerHTML = '<div style="width: 40px; height: 5px; background: #cbd5e1; border-radius: 3px;"></div><div style="position:absolute; right:10px; cursor:pointer; font-family:sans-serif; font-size:14px; font-weight:bold; color:#94a3b8;" id="lazyfill-widget-close">✕</div>';
+    dragHandle.innerHTML = '<div style="width: 40px; height: 5px; background: #cbd5e1; border-radius: 3px;"></div><div style="position:absolute; right:10px; cursor:pointer; font-family:sans-serif; font-size:14px; font-weight:bold; color:#94a3b8;" id="mockform-widget-close">✕</div>';
 
     const iframe = document.createElement('iframe');
     iframe.src = chrome.runtime.getURL('popup.html');
@@ -888,7 +888,7 @@
     document.body.appendChild(widgetContainer);
 
     // Close button logic
-    widgetContainer.querySelector('#lazyfill-widget-close').addEventListener('click', (e) => {
+    widgetContainer.querySelector('#mockform-widget-close').addEventListener('click', (e) => {
       e.stopPropagation();
       toggleWidget();
     });
@@ -907,7 +907,7 @@
     document.addEventListener('mousemove', drag);
 
     function dragStart(e) {
-      if (e.target.id === 'lazyfill-widget-close') return;
+      if (e.target.id === 'mockform-widget-close') return;
       initialX = e.clientX - xOffset;
       initialY = e.clientY - yOffset;
       isDragging = true;
@@ -959,7 +959,7 @@
     if (contextIcon) return;
     
     contextIcon = document.createElement('div');
-    contextIcon.id = 'lazyfill-context-icon';
+    contextIcon.id = 'mockform-context-icon';
     Object.assign(contextIcon.style, {
       position: 'absolute',
       width: '28px',
@@ -1054,5 +1054,5 @@
     });
   }
 
-  console.log('[LazyFill] v2 loaded — full HTML input support ✓');
+  console.log('[mock-form] Loaded successfully ✓');
 })();

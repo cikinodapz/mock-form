@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "LazyFill Form",
+  "name": "mock-form",
   "version": "1.0.0",
-  "description": "Isi form & suntik foto otomatis dengan kecerdasan AI Gemini.",
+  "description": "Intelligent AI-powered form autofill & image injection browser extension powered by Google Gemini AI.",
   "permissions": [
     "activeTab",
     "storage",

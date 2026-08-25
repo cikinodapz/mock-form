@@ -1,4 +1,4 @@
-// Gemini AutoFill - background.js
+// mock-form - background.js
 
 function updateDisplayMode(mode) {
   if (mode === 'popup' || mode === 'contextual') {
@@ -39,5 +39,5 @@ chrome.action.onClicked.addListener(async (tab) => {
 });
 
 chrome.runtime.onInstalled.addListener(() => {
-  console.log('Gemini AutoFill Extension Installed');
+  console.log('mock-form Extension Installed');
 });

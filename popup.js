@@ -1,4 +1,4 @@
-// LazyFill Form - popup.js (v2)
+// mock-form - popup.js
 // ============================================================
 
 const $ = id => document.getElementById(id);
@@ -345,7 +345,7 @@ Sertakan semua ${fields.length} field dalam array (index 0 sampai ${fields.lengt
     try { return JSON.parse(match[0]); } catch {}
   }
 
-  console.error('[GeminiAutoFill] Failed to parse Gemini response:', text);
+  console.error('[mock-form] Failed to parse Gemini response:', text);
   return null;
 }
 
