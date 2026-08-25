@@ -1033,7 +1033,7 @@
 
     const colors = {
       info: { bg: '#1e293b', text: '#f8fafc', border: '#334155' },
-      success: { bg: '#064e3b', text: '#ecfdf5', border: '#059669' },
+      success: { bg: '#09090b', text: '#f4f4f5', border: '#27272a' },
       error: { bg: '#7f1d1d', text: '#fef2f2', border: '#dc2626' }
     };
     const c = colors[type] || colors.info;
@@ -1070,7 +1070,7 @@
         </svg>`;
     } else if (state === 'success') {
       contextIcon.innerHTML = `
-        <svg style="width: 22px; height: 22px; color: #10b981;" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+        <svg style="width: 22px; height: 22px; color: #09090b;" viewBox="0 0 24 24" fill="none" stroke="#09090b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="20 6 9 17 4 12"></polyline>
         </svg>`;
     } else {
