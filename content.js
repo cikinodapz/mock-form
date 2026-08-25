@@ -941,6 +941,9 @@
   let isContextualMode = false;
   let activeInput = null;
   let contextIcon = null;
+  let contextToast = null;
+  let contextToastTimer = null;
+  let isContextFilling = false;
 
   chrome.storage.local.get(['displayMode'], (data) => {
     isContextualMode = (data.displayMode === 'contextual');
@@ -956,6 +959,18 @@
   });
 
   function initContextualMode() {
+    if (!document.getElementById('mockform-style')) {
+      const style = document.createElement('style');
+      style.id = 'mockform-style';
+      style.textContent = `
+        @keyframes mockform-spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+
     if (contextIcon) return;
     
     contextIcon = document.createElement('div');
@@ -971,8 +986,7 @@
       zIndex: '2147483646',
       filter: 'drop-shadow(0 2px 5px rgba(0,0,0,0.2))'
     });
-    const iconUrl = chrome.runtime.getURL('icons/logo-ui.png');
-    contextIcon.innerHTML = `<img src="${iconUrl}" style="width: 28px; height: 28px; object-fit: contain;" />`;
+    setContextIconState('default');
     
     document.body.appendChild(contextIcon);
 
@@ -986,8 +1000,82 @@
       contextIcon.remove();
       contextIcon = null;
     }
+    if (contextToast) {
+      contextToast.remove();
+      contextToast = null;
+    }
     document.removeEventListener('focusin', handleFocusIn);
     document.removeEventListener('mousedown', handleMouseDown);
+  }
+
+  function showContextToast(msg, type = 'info', durationMs = 3000) {
+    if (!contextToast) {
+      contextToast = document.createElement('div');
+      contextToast.id = 'mockform-context-toast';
+      Object.assign(contextToast.style, {
+        position: 'absolute',
+        zIndex: '2147483647',
+        padding: '6px 12px',
+        borderRadius: '8px',
+        fontSize: '12px',
+        fontWeight: '500',
+        fontFamily: 'system-ui, -apple-system, sans-serif',
+        boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+        pointerEvents: 'none',
+        whiteSpace: 'nowrap',
+        transition: 'all 0.2s ease',
+        display: 'none'
+      });
+      document.body.appendChild(contextToast);
+    }
+
+    if (contextToastTimer) clearTimeout(contextToastTimer);
+
+    const colors = {
+      info: { bg: '#1e293b', text: '#f8fafc', border: '#334155' },
+      success: { bg: '#064e3b', text: '#ecfdf5', border: '#059669' },
+      error: { bg: '#7f1d1d', text: '#fef2f2', border: '#dc2626' }
+    };
+    const c = colors[type] || colors.info;
+
+    contextToast.textContent = msg;
+    contextToast.style.backgroundColor = c.bg;
+    contextToast.style.color = c.text;
+    contextToast.style.border = `1px solid ${c.border}`;
+
+    if (contextIcon) {
+      const rect = contextIcon.getBoundingClientRect();
+      const scrollX = window.scrollX || window.pageXOffset;
+      const scrollY = window.scrollY || window.pageYOffset;
+      contextToast.style.top = `${rect.top + scrollY - 34}px`;
+      contextToast.style.left = `${rect.left + scrollX}px`;
+      contextToast.style.display = 'block';
+    }
+
+    if (durationMs > 0) {
+      contextToastTimer = setTimeout(() => {
+        if (contextToast) contextToast.style.display = 'none';
+      }, durationMs);
+    }
+  }
+
+  function setContextIconState(state) {
+    if (!contextIcon) return;
+    const iconUrl = chrome.runtime.getURL('icons/logo-ui.png');
+    if (state === 'loading') {
+      contextIcon.innerHTML = `
+        <svg style="width: 20px; height: 20px; animation: mockform-spin 1s linear infinite;" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="3" stroke-linecap="round">
+          <circle cx="12" cy="12" r="10" stroke-opacity="0.25"></circle>
+          <path d="M12 2 a10 10 0 0 1 10 10"></path>
+        </svg>`;
+    } else if (state === 'success') {
+      contextIcon.innerHTML = `
+        <svg style="width: 22px; height: 22px; color: #10b981;" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>`;
+    } else {
+      contextIcon.innerHTML = `<img src="${iconUrl}" style="width: 28px; height: 28px; object-fit: contain;" />`;
+    }
   }
 
   function handleFocusIn(e) {
@@ -1009,6 +1097,7 @@
     if (activeInput && e.target !== activeInput && e.target !== contextIcon && !contextIcon.contains(e.target)) {
       if (widgetContainer && widgetContainer.contains(e.target)) return;
       contextIcon.style.display = 'none';
+      if (contextToast) contextToast.style.display = 'none';
       activeInput = null;
       if (widgetContainer) {
         toggleWidget(); // close if clicked outside everything
@@ -1026,29 +1115,212 @@
     contextIcon.style.left = `${rect.right + scrollX + 8}px`;
   }
 
-  function handleIconClick(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    
-    if (widgetContainer) {
-      toggleWidget();
-      return;
+  async function askGeminiForContentScript(apiKey, model, instruction, fields) {
+    const modelId = model || 'gemini-2.5-flash-lite';
+
+    const fieldLines = fields.map((f, i) => {
+      let line = `[${i}] type="${f.type}" label="${f.label || f.placeholder || f.name || ''}"`;
+      if (f.name) line += ` name="${f.name}"`;
+      if (f.required) line += ` REQUIRED`;
+
+      switch (f.type) {
+        case 'select':
+        case 'select-multiple':
+        case 'radio':
+        case 'combobox':
+          if (f.options?.length) {
+            const optStr = f.options.slice(0, 20).map(o => `"${o.label || o.value}"`).join(', ');
+            line += `\n    OPSI TERSEDIA: ${optStr}${f.options.length > 20 ? ` ... (+${f.options.length - 20} lagi)` : ''}`;
+            line += `\n    → Wajib pilih SALAH SATU opsi di atas yang paling cocok (gunakan LABEL opsi persis)`;
+          }
+          if (f.type === 'select-multiple') line += `\n    → Boleh pilih lebih dari satu, pisahkan dengan koma`;
+          break;
+        case 'checkbox':
+          line += `\n    → Nilai: "true" (centang) atau "false" (tidak centang)`;
+          break;
+        case 'date':
+          line += `\n    → Format output WAJIB: YYYY-MM-DD (contoh: 2024-06-25)`;
+          break;
+        case 'time':
+          line += `\n    → Format output WAJIB: HH:MM dalam 24 jam (contoh: 14:30)`;
+          break;
+        case 'datetime-local':
+          line += `\n    → Format output WAJIB: YYYY-MM-DDTHH:MM (contoh: 2024-06-25T14:30)`;
+          break;
+        case 'month':
+          line += `\n    → Format output WAJIB: YYYY-MM (contoh: 2024-06)`;
+          break;
+        case 'week':
+          line += `\n    → Format output WAJIB: YYYY-Www (contoh: 2024-W26)`;
+          break;
+        case 'color':
+          line += `\n    → Format output WAJIB: hex warna #RRGGBB (contoh: #ff5733)`;
+          break;
+        case 'range':
+          line += `\n    → Nilai angka antara ${f.min || 0} sampai ${f.max || 100} (step: ${f.step || 1})`;
+          break;
+        case 'number':
+          if (f.min !== undefined) line += `\n    → Nilai angka min:${f.min}${f.max ? ` max:${f.max}` : ''}`;
+          break;
+        case 'file':
+          line += `\n    → Input file tidak bisa diisi otomatis. Kembalikan nilai "" (string kosong)`;
+          break;
+        case 'email':
+          line += `\n    → Harus berformat email valid`;
+          break;
+        case 'tel':
+          line += `\n    → Format nomor telepon`;
+          break;
+        case 'url':
+          line += `\n    → Harus berformat URL valid (mulai dengan https://)`;
+          break;
+        case 'textarea':
+          line += `\n    → Isi dengan teks paragraf yang sesuai konteks`;
+          break;
+        case 'password':
+          line += `\n    → Isi dengan password yang sesuai instruksi (atau buat yang kuat)`;
+          break;
+      }
+
+      if (f.suggestions?.length) {
+        line += `\n    SARAN: ${f.suggestions.slice(0, 5).join(', ')}`;
+      }
+
+      if (f.currentValue && f.currentValue !== '' && f.currentValue !== 'false') {
+        line += `\n    (nilai saat ini: "${f.currentValue}")`;
+      }
+
+      return line;
+    }).join('\n\n');
+
+    const prompt = `Kamu adalah asisten AI yang mengisi form web secara otomatis dan cerdas.
+
+INSTRUKSI DARI PENGGUNA:
+"""
+${instruction}
+"""
+
+DAFTAR FIELD FORM (${fields.length} field):
+${fieldLines}
+
+ATURAN PENGISIAN:
+1. Gunakan data dari instruksi pengguna untuk mengisi field yang relevan
+2. Untuk field yang tidak ada datanya, buat nilai yang masuk akal dan realistis sesuai konteks label
+3. Untuk SELECT/RADIO/COMBOBOX: WAJIB pilih dari opsi yang tersedia, gunakan nilai label yang persis sama
+4. Untuk DATE/TIME: Gunakan format yang sudah ditentukan
+5. Untuk FILE: selalu kembalikan "" (kosong)
+6. Jika instruksi tidak menyebutkan suatu field, isi dengan nilai default yang wajar berdasarkan konteks label
+7. Field yang bertanda REQUIRED HARUS diisi (tidak boleh kosong "")
+
+BALAS HANYA dengan JSON array murni (tanpa markdown, tanpa penjelasan, langsung array):
+[
+  {"index": 0, "value": "nilai"},
+  {"index": 1, "value": "nilai"},
+  ...
+]
+
+Sertakan semua ${fields.length} field dalam array (index 0 sampai ${fields.length - 1}).`;
+
+    const resp = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${modelId}:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: {
+            temperature: 0.2,
+            maxOutputTokens: 4096,
+          }
+        })
+      }
+    );
+
+    if (!resp.ok) {
+      const err = await resp.json();
+      throw new Error(err.error?.message || `HTTP ${resp.status}`);
     }
 
-    const rect = contextIcon.getBoundingClientRect();
-    let left = rect.left;
-    if (left + 360 > window.innerWidth) left = window.innerWidth - 380;
-    if (left < 0) left = 10;
-    
-    let top = rect.bottom + 8;
-    if (top + 600 > window.innerHeight) top = rect.top - 608;
-    if (top < 0) top = 10;
+    const data = await resp.json();
+    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
 
-    toggleWidget({
-      position: 'fixed',
-      top: `${top}px`,
-      left: `${left}px`,
-      right: 'auto'
+    try {
+      const clean = text.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim();
+      return JSON.parse(clean);
+    } catch {}
+
+    const match = text.match(/\[\s*\{[\s\S]*\}\s*\]/);
+    if (match) {
+      try { return JSON.parse(match[0]); } catch {}
+    }
+
+    console.error('[mock-form] Failed to parse Gemini response:', text);
+    return null;
+  }
+
+  async function handleIconClick(e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (isContextFilling) return;
+
+    chrome.storage.local.get(['apiKey', 'model', 'profiles', 'activeProfileIndex'], async (data) => {
+      if (!data.apiKey) {
+        showContextToast('API Key belum diatur. Silakan atur di Setelan.', 'error', 4000);
+        return;
+      }
+
+      const fields = getFormFields();
+      if (!fields || fields.length === 0) {
+        showContextToast('Tidak ada field form terdeteksi', 'error', 3000);
+        return;
+      }
+
+      isContextFilling = true;
+      setContextIconState('loading');
+      showContextToast('Mengisi form dengan Gemini AI...', 'info', 0);
+
+      try {
+        const activeIdx = data.activeProfileIndex || 0;
+        const profiles = data.profiles || [];
+        const activeProfile = profiles[activeIdx] || profiles[0] || null;
+
+        let instruction = '';
+        if (activeProfile && activeProfile.data) {
+          instruction = `Isi form menggunakan data profil "${activeProfile.name}":\n${activeProfile.data}`;
+        } else {
+          instruction = 'Isi form ini dengan data dummy yang masuk akal dan realistis.';
+        }
+
+        let imageData = activeProfile?.image || null;
+        if (!imageData || imageData.length < 100) {
+          const pWithImg = profiles.find(p => p.image && p.image.length > 100);
+          imageData = pWithImg ? pWithImg.image : null;
+        }
+
+        const fillData = await askGeminiForContentScript(data.apiKey, data.model, instruction, fields);
+        if (!fillData) {
+          showContextToast('Gagal mendapatkan respon dari Gemini', 'error', 3000);
+          setContextIconState('default');
+          isContextFilling = false;
+          return;
+        }
+
+        const filledCount = await fillFields(fillData, imageData);
+        showContextToast(`Berhasil mengisi ${filledCount} dari ${fields.length} field! ✓`, 'success', 3000);
+        setContextIconState('success');
+
+        setTimeout(() => {
+          setContextIconState('default');
+          isContextFilling = false;
+        }, 2000);
+
+      } catch (err) {
+        console.error('[mock-form] Contextual fill error:', err);
+        showContextToast(`Gagal: ${err.message}`, 'error', 4000);
+        setContextIconState('default');
+        isContextFilling = false;
+      }
     });
   }
 
