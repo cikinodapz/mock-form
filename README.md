@@ -66,8 +66,11 @@ Choose from a variety of free-tier Google Gemini models directly inside the exte
 
 | Model Name | Speed | Typical Use Case | Cost |
 | :--- | :---: | :--- | :---: |
-| **Gemini 3.1 Flash Lite** *(Preview)* | Ultra Fast | Instant form population | Free |
-| **Gemini 3 Flash** *(Preview)* | Very Fast | High accuracy for complex forms | Free |
+| **Gemini 3.7 Flash** | Ultra Fast | State-of-the-art hybrid reasoning & speed | Free |
+| **Gemini 3.6 Flash** | Ultra Fast | High-efficiency next-gen generation | Free |
+| **Gemini 3.1 Flash Lite** | Ultra Fast | Instant form population | Free |
+| **Gemini 3 Flash** | Very Fast | High accuracy for complex forms | Free |
+| **Gemini 2.5 Flash** | Very Fast | High quality & balanced performance | Free |
 | **Gemini 2.5 Flash Lite** | Ultra Fast | Fast default option | Free |
 | **Gemini 2.0 Flash** | Fast | Standard AI task model | Free |
 | **Gemini 1.5 Flash** | Moderate | Legacy support | Free |
