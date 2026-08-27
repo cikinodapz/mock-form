@@ -34,6 +34,22 @@
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
   },
+  "commands": {
+    "auto_fill_form": {
+      "suggested_key": {
+        "default": "Alt+Shift+F",
+        "mac": "Alt+Shift+F"
+      },
+      "description": "Auto-fill forms on the active webpage with Gemini AI"
+    },
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Alt+Shift+M",
+        "mac": "Alt+Shift+M"
+      },
+      "description": "Open mock-form popup"
+    }
+  },
   "web_accessible_resources": [
     {
       "resources": ["popup.html", "popup.js", "icons/*"],

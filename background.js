@@ -33,6 +33,25 @@ chrome.action.onClicked.addListener(async (tab) => {
   }
 });
 
+// Handle keyboard shortcuts
+chrome.commands.onCommand.addListener(async (command) => {
+  if (command === 'auto_fill_form') {
+    try {
+      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+      if (tab && tab.id) {
+        chrome.tabs.sendMessage(tab.id, { action: 'triggerAutofillShortcut' }, () => {
+          if (chrome.runtime.lastError) {
+            console.log('[mock-form] Shortcut error or content script not ready:', chrome.runtime.lastError.message);
+          }
+        });
+      }
+    } catch (e) {
+      console.log('[mock-form] Failed to trigger shortcut autofill:', e);
+    }
+  }
+});
+
 chrome.runtime.onInstalled.addListener(() => {
   console.log('mock-form Extension Installed');
 });
+

@@ -824,6 +824,12 @@
       return false;
     }
 
+    if (message.action === 'triggerAutofillShortcut') {
+      triggerDirectAutofill();
+      sendResponse({ status: 'started' });
+      return false;
+    }
+
     sendResponse({ error: 'Unknown action' });
     return false;
   });
@@ -1013,14 +1019,14 @@
       contextToast = document.createElement('div');
       contextToast.id = 'mockform-context-toast';
       Object.assign(contextToast.style, {
-        position: 'absolute',
+        position: 'fixed',
         zIndex: '2147483647',
-        padding: '6px 12px',
-        borderRadius: '8px',
-        fontSize: '12px',
+        padding: '8px 16px',
+        borderRadius: '20px',
+        fontSize: '12.5px',
         fontWeight: '500',
         fontFamily: 'system-ui, -apple-system, sans-serif',
-        boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+        boxShadow: '0 8px 24px rgba(0,0,0,0.25)',
         pointerEvents: 'none',
         whiteSpace: 'nowrap',
         transition: 'all 0.2s ease',
@@ -1032,8 +1038,8 @@
     if (contextToastTimer) clearTimeout(contextToastTimer);
 
     const colors = {
-      info: { bg: '#1e293b', text: '#f8fafc', border: '#334155' },
-      success: { bg: '#09090b', text: '#f4f4f5', border: '#27272a' },
+      info: { bg: '#0f172a', text: '#f8fafc', border: '#334155' },
+      success: { bg: '#064e3b', text: '#ecfdf5', border: '#059669' },
       error: { bg: '#7f1d1d', text: '#fef2f2', border: '#dc2626' }
     };
     const c = colors[type] || colors.info;
@@ -1043,12 +1049,20 @@
     contextToast.style.color = c.text;
     contextToast.style.border = `1px solid ${c.border}`;
 
-    if (contextIcon) {
+    if (contextIcon && contextIcon.style.display !== 'none' && contextIcon.isConnected) {
       const rect = contextIcon.getBoundingClientRect();
       const scrollX = window.scrollX || window.pageXOffset;
       const scrollY = window.scrollY || window.pageYOffset;
-      contextToast.style.top = `${rect.top + scrollY - 34}px`;
+      contextToast.style.position = 'absolute';
+      contextToast.style.top = `${rect.top + scrollY - 36}px`;
       contextToast.style.left = `${rect.left + scrollX}px`;
+      contextToast.style.transform = 'none';
+      contextToast.style.display = 'block';
+    } else {
+      contextToast.style.position = 'fixed';
+      contextToast.style.top = '24px';
+      contextToast.style.left = '50%';
+      contextToast.style.transform = 'translateX(-50%)';
       contextToast.style.display = 'block';
     }
 
@@ -1324,5 +1338,69 @@ Sertakan semua ${fields.length} field dalam array (index 0 sampai ${fields.lengt
     });
   }
 
+  async function triggerDirectAutofill() {
+    if (isContextFilling) return;
+
+    chrome.storage.local.get(['apiKey', 'model', 'profiles', 'activeProfileIndex'], async (data) => {
+      if (!data.apiKey) {
+        showContextToast('⚠️ API Key belum diatur. Buka setelan mock-form.', 'error', 4000);
+        return;
+      }
+
+      const fields = getFormFields();
+      if (!fields || fields.length === 0) {
+        showContextToast('ℹ️ Tidak ada field form di halaman ini.', 'info', 3000);
+        return;
+      }
+
+      isContextFilling = true;
+      setContextIconState('loading');
+      showContextToast('✨ Memindai form & meminta Gemini AI...', 'info', 0);
+
+      try {
+        const activeIdx = data.activeProfileIndex || 0;
+        const profiles = data.profiles || [];
+        const activeProfile = profiles[activeIdx] || profiles[0] || null;
+
+        let instruction = '';
+        if (activeProfile && activeProfile.data) {
+          instruction = `Isi form menggunakan data profil "${activeProfile.name}":\n${activeProfile.data}`;
+        } else {
+          instruction = 'Isi form ini dengan data dummy yang masuk akal dan realistis.';
+        }
+
+        let imageData = activeProfile?.image || null;
+        if (!imageData || imageData.length < 100) {
+          const pWithImg = profiles.find(p => p.image && p.image.length > 100);
+          imageData = pWithImg ? pWithImg.image : null;
+        }
+
+        const fillData = await askGeminiForContentScript(data.apiKey, data.model, instruction, fields);
+        if (!fillData) {
+          showContextToast('❌ Gagal mendapatkan respon dari Gemini AI.', 'error', 3000);
+          setContextIconState('default');
+          isContextFilling = false;
+          return;
+        }
+
+        const filledCount = await fillFields(fillData, imageData);
+        showContextToast(`✅ Berhasil mengisi ${filledCount} dari ${fields.length} field! 🎉`, 'success', 3500);
+        setContextIconState('success');
+
+        setTimeout(() => {
+          setContextIconState('default');
+          isContextFilling = false;
+        }, 2000);
+
+      } catch (err) {
+        console.error('[mock-form] Shortcut autofill error:', err);
+        showContextToast(`❌ Gagal: ${err.message}`, 'error', 4000);
+        setContextIconState('default');
+        isContextFilling = false;
+      }
+    });
+  }
+
   console.log('[mock-form] Loaded successfully ✓');
 })();
+

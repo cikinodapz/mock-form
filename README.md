@@ -27,6 +27,7 @@ Tired of manually filling out tedious registration forms, checkout flows, or com
 - **Reusable Data Profiles**: Save custom user profiles for instant 1-click population.
 - **Pre-fill Field Inspector**: Scan and review detected fields before triggering auto-fill.
 - **Flexible UI Modes**: Supports Side Panel, Floating Draggable Widget, or standard Action Popup.
+- **Keyboard Shortcuts (Hotkeys)**: Instant 1-touch autofill via `Alt + Shift + F` (`Option + Shift + F` on macOS) without opening the popup.
 - **Privacy & Security First**: API keys are stored strictly in your browser (`chrome.storage.local`). Direct communication with Google AI Studio with no middleman servers or telemetry tracking.
 
 ---
@@ -94,6 +95,10 @@ Choose from a variety of free-tier Google Gemini models directly inside the exte
 ### 3. Save Custom Profiles
 - Open the **Profiles** tab to create preset records (Name, Email, Phone, Address, Job Title, etc.).
 - Click the **Play** button on any profile to instantly fill the current page using saved data.
+
+### 4. Quick Keyboard Shortcut (Hotkeys)
+- Press **`Alt + Shift + F`** (or **`Option + Shift + F`** on macOS) on any page to trigger instant autofill using your active profile or smart dummy data with Google Gemini AI.
+- Press **`Alt + Shift + M`** to quickly open the mock-form extension popup.
 
 ---
 
