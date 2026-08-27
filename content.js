@@ -1021,15 +1021,17 @@
       Object.assign(contextToast.style, {
         position: 'fixed',
         zIndex: '2147483647',
-        padding: '8px 16px',
-        borderRadius: '20px',
-        fontSize: '12.5px',
+        padding: '10px 22px',
+        borderRadius: '28px',
+        fontSize: '13px',
         fontWeight: '500',
         fontFamily: 'system-ui, -apple-system, sans-serif',
-        boxShadow: '0 8px 24px rgba(0,0,0,0.25)',
+        boxShadow: '0 12px 32px rgba(0,0,0,0.35)',
         pointerEvents: 'none',
         whiteSpace: 'nowrap',
-        transition: 'all 0.2s ease',
+        transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+        backdropFilter: 'blur(10px)',
+        webkitBackdropFilter: 'blur(10px)',
         display: 'none'
       });
       document.body.appendChild(contextToast);
@@ -1038,9 +1040,9 @@
     if (contextToastTimer) clearTimeout(contextToastTimer);
 
     const colors = {
-      info: { bg: '#0f172a', text: '#f8fafc', border: '#334155' },
-      success: { bg: '#064e3b', text: '#ecfdf5', border: '#059669' },
-      error: { bg: '#7f1d1d', text: '#fef2f2', border: '#dc2626' }
+      info: { bg: 'rgba(15, 23, 42, 0.92)', text: '#f8fafc', border: 'rgba(51, 65, 85, 0.8)' },
+      success: { bg: 'rgba(9, 9, 11, 0.92)', text: '#f4f4f5', border: 'rgba(39, 39, 42, 0.8)' },
+      error: { bg: 'rgba(127, 29, 29, 0.92)', text: '#fef2f2', border: 'rgba(220, 38, 38, 0.8)' }
     };
     const c = colors[type] || colors.info;
 
@@ -1059,10 +1061,11 @@
       contextToast.style.transform = 'none';
       contextToast.style.display = 'block';
     } else {
+      // Posisi tepat di tengah-tengah layar (Center Screen HUD)
       contextToast.style.position = 'fixed';
-      contextToast.style.top = '24px';
+      contextToast.style.top = '50%';
       contextToast.style.left = '50%';
-      contextToast.style.transform = 'translateX(-50%)';
+      contextToast.style.transform = 'translate(-50%, -50%)';
       contextToast.style.display = 'block';
     }
 
