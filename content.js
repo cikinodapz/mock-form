@@ -1341,21 +1341,25 @@ Sertakan semua ${fields.length} field dalam array (index 0 sampai ${fields.lengt
   async function triggerDirectAutofill() {
     if (isContextFilling) return;
 
+    // Pastikan icon kontekstual disembunyikan saat shortcut berjalan
+    if (contextIcon) {
+      contextIcon.style.display = 'none';
+    }
+
     chrome.storage.local.get(['apiKey', 'model', 'profiles', 'activeProfileIndex'], async (data) => {
       if (!data.apiKey) {
-        showContextToast('⚠️ API Key belum diatur. Buka setelan mock-form.', 'error', 4000);
+        showContextToast('API Key belum diatur. Silakan atur di Setelan.', 'error', 4000);
         return;
       }
 
       const fields = getFormFields();
       if (!fields || fields.length === 0) {
-        showContextToast('ℹ️ Tidak ada field form di halaman ini.', 'info', 3000);
+        showContextToast('Tidak ada field form terdeteksi', 'error', 3000);
         return;
       }
 
       isContextFilling = true;
-      setContextIconState('loading');
-      showContextToast('✨ Memindai form & meminta Gemini AI...', 'info', 0);
+      showContextToast('Mengisi otomatis...', 'info', 0);
 
       try {
         const activeIdx = data.activeProfileIndex || 0;
@@ -1377,26 +1381,25 @@ Sertakan semua ${fields.length} field dalam array (index 0 sampai ${fields.lengt
 
         const fillData = await askGeminiForContentScript(data.apiKey, data.model, instruction, fields);
         if (!fillData) {
-          showContextToast('❌ Gagal mendapatkan respon dari Gemini AI.', 'error', 3000);
-          setContextIconState('default');
+          showContextToast('Gagal mendapatkan respon dari Gemini', 'error', 3000);
           isContextFilling = false;
+          if (contextIcon) contextIcon.style.display = 'none';
           return;
         }
 
         const filledCount = await fillFields(fillData, imageData);
-        showContextToast(`✅ Berhasil mengisi ${filledCount} dari ${fields.length} field! 🎉`, 'success', 3500);
-        setContextIconState('success');
+        showContextToast(`Berhasil mengisi ${filledCount} dari ${fields.length} field! ✓`, 'success', 3000);
 
         setTimeout(() => {
-          setContextIconState('default');
           isContextFilling = false;
-        }, 2000);
+          if (contextIcon) contextIcon.style.display = 'none';
+        }, 1500);
 
       } catch (err) {
         console.error('[mock-form] Shortcut autofill error:', err);
-        showContextToast(`❌ Gagal: ${err.message}`, 'error', 4000);
-        setContextIconState('default');
+        showContextToast(`Gagal: ${err.message}`, 'error', 4000);
         isContextFilling = false;
+        if (contextIcon) contextIcon.style.display = 'none';
       }
     });
   }
