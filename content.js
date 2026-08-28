@@ -63,6 +63,208 @@
   }
 
   // ============================================================
+  // SPECIAL DATA FORMATS & REGIONAL / REGEX PRESET GENERATORS
+  // ============================================================
+
+  // 1. NIK (16 Digits: Wilayah 6 digit + Tgl Lahir 6 digit + Urut 4 digit)
+  function generateNIK() {
+    const provinces = ['317101', '327301', '357801', '517101', '127101', '337401', '347101', '137101', '647101', '737101'];
+    const prov = provinces[Math.floor(Math.random() * provinces.length)];
+    const day = String(Math.floor(Math.random() * 28) + 1).padStart(2, '0');
+    const month = String(Math.floor(Math.random() * 12) + 1).padStart(2, '0');
+    const year = String(Math.floor(Math.random() * 35) + 65).padStart(2, '0'); // 65-99
+    const serial = String(Math.floor(Math.random() * 90) + 1).padStart(4, '0');
+    return `${prov}${day}${month}${year}${serial}`;
+  }
+
+  // 2. NPWP (15 / 16 Digits)
+  function generateNPWP(formatted = true) {
+    const p1 = String(Math.floor(Math.random() * 90) + 10);
+    const p2 = String(Math.floor(Math.random() * 900) + 100);
+    const p3 = String(Math.floor(Math.random() * 900) + 100);
+    const p4 = String(Math.floor(Math.random() * 9) + 1);
+    const p5 = String(Math.floor(Math.random() * 900) + 100);
+    const p6 = '000';
+    if (!formatted) return `${p1}${p2}${p3}${p4}${p5}${p6}`;
+    return `${p1}.${p2}.${p3}.${p4}-${p5}.${p6}`;
+  }
+
+  // 3. Credit Card (Luhn Valid Generator & Validator)
+  function generateLuhnCard(prefix = '4') {
+    let digits = prefix.split('').map(Number);
+    while (digits.length < 15) {
+      digits.push(Math.floor(Math.random() * 10));
+    }
+    let sum = 0;
+    for (let i = 0; i < digits.length; i++) {
+      let d = digits[digits.length - 1 - i];
+      if (i % 2 === 0) {
+        d *= 2;
+        if (d > 9) d -= 9;
+      }
+      sum += d;
+    }
+    const checkDigit = (10 - (sum % 10)) % 10;
+    digits.push(checkDigit);
+    return digits.join('');
+  }
+
+  function isLuhnValid(cardNo) {
+    const clean = String(cardNo).replace(/\D/g, '');
+    if (clean.length < 13 || clean.length > 19) return false;
+    let sum = 0;
+    let shouldDouble = false;
+    for (let i = clean.length - 1; i >= 0; i--) {
+      let digit = parseInt(clean.charAt(i), 10);
+      if (shouldDouble) {
+        digit *= 2;
+        if (digit > 9) digit -= 9;
+      }
+      sum += digit;
+      shouldDouble = !shouldDouble;
+    }
+    return (sum % 10) === 0;
+  }
+
+  // 4. Indonesian Phone / WhatsApp (08xx or +628xx)
+  function generateIndoPhone(withPrefix = false) {
+    const prefixes = ['0812', '0813', '0821', '0822', '0852', '0853', '0857', '0858', '0877', '0878', '0895', '0896'];
+    const p = prefixes[Math.floor(Math.random() * prefixes.length)];
+    const rest = String(Math.floor(Math.random() * 90000000) + 10000000);
+    const full = `${p}${rest}`;
+    return withPrefix ? full.replace(/^0/, '+62') : full;
+  }
+
+  // 5. UUID v4 (RFC4122)
+  function generateUUID() {
+    if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+      try { return crypto.randomUUID(); } catch {}
+    }
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+      const r = Math.random() * 16 | 0;
+      const v = c === 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  }
+
+  // 6. IPv4 & IPv6
+  function generateIPv4() {
+    return `192.168.${Math.floor(Math.random() * 200) + 1}.${Math.floor(Math.random() * 250) + 2}`;
+  }
+
+  function generateIPv6() {
+    const hex = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+    return `2001:db8:${hex()}:${hex()}:${hex()}:${hex()}:${hex()}:${hex()}`;
+  }
+
+  // 7. Adult DOB (18+ to 60 years old)
+  function generateAdultDOB(minAge = 18, maxAge = 55) {
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const birthYear = currentYear - (Math.floor(Math.random() * (maxAge - minAge + 1)) + minAge);
+    const month = String(Math.floor(Math.random() * 12) + 1).padStart(2, '0');
+    const day = String(Math.floor(Math.random() * 28) + 1).padStart(2, '0');
+    return `${birthYear}-${month}-${day}`;
+  }
+
+  // 8. RegEx / Pattern Synthesizer
+  function generateFromPattern(patternStr, minLen, maxLen) {
+    if (!patternStr) return null;
+    try {
+      if (/^(\^)?\\d\{(\d+)\}(\$)?$/.test(patternStr)) {
+        const len = parseInt(patternStr.match(/\\d\{(\d+)\}/)[1], 10);
+        let res = '';
+        for (let i = 0; i < len; i++) res += Math.floor(Math.random() * 10);
+        return res;
+      }
+      if (/^(\^)?\[0-9\]\{(\d+)\}(\$)?$/.test(patternStr)) {
+        const len = parseInt(patternStr.match(/\[0-9\]\{(\d+)\}/)[1], 10);
+        let res = '';
+        for (let i = 0; i < len; i++) res += Math.floor(Math.random() * 10);
+        return res;
+      }
+      if (/^[A-Z]{2,4}[-_][0-9]{3,6}$/i.test(patternStr) || /\[A-Z\]\{(\d+)\}[-_](\\d|\[0-9\])\{(\d+)\}/i.test(patternStr)) {
+        const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        let code = '';
+        for (let i = 0; i < 3; i++) code += letters[Math.floor(Math.random() * letters.length)];
+        let nums = '';
+        for (let i = 0; i < 4; i++) nums += Math.floor(Math.random() * 10);
+        const sep = patternStr.includes('_') ? '_' : '-';
+        return `${code}${sep}${nums}`;
+      }
+      if (/^[a-zA-Z0-9]+$/i.test(patternStr) || /\[a-zA-Z0-9\]/i.test(patternStr)) {
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        const targetLen = maxLen || minLen || 10;
+        let res = '';
+        for (let i = 0; i < targetLen; i++) res += chars[Math.floor(Math.random() * chars.length)];
+        return res;
+      }
+    } catch {}
+    return null;
+  }
+
+  // 9. Semantic Field Classifier
+  function detectSemanticType(el, label, normalizedType) {
+    const text = [
+      label || '',
+      el.name || '',
+      el.id || '',
+      el.placeholder || '',
+      el.getAttribute('autocomplete') || '',
+      el.getAttribute('aria-label') || ''
+    ].join(' ').toLowerCase();
+
+    if (/\b(nik|no[_\s-]?ktp|nomor[_\s-]?ktp|nomor[_\s-]?induk[_\s-]?kependudukan)\b/i.test(text) ||
+      (text.includes('ktp') && !text.includes('upload') && !text.includes('foto') && !text.includes('file'))) {
+      return 'nik';
+    }
+
+    if (/\b(npwp|nomor[_\s-]?pokok[_\s-]?wajib[_\s-]?pajak|tax[_\s-]?id)\b/i.test(text)) {
+      return 'npwp';
+    }
+
+    if (/\b(card[_\s-]?number|nomor[_\s-]?kartu|credit[_\s-]?card|kartu[_\s-]?kredit|pan|cc[_\s-]?num|cc[_\s-]?number)\b/i.test(text) ||
+      (el.getAttribute('autocomplete') === 'cc-number')) {
+      return 'credit_card';
+    }
+
+    if (/\b(cvv|cvc|cvv2|security[_\s-]?code|kode[_\s-]?keamanan|card[_\s-]?code)\b/i.test(text) ||
+      el.getAttribute('autocomplete') === 'cc-csc') {
+      return 'card_cvv';
+    }
+
+    if (/\b(card[_\s-]?exp|exp[_\s-]?date|kadaluarsa|expiry|valid[_\s-]?thru|expiration)\b/i.test(text) ||
+      el.getAttribute('autocomplete') === 'cc-exp') {
+      return 'card_exp';
+    }
+
+    if (/\b(uuid|guid|reference[_\s-]?id|unique[_\s-]?id|tracking[_\s-]?id)\b/i.test(text)) {
+      return 'uuid';
+    }
+
+    if (/\b(ip[_\s-]?address|ipv4|ipv6|server[_\s-]?ip|alamat[_\s-]?ip|host[_\s-]?ip)\b/i.test(text)) {
+      return 'ip';
+    }
+
+    if (/\b(dob|birth[_\s-]?date|tanggal[_\s-]?lahir|tgl[_\s-]?lahir|birthdate|date[_\s-]?of[_\s-]?birth)\b/i.test(text) ||
+      el.getAttribute('autocomplete') === 'bday') {
+      return 'dob';
+    }
+
+    if (/\b(kodepos|kode[_\s-]?pos|postal[_\s-]?code|zip[_\s-]?code|postcode|zip)\b/i.test(text) ||
+      el.getAttribute('autocomplete') === 'postal-code') {
+      return 'postal_code';
+    }
+
+    if (normalizedType === 'tel' || /\b(no[_\s-]?hp|handphone|telepon|phone|no[_\s-]?telp|telp|mobile|wa|whatsapp)\b/i.test(text) ||
+      el.getAttribute('autocomplete') === 'tel') {
+      return 'phone_id';
+    }
+
+    return null;
+  }
+
+  // ============================================================
   // FIELD SCANNING
   // ============================================================
   function isVisible(el) {
@@ -131,6 +333,11 @@
       seenEls.add(el);
 
       const label = findLabel(el);
+      const pattern = el.getAttribute('pattern') || '';
+      const minLength = el.minLength > 0 ? el.minLength : (parseInt(el.getAttribute('minlength'), 10) || undefined);
+      const maxLength = el.maxLength > 0 ? el.maxLength : (parseInt(el.getAttribute('maxlength'), 10) || undefined);
+      const semanticType = detectSemanticType(el, label, normalizedType);
+
       const field = {
         index: fields.length,
         id: el.id || '',
@@ -140,6 +347,10 @@
         placeholder: el.placeholder || '',
         required: el.required || el.getAttribute('aria-required') === 'true',
         currentValue: getCurrentValue(el),
+        pattern,
+        minLength,
+        maxLength,
+        semanticType,
       };
 
       // SELECT options
@@ -338,7 +549,10 @@
     if (type === 'radio') return fillRadio(el, field, value);
 
     // DATE
-    if (type === 'date') return fillDate(el, value);
+    if (type === 'date') {
+      const sanitized = sanitizeSpecialValue(field, value, el);
+      return fillDate(el, sanitized);
+    }
 
     // TIME
     if (type === 'time') return fillTime(el, value);
@@ -369,7 +583,8 @@
 
     // NUMBER / spinbutton
     if (type === 'number' || el.getAttribute('role') === 'spinbutton') {
-      const clean = String(value).replace(/[^\d.\-]/g, '');
+      const sanitized = sanitizeSpecialValue(field, value, el);
+      const clean = String(sanitized).replace(/[^\d.\-]/g, '');
       return setNative(el, clean);
     }
 
@@ -398,10 +613,122 @@
     }
 
     // TEXTAREA
-    if (tag === 'TEXTAREA') return setNative(el, value, true);
+    if (tag === 'TEXTAREA') {
+      const sanitized = sanitizeSpecialValue(field, value, el);
+      return setNative(el, sanitized, true);
+    }
 
     // TEXT / EMAIL / TEL / URL / SEARCH / PASSWORD / etc.
-    return setNative(el, value);
+    const sanitized = sanitizeSpecialValue(field, value, el);
+    return setNative(el, sanitized);
+  }
+
+  // ── SANITIZER & VALIDATOR FOR SPECIAL FORMATS ──────────────
+  function sanitizeSpecialValue(field, value, el) {
+    if (!value && value !== 0) return value;
+    let strVal = String(value).trim();
+
+    // 1. NIK
+    if (field.semanticType === 'nik') {
+      const cleanDigits = strVal.replace(/\D/g, '');
+      if (cleanDigits.length === 16) return cleanDigits;
+      return generateNIK();
+    }
+
+    // 2. NPWP
+    if (field.semanticType === 'npwp') {
+      const cleanDigits = strVal.replace(/\D/g, '');
+      if (cleanDigits.length >= 15 && cleanDigits.length <= 16) {
+        if (field.maxLength === 15 || field.maxLength === 16 || (field.pattern && !field.pattern.includes('.'))) {
+          return cleanDigits;
+        }
+        return strVal;
+      }
+      return generateNPWP(true);
+    }
+
+    // 3. Credit Card (Luhn Valid)
+    if (field.semanticType === 'credit_card') {
+      const cleanDigits = strVal.replace(/\D/g, '');
+      if (isLuhnValid(cleanDigits)) {
+        return cleanDigits;
+      }
+      return generateLuhnCard('4');
+    }
+
+    // 4. Card CVV
+    if (field.semanticType === 'card_cvv') {
+      const clean = strVal.replace(/\D/g, '');
+      if (clean.length === 3 || clean.length === 4) return clean;
+      return String(Math.floor(Math.random() * 900) + 100);
+    }
+
+    // 5. Card Expiration
+    if (field.semanticType === 'card_exp') {
+      if (/^(0[1-9]|1[0-2])\/?(2[5-9]|3[0-5])$/.test(strVal)) return strVal;
+      return '12/28';
+    }
+
+    // 6. UUID
+    if (field.semanticType === 'uuid') {
+      if (/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(strVal)) {
+        return strVal;
+      }
+      return generateUUID();
+    }
+
+    // 7. IP Address
+    if (field.semanticType === 'ip') {
+      if (/^(\d{1,3}\.){3}\d{1,3}$/.test(strVal)) return strVal;
+      return generateIPv4();
+    }
+
+    // 8. DOB (Adult 18+)
+    if (field.semanticType === 'dob' && field.type === 'date') {
+      const norm = normalizeDate(strVal);
+      if (norm) {
+        const birthYear = parseInt(norm.split('-')[0], 10);
+        const curYear = new Date().getFullYear();
+        if (curYear - birthYear >= 18) return norm;
+      }
+      return generateAdultDOB(18, 50);
+    }
+
+    // 9. Indonesian Phone
+    if (field.semanticType === 'phone_id' || field.type === 'tel') {
+      const clean = strVal.replace(/[^0-9+]/g, '');
+      if (/^(\+62|0)8[1-9][0-9]{7,10}$/.test(clean)) return clean;
+      return generateIndoPhone(clean.startsWith('+62'));
+    }
+
+    // 10. Postal Code
+    if (field.semanticType === 'postal_code') {
+      const clean = strVal.replace(/\D/g, '');
+      if (clean.length === 5) return clean;
+      return '12930';
+    }
+
+    // 11. HTML5 Pattern Regex Check
+    if (field.pattern) {
+      try {
+        const rx = new RegExp(field.pattern);
+        if (!rx.test(strVal)) {
+          const generated = generateFromPattern(field.pattern, field.minLength, field.maxLength);
+          if (generated) return generated;
+        }
+      } catch {}
+    }
+
+    // MinLength check
+    if (field.minLength && strVal.length < field.minLength) {
+      strVal = strVal.padEnd(field.minLength, '0');
+    }
+    // MaxLength check
+    if (field.maxLength && strVal.length > field.maxLength) {
+      strVal = strVal.slice(0, field.maxLength);
+    }
+
+    return strVal;
   }
 
   // ── SELECT single ─────────────────────────────────────────
@@ -1199,6 +1526,36 @@
           break;
       }
 
+      // Special semantic & regional hints
+      if (f.semanticType === 'nik') {
+        line += `\n    → FORMAT NIK: WAJIB tepat 16 digit angka kependudukan valid (contoh: 3171011508950001)`;
+      } else if (f.semanticType === 'npwp') {
+        line += `\n    → FORMAT NPWP: Format standar 15/16 digit (contoh: 01.234.567.8-901.000 atau 012345678901000)`;
+      } else if (f.semanticType === 'credit_card') {
+        line += `\n    → KARTU KREDIT: WAJIB 16 digit angka valid algoritma Luhn (contoh: 4242424242424242)`;
+      } else if (f.semanticType === 'card_cvv') {
+        line += `\n    → CVV: 3 digit angka keamanan (contoh: 789)`;
+      } else if (f.semanticType === 'card_exp') {
+        line += `\n    → KADALUARSA: Format MM/YY atau MM/YYYY di masa depan (contoh: 12/28)`;
+      } else if (f.semanticType === 'uuid') {
+        line += `\n    → UUID v4: WAJIB format UUID v4 valid (contoh: c9bf9e57-1685-4c89-bafb-ff5af830be8a)`;
+      } else if (f.semanticType === 'ip') {
+        line += `\n    → IP ADDRESS: Format IPv4 valid (contoh: 192.168.1.50)`;
+      } else if (f.semanticType === 'dob') {
+        line += `\n    → TANGGAL LAHIR: Format YYYY-MM-DD, WAJIB usia dewasa (18+ tahun, misal tahun 1995-2005)`;
+      } else if (f.semanticType === 'phone_id') {
+        line += `\n    → NO TELEPON: Format nomor HP Indonesia 10-13 digit (contoh: 081234567890)`;
+      } else if (f.semanticType === 'postal_code') {
+        line += `\n    → KODE POS: 5 digit angka pos Indonesia (contoh: 12930)`;
+      }
+
+      if (f.pattern) {
+        line += `\n    → REGEX PATTERN: Output WAJIB cocok dengan pola regex /${f.pattern}/`;
+      }
+      if (f.minLength || f.maxLength) {
+        line += `\n    → PANJANG KARAKTER: ${f.minLength ? `min ${f.minLength}` : ''}${f.maxLength ? ` max ${f.maxLength}` : ''}`;
+      }
+
       if (f.suggestions?.length) {
         line += `\n    SARAN: ${f.suggestions.slice(0, 5).join(', ')}`;
       }
@@ -1228,6 +1585,7 @@ ATURAN PENGISIAN:
 5. Untuk FILE: selalu kembalikan "" (kosong)
 6. Jika instruksi tidak menyebutkan suatu field, isi dengan nilai default yang wajar berdasarkan konteks label
 7. Field yang bertanda REQUIRED HARUS diisi (tidak boleh kosong "")
+8. Untuk field format khusus (NIK, NPWP, Kartu Kredit Luhn, UUID, IP, Tanggal Lahir 18+, Nomor HP, Pattern Regex): WAJIB ikuti format dan lolos regex yang diminta.
 
 BALAS HANYA dengan JSON array murni (tanpa markdown, tanpa penjelasan, langsung array):
 [

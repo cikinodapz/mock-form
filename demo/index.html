@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>mock-form - Testing Playground & Presets Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #090d16;
+      --card-bg: rgba(15, 23, 42, 0.75);
+      --border: rgba(51, 65, 85, 0.6);
+      --accent: #6366f1;
+      --accent-glow: rgba(99, 102, 241, 0.25);
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --success: #10b981;
+      --success-glow: rgba(16, 185, 129, 0.2);
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --radius: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      background-image: radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.12) 0%, transparent 40%),
+                        radial-gradient(circle at 85% 85%, rgba(16, 185, 129, 0.08) 0%, transparent 40%);
+      color: var(--text);
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      padding: 30px 20px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 900px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .header {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .header-title h1 {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #fff 30%, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .header-title p {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 4px 14px var(--accent-glow);
+    }
+
+    .btn-primary:hover {
+      background: #4f46e5;
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: rgba(30, 41, 59, 0.8);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(51, 65, 85, 0.8);
+    }
+
+    .layout-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 768px) {
+      .layout-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #e2e8f0;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .full-width {
+      grid-column: span 2;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .badge {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: rgba(99, 102, 241, 0.15);
+      color: #a5b4fc;
+      border: 1px solid rgba(99, 102, 241, 0.3);
+    }
+
+    input, select, textarea {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 9px 12px;
+      color: var(--text);
+      font-size: 13px;
+      font-family: inherit;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px var(--accent-glow);
+    }
+
+    input:user-valid, select:user-valid {
+      border-color: rgba(16, 185, 129, 0.6);
+    }
+
+    input:user-invalid {
+      border-color: rgba(239, 68, 68, 0.6);
+    }
+
+    /* Verification Report */
+    .report-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .report-item {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+    }
+
+    .report-label {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .report-name {
+      font-weight: 600;
+      color: #f1f5f9;
+    }
+
+    .report-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--text-muted);
+      max-width: 180px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .status-badge {
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+
+    .status-pass {
+      background: var(--success-glow);
+      color: var(--success);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+    }
+
+    .status-fail {
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--danger);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+    }
+
+    .status-pending {
+      background: rgba(148, 163, 184, 0.1);
+      color: var(--text-muted);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="header">
+      <div class="header-title">
+        <h1>mock-form Testing Playground</h1>
+        <p>Halaman pengujian validasi pola khusus, regional Indonesia & algoritma QA.</p>
+      </div>
+      <div class="controls">
+        <button class="btn btn-secondary" id="btn-reset">Reset Form</button>
+        <button class="btn btn-primary" id="btn-simulate-fill">⚡ Tes Autofill Presets</button>
+      </div>
+    </div>
+
+    <div class="layout-grid">
+      <!-- FORM SECTION -->
+      <div class="card">
+        <div class="card-title">
+          <span>📋 Formulir Validasi Ketat</span>
+        </div>
+
+        <form id="test-form" onsubmit="event.preventDefault();">
+          <div class="form-grid">
+            <!-- NIK -->
+            <div class="form-group full-width">
+              <label for="nik">Nomor Induk Kependudukan (NIK) <span class="badge">16 Digit</span></label>
+              <input type="text" id="nik" name="nik" placeholder="3171xxxxxxxxxxxx" required minlength="16" maxlength="16" pattern="^[0-9]{16}$">
+            </div>
+
+            <!-- NPWP -->
+            <div class="form-group full-width">
+              <label for="npwp">NPWP Wajib Pajak <span class="badge">Format Standar</span></label>
+              <input type="text" id="npwp" name="npwp" placeholder="01.234.567.8-901.000" required>
+            </div>
+
+            <!-- Credit Card -->
+            <div class="form-group full-width">
+              <label for="card_number">Nomor Kartu Kredit <span class="badge">Luhn Valid</span></label>
+              <input type="text" id="card_number" name="card_number" autocomplete="cc-number" placeholder="4242 4242 4242 4242" required>
+            </div>
+
+            <!-- CVV & Exp -->
+            <div class="form-group">
+              <label for="card_cvv">CVV / CVC <span class="badge">3 Digit</span></label>
+              <input type="text" id="card_cvv" name="card_cvv" placeholder="123" maxlength="4" required>
+            </div>
+            <div class="form-group">
+              <label for="card_exp">Kadaluarsa (MM/YY) <span class="badge">Masa Depan</span></label>
+              <input type="text" id="card_exp" name="card_exp" placeholder="12/28" required>
+            </div>
+
+            <!-- No HP -->
+            <div class="form-group full-width">
+              <label for="no_hp">No. WhatsApp / HP Indonesia <span class="badge">08xx / +628xx</span></label>
+              <input type="tel" id="no_hp" name="no_hp" placeholder="081234567890" required>
+            </div>
+
+            <!-- Tanggal Lahir -->
+            <div class="form-group">
+              <label for="tgl_lahir">Tanggal Lahir <span class="badge">Dewasa 18+</span></label>
+              <input type="date" id="tgl_lahir" name="tgl_lahir" required>
+            </div>
+
+            <!-- Kode Pos -->
+            <div class="form-group">
+              <label for="kode_pos">Kode Pos <span class="badge">5 Digit</span></label>
+              <input type="text" id="kode_pos" name="kodepos" placeholder="12930" maxlength="5" required>
+            </div>
+
+            <!-- HTML5 Pattern Custom Code -->
+            <div class="form-group full-width">
+              <label for="voucher_code">Kode Voucher <span class="badge">Regex: ^[A-Z]{3}-[0-9]{4}$</span></label>
+              <input type="text" id="voucher_code" name="voucher_code" pattern="^[A-Z]{3}-[0-9]{4}$" placeholder="PRO-2026" required>
+            </div>
+
+            <!-- UUID -->
+            <div class="form-group full-width">
+              <label for="uuid">Reference / Transaction UUID <span class="badge">RFC4122 v4</span></label>
+              <input type="text" id="uuid" name="uuid" placeholder="xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx">
+            </div>
+
+            <!-- IP Address -->
+            <div class="form-group full-width">
+              <label for="server_ip">Server IP Address <span class="badge">IPv4</span></label>
+              <input type="text" id="server_ip" name="server_ip" placeholder="192.168.1.1">
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- VALIDATION REPORT -->
+      <div class="card">
+        <div class="card-title">
+          <span>🔍 Hasil Verifikasi Real-time</span>
+        </div>
+
+        <div class="report-list" id="report-list">
+          <div class="report-item" data-field="nik">
+            <div class="report-label">
+              <span class="report-name">NIK 16-Digit</span>
+              <span class="report-val" id="val-nik">-</span>
+            </div>
+            <span class="status-badge status-pending" id="badge-nik">PENDING</span>
+          </div>
+
+          <div class="report-item" data-field="npwp">
+            <div class="report-label">
+              <span class="report-name">NPWP Indonesia</span>
+              <span class="report-val" id="val-npwp">-</span>
+            </div>
+            <span class="status-badge status-pending" id="badge-npwp">PENDING</span>
+          </div>
+
+          <div class="report-item" data-field="card_number">
+            <div class="report-label">
+              <span class="report-name">Credit Card (Luhn Check)</span>
+              <span class="report-val" id="val-card">-</span>
+            </div>
+            <span class="status-badge status-pending" id="badge-card">PENDING</span>
+          </div>
+
+          <div class="report-item" data-field="card_cvv">
+            <div class="report-label">
+              <span class="report-name">Card CVV (3-4 Digits)</span>
+              <span class="report-val" id="val-cvv">-</span>
+            </div>
+            <span class="status-badge status-pending" id="badge-cvv">PENDING</span>
+          </div>
+
+          <div class="report-item" data-field="card_exp">
+            <div class="report-label">
+              <span class="report-name">Expiry Date (MM/YY)</span>
+              <span class="report-val" id="val-exp">-</span>
+            </div>
+            <span class="status-badge status-pending" id="badge-exp">PENDING</span>
+          </div>
+
+          <div class="report-item" data-field="no_hp">
+            <div class="report-label">
+              <span class="report-name">No. HP Indonesia (08xx)</span>
+              <span class="report-val" id="val-hp">-</span>
+            </div>
+            <span class="status-badge status-pending" id="badge-hp">PENDING</span>
+          </div>
+
+          <div class="report-item" data-field="tgl_lahir">
+            <div class="report-label">
+              <span class="report-name">Tanggal Lahir (Usia 18+)</span>
+              <span class="report-val" id="val-dob">-</span>
+            </div>
+            <span class="status-badge status-pending" id="badge-dob">PENDING</span>
+          </div>
+
+          <div class="report-item" data-field="voucher_code">
+            <div class="report-label">
+              <span class="report-name">Pattern Matcher (ABC-1234)</span>
+              <span class="report-val" id="val-voucher">-</span>
+            </div>
+            <span class="status-badge status-pending" id="badge-voucher">PENDING</span>
+          </div>
+
+          <div class="report-item" data-field="uuid">
+            <div class="report-label">
+              <span class="report-name">UUID v4 Format</span>
+              <span class="report-val" id="val-uuid">-</span>
+            </div>
+            <span class="status-badge status-pending" id="badge-uuid">PENDING</span>
+          </div>
+
+          <div class="report-item" data-field="server_ip">
+            <div class="report-label">
+              <span class="report-name">IPv4 Address</span>
+              <span class="report-val" id="val-ip">-</span>
+            </div>
+            <span class="status-badge status-pending" id="badge-ip">PENDING</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Validation Helper Functions
+    function isLuhnValid(cardNo) {
+      const clean = String(cardNo).replace(/\D/g, '');
+      if (clean.length < 13 || clean.length > 19) return false;
+      let sum = 0;
+      let shouldDouble = false;
+      for (let i = clean.length - 1; i >= 0; i--) {
+        let digit = parseInt(clean.charAt(i), 10);
+        if (shouldDouble) {
+          digit *= 2;
+          if (digit > 9) digit -= 9;
+        }
+        sum += digit;
+        shouldDouble = !shouldDouble;
+      }
+      return (sum % 10) === 0;
+    }
+
+    function validateAll() {
+      // 1. NIK
+      const nik = document.getElementById('nik').value;
+      const nikValid = /^\d{16}$/.test(nik);
+      updateReport('nik', nik, nikValid);
+
+      // 2. NPWP
+      const npwp = document.getElementById('npwp').value;
+      const npwpValid = /^(\d{2}\.\d{3}\.\d{3}\.\d{1}-\d{3}\.\d{3}|\d{15,16})$/.test(npwp);
+      updateReport('npwp', npwp, npwpValid);
+
+      // 3. Credit Card
+      const cc = document.getElementById('card_number').value;
+      const ccValid = isLuhnValid(cc);
+      updateReport('card', cc, ccValid);
+
+      // 4. CVV
+      const cvv = document.getElementById('card_cvv').value;
+      const cvvValid = /^\d{3,4}$/.test(cvv);
+      updateReport('cvv', cvv, cvvValid);
+
+      // 5. Exp
+      const exp = document.getElementById('card_exp').value;
+      const expValid = /^(0[1-9]|1[0-2])\/?(2[5-9]|3[0-5])$/.test(exp);
+      updateReport('exp', exp, expValid);
+
+      // 6. HP
+      const hp = document.getElementById('no_hp').value;
+      const hpValid = /^(\+62|0)8[1-9][0-9]{7,10}$/.test(hp.replace(/[^0-9+]/g, ''));
+      updateReport('hp', hp, hpValid);
+
+      // 7. DOB
+      const dob = document.getElementById('tgl_lahir').value;
+      let dobValid = false;
+      if (dob) {
+        const year = parseInt(dob.split('-')[0], 10);
+        dobValid = (new Date().getFullYear() - year) >= 18;
+      }
+      updateReport('dob', dob, dobValid);
+
+      // 8. Voucher / Pattern
+      const voucher = document.getElementById('voucher_code').value;
+      const voucherValid = /^[A-Z]{3}-[0-9]{4}$/.test(voucher);
+      updateReport('voucher', voucher, voucherValid);
+
+      // 9. UUID
+      const uuid = document.getElementById('uuid').value;
+      const uuidValid = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(uuid);
+      updateReport('uuid', uuid, uuidValid);
+
+      // 10. IP
+      const ip = document.getElementById('server_ip').value;
+      const ipValid = /^(\d{1,3}\.){3}\d{1,3}$/.test(ip);
+      updateReport('ip', ip, ipValid);
+    }
+
+    function updateReport(id, val, isValid) {
+      const valEl = document.getElementById(`val-${id}`);
+      const badgeEl = document.getElementById(`badge-${id}`);
+      if (!valEl || !badgeEl) return;
+
+      valEl.textContent = val || '-';
+      if (!val) {
+        badgeEl.className = 'status-badge status-pending';
+        badgeEl.textContent = 'PENDING';
+      } else if (isValid) {
+        badgeEl.className = 'status-badge status-pass';
+        badgeEl.textContent = 'PASS ✓';
+      } else {
+        badgeEl.className = 'status-badge status-fail';
+        badgeEl.textContent = 'FAIL ✗';
+      }
+    }
+
+    // Generator logic identical to content.js
+    function simulateContentScriptFill() {
+      // 1. NIK
+      const provs = ['317101', '327301', '357801', '517101'];
+      const p = provs[Math.floor(Math.random() * provs.length)];
+      const d = String(Math.floor(Math.random() * 28) + 1).padStart(2, '0');
+      const m = String(Math.floor(Math.random() * 12) + 1).padStart(2, '0');
+      const y = String(Math.floor(Math.random() * 30) + 70).padStart(2, '0');
+      const s = String(Math.floor(Math.random() * 90) + 1).padStart(4, '0');
+      document.getElementById('nik').value = `${p}${d}${m}${y}${s}`;
+
+      // 2. NPWP
+      document.getElementById('npwp').value = '01.234.567.8-901.000';
+
+      // 3. Card Luhn
+      let digits = [4];
+      while (digits.length < 15) digits.push(Math.floor(Math.random() * 10));
+      let sum = 0;
+      for (let i = 0; i < digits.length; i++) {
+        let digit = digits[digits.length - 1 - i];
+        if (i % 2 === 0) { digit *= 2; if (digit > 9) digit -= 9; }
+        sum += digit;
+      }
+      digits.push((10 - (sum % 10)) % 10);
+      document.getElementById('card_number').value = digits.join('');
+
+      // 4. CVV & Exp
+      document.getElementById('card_cvv').value = '789';
+      document.getElementById('card_exp').value = '12/28';
+
+      // 5. HP
+      document.getElementById('no_hp').value = '081234567890';
+
+      // 6. DOB
+      const birthYear = new Date().getFullYear() - 25;
+      document.getElementById('tgl_lahir').value = `${birthYear}-08-17`;
+
+      // 7. Kode Pos
+      document.getElementById('kode_pos').value = '12930';
+
+      // 8. Pattern Voucher
+      document.getElementById('voucher_code').value = 'VIP-2026';
+
+      // 9. UUID
+      document.getElementById('uuid').value = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+        const r = Math.random() * 16 | 0;
+        return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+      });
+
+      // 10. IP
+      document.getElementById('server_ip').value = '192.168.1.100';
+
+      validateAll();
+    }
+
+    document.getElementById('btn-simulate-fill').addEventListener('click', simulateContentScriptFill);
+    document.getElementById('btn-reset').addEventListener('click', () => {
+      document.getElementById('test-form').reset();
+      validateAll();
+    });
+
+    document.querySelectorAll('input').forEach(input => {
+      input.addEventListener('input', validateAll);
+    });
+  </script>
+</body>
+</html>

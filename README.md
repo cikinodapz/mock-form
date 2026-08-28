@@ -27,6 +27,7 @@ Tired of manually filling out tedious registration forms, checkout flows, or com
 - **Reusable Data Profiles**: Save custom user profiles for instant 1-click population.
 - **Pre-fill Field Inspector**: Scan and review detected fields before triggering auto-fill.
 - **Flexible UI Modes**: Supports Side Panel, Floating Draggable Widget, or standard Action Popup.
+- **Regional & RegEx Presets (Special Formats)**: Built-in support for Indonesia local data (16-digit NIK, NPWP, 08xx/WhatsApp numbers, postal codes) and QA test data (Luhn-compliant dummy credit cards, UUID v4, IPv4/IPv6, 18+ adult DOB, and automated HTML5 `pattern="..."` matching).
 - **Keyboard Shortcuts (Hotkeys)**: Instant 1-touch autofill via `Alt + Shift + F` (`Option + Shift + F` on macOS) without opening the popup.
 - **Privacy & Security First**: API keys are stored strictly in your browser (`chrome.storage.local`). Direct communication with Google AI Studio with no middleman servers or telemetry tracking.
 

@@ -278,6 +278,36 @@ async function askGemini(apiKey, model, instruction, fields) {
         break;
     }
 
+    // Special semantic & regional hints
+    if (f.semanticType === 'nik') {
+      line += `\n    → FORMAT NIK: WAJIB tepat 16 digit angka kependudukan valid (contoh: 3171011508950001)`;
+    } else if (f.semanticType === 'npwp') {
+      line += `\n    → FORMAT NPWP: Format standar 15/16 digit (contoh: 01.234.567.8-901.000 atau 012345678901000)`;
+    } else if (f.semanticType === 'credit_card') {
+      line += `\n    → KARTU KREDIT: WAJIB 16 digit angka valid algoritma Luhn (contoh: 4242424242424242)`;
+    } else if (f.semanticType === 'card_cvv') {
+      line += `\n    → CVV: 3 digit angka keamanan (contoh: 789)`;
+    } else if (f.semanticType === 'card_exp') {
+      line += `\n    → KADALUARSA: Format MM/YY atau MM/YYYY di masa depan (contoh: 12/28)`;
+    } else if (f.semanticType === 'uuid') {
+      line += `\n    → UUID v4: WAJIB format UUID v4 valid (contoh: c9bf9e57-1685-4c89-bafb-ff5af830be8a)`;
+    } else if (f.semanticType === 'ip') {
+      line += `\n    → IP ADDRESS: Format IPv4 valid (contoh: 192.168.1.50)`;
+    } else if (f.semanticType === 'dob') {
+      line += `\n    → TANGGAL LAHIR: Format YYYY-MM-DD, WAJIB usia dewasa (18+ tahun, misal tahun 1995-2005)`;
+    } else if (f.semanticType === 'phone_id') {
+      line += `\n    → NO TELEPON: Format nomor HP Indonesia 10-13 digit (contoh: 081234567890)`;
+    } else if (f.semanticType === 'postal_code') {
+      line += `\n    → KODE POS: 5 digit angka pos Indonesia (contoh: 12930)`;
+    }
+
+    if (f.pattern) {
+      line += `\n    → REGEX PATTERN: Output WAJIB cocok dengan pola regex /${f.pattern}/`;
+    }
+    if (f.minLength || f.maxLength) {
+      line += `\n    → PANJANG KARAKTER: ${f.minLength ? `min ${f.minLength}` : ''}${f.maxLength ? ` max ${f.maxLength}` : ''}`;
+    }
+
     if (f.suggestions?.length) {
       line += `\n    SARAN: ${f.suggestions.slice(0, 5).join(', ')}`;
     }
@@ -307,6 +337,7 @@ ATURAN PENGISIAN:
 5. Untuk FILE: selalu kembalikan "" (kosong)
 6. Jika instruksi tidak menyebutkan suatu field, isi dengan nilai default yang wajar berdasarkan konteks label
 7. Field yang bertanda REQUIRED HARUS diisi (tidak boleh kosong "")
+8. Untuk field format khusus (NIK, NPWP, Kartu Kredit Luhn, UUID, IP, Tanggal Lahir 18+, Nomor HP, Pattern Regex): WAJIB ikuti format dan lolos regex yang diminta.
 
 BALAS HANYA dengan JSON array murni (tanpa markdown, tanpa penjelasan, langsung array):
 [
