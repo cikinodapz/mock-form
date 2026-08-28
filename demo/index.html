@@ -1,26 +1,47 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>mock-form - Testing Playground & Presets Demo</title>
+  <title>mock-form - Open Source Testing Playground & Showcase</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #090d16;
+      --bg-pattern: radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.15) 0%, transparent 40%),
+                         radial-gradient(circle at 85% 85%, rgba(16, 185, 129, 0.1) 0%, transparent 40%);
       --card-bg: rgba(15, 23, 42, 0.75);
+      --card-inner: rgba(15, 23, 42, 0.95);
       --border: rgba(51, 65, 85, 0.6);
+      --border-focus: #6366f1;
       --accent: #6366f1;
+      --accent-hover: #4f46e5;
       --accent-glow: rgba(99, 102, 241, 0.25);
       --text: #f8fafc;
+      --text-secondary: #cbd5e1;
       --text-muted: #94a3b8;
       --success: #10b981;
       --success-glow: rgba(16, 185, 129, 0.2);
       --danger: #ef4444;
       --warning: #f59e0b;
       --radius: 12px;
+      --radius-sm: 8px;
+    }
+
+    [data-theme="light"] {
+      --bg: #f8fafc;
+      --bg-pattern: radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.08) 0%, transparent 40%),
+                         radial-gradient(circle at 85% 85%, rgba(16, 185, 129, 0.05) 0%, transparent 40%);
+      --card-bg: rgba(255, 255, 255, 0.85);
+      --card-inner: #ffffff;
+      --border: #e2e8f0;
+      --border-focus: #4f46e5;
+      --text: #0f172a;
+      --text-secondary: #334155;
+      --text-muted: #64748b;
+      --accent-glow: rgba(99, 102, 241, 0.15);
     }
 
     * {
@@ -31,32 +52,33 @@
 
     body {
       background-color: var(--bg);
-      background-image: radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.12) 0%, transparent 40%),
-                        radial-gradient(circle at 85% 85%, rgba(16, 185, 129, 0.08) 0%, transparent 40%);
+      background-image: var(--bg-pattern);
       color: var(--text);
       font-family: 'Inter', system-ui, -apple-system, sans-serif;
       min-height: 100vh;
-      padding: 30px 20px;
+      padding: 24px 16px;
       display: flex;
       justify-content: center;
       align-items: flex-start;
+      transition: background-color 0.3s, color 0.3s;
     }
 
     .container {
       width: 100%;
-      max-width: 900px;
+      max-width: 1080px;
       display: flex;
       flex-direction: column;
-      gap: 24px;
+      gap: 20px;
     }
 
+    /* ─── Hero Header ─── */
     .header {
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 24px;
+      padding: 20px 24px;
       backdrop-filter: blur(16px);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -64,68 +86,163 @@
       gap: 16px;
     }
 
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .logo-badge {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, #6366f1, #3b82f6);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px var(--accent-glow);
+    }
+
+    .logo-badge svg {
+      width: 24px;
+      height: 24px;
+      color: white;
+    }
+
     .header-title h1 {
-      font-size: 22px;
+      font-size: 20px;
       font-weight: 700;
       letter-spacing: -0.02em;
-      background: linear-gradient(135deg, #fff 30%, #94a3b8);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .header-title p {
-      font-size: 13px;
+      font-size: 12.5px;
       color: var(--text-muted);
-      margin-top: 4px;
+      margin-top: 2px;
     }
 
-    .controls {
+    .header-actions {
       display: flex;
+      align-items: center;
       gap: 10px;
     }
 
+    .pill-hint {
+      background: rgba(99, 102, 241, 0.12);
+      border: 1px solid rgba(99, 102, 241, 0.25);
+      color: #818cf8;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 11.5px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pill-hint kbd {
+      background: var(--card-inner);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1px 5px;
+      font-family: inherit;
+      font-size: 10.5px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    /* ─── Buttons ─── */
     .btn {
-      padding: 10px 18px;
-      border-radius: 8px;
-      font-size: 13px;
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 12.5px;
       font-weight: 600;
       cursor: pointer;
       border: none;
-      transition: all 0.2s;
+      transition: all 0.15s;
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
+      user-select: none;
+      text-decoration: none;
     }
 
     .btn-primary {
       background: var(--accent);
       color: #fff;
-      box-shadow: 0 4px 14px var(--accent-glow);
+      box-shadow: 0 4px 12px var(--accent-glow);
     }
 
     .btn-primary:hover {
-      background: #4f46e5;
+      background: var(--accent-hover);
       transform: translateY(-1px);
     }
 
     .btn-secondary {
-      background: rgba(30, 41, 59, 0.8);
-      color: var(--text);
+      background: var(--card-inner);
+      color: var(--text-secondary);
       border: 1px solid var(--border);
     }
 
     .btn-secondary:hover {
-      background: rgba(51, 65, 85, 0.8);
+      background: rgba(51, 65, 85, 0.4);
+      color: var(--text);
     }
 
-    .layout-grid {
+    /* ─── Tabs Navigation ─── */
+    .nav-tabs {
+      display: flex;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 6px;
+      gap: 6px;
+      backdrop-filter: blur(16px);
+      overflow-x: auto;
+    }
+
+    .tab-btn {
+      flex: 1;
+      min-width: 140px;
+      padding: 9px 14px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      border-radius: var(--radius-sm);
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .tab-btn:hover {
+      color: var(--text);
+      background: rgba(51, 65, 85, 0.25);
+    }
+
+    .tab-btn.active {
+      background: var(--accent);
+      color: #ffffff;
+      box-shadow: 0 2px 8px var(--accent-glow);
+    }
+
+    /* ─── Main Grid Layout ─── */
+    .playground-grid {
       display: grid;
       grid-template-columns: 1.2fr 0.8fr;
-      gap: 24px;
+      gap: 20px;
     }
 
-    @media (max-width: 768px) {
-      .layout-grid {
+    @media (max-width: 860px) {
+      .playground-grid {
         grid-template-columns: 1fr;
       }
     }
@@ -134,27 +251,50 @@
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 24px;
+      padding: 22px;
       backdrop-filter: blur(16px);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
     }
 
     .card-title {
-      font-size: 15px;
+      font-size: 14.5px;
       font-weight: 600;
-      color: #e2e8f0;
-      margin-bottom: 16px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid var(--border);
+      color: var(--text);
       display: flex;
       align-items: center;
       gap: 8px;
     }
 
+    /* ─── Forms Styling ─── */
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+      animation: fadeIn 0.2s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(3px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
     .form-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 16px;
+      gap: 14px;
     }
 
     .full-width {
@@ -164,68 +304,249 @@
     .form-group {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 5px;
     }
 
     label {
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 500;
-      color: var(--text-muted);
+      color: var(--text-secondary);
       display: flex;
       justify-content: space-between;
+      align-items: center;
     }
 
-    .badge {
+    .badge-tag {
       font-size: 10px;
-      padding: 2px 6px;
+      padding: 1px 6px;
       border-radius: 4px;
-      background: rgba(99, 102, 241, 0.15);
-      color: #a5b4fc;
-      border: 1px solid rgba(99, 102, 241, 0.3);
+      background: rgba(99, 102, 241, 0.12);
+      color: #818cf8;
+      border: 1px solid rgba(99, 102, 241, 0.2);
     }
 
-    input, select, textarea {
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="password"],
+    input[type="date"],
+    input[type="time"],
+    input[type="number"],
+    select,
+    textarea {
       width: 100%;
-      background: rgba(15, 23, 42, 0.9);
+      background: var(--card-inner);
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 9px 12px;
+      border-radius: var(--radius-sm);
+      padding: 8px 11px;
       color: var(--text);
-      font-size: 13px;
+      font-size: 12.5px;
       font-family: inherit;
       outline: none;
-      transition: all 0.2s;
+      transition: border-color 0.15s, box-shadow 0.15s;
     }
 
     input:focus, select:focus, textarea:focus {
-      border-color: var(--accent);
+      border-color: var(--border-focus);
       box-shadow: 0 0 0 2px var(--accent-glow);
     }
 
-    input:user-valid, select:user-valid {
-      border-color: rgba(16, 185, 129, 0.6);
+    textarea {
+      resize: vertical;
+      min-height: 60px;
     }
 
-    input:user-invalid {
-      border-color: rgba(239, 68, 68, 0.6);
+    /* Radio & Checkbox Groups */
+    .options-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding: 6px 0;
     }
 
-    /* Verification Report */
+    .option-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+
+    .option-label input {
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    /* Range & Color */
+    .range-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    input[type="range"] {
+      flex: 1;
+      accent-color: var(--accent);
+    }
+
+    .range-val {
+      font-size: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      color: var(--text-muted);
+      min-width: 40px;
+    }
+
+    input[type="color"] {
+      height: 34px;
+      padding: 2px 4px;
+      background: var(--card-inner);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+    }
+
+    /* ─── Avatar / Photo Dropzone ─── */
+    .dropzone-box {
+      border: 2px dashed var(--border);
+      border-radius: var(--radius);
+      padding: 28px 16px;
+      text-align: center;
+      background: var(--card-inner);
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .dropzone-box:hover, .dropzone-box.dragover {
+      border-color: var(--accent);
+      background: rgba(99, 102, 241, 0.05);
+    }
+
+    .dropzone-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: rgba(99, 102, 241, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent);
+    }
+
+    .dropzone-preview {
+      display: none;
+      max-width: 140px;
+      max-height: 140px;
+      border-radius: 8px;
+      object-fit: cover;
+      border: 2px solid var(--accent);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    /* ─── Wizard / Multi-Step Stepper ─── */
+    .stepper {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .stepper::before {
+      content: '';
+      position: absolute;
+      top: 14px;
+      left: 20px;
+      right: 20px;
+      height: 2px;
+      background: var(--border);
+      z-index: 1;
+    }
+
+    .step-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .step-dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--card-inner);
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      transition: all 0.2s;
+    }
+
+    .step-item.active .step-dot {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: white;
+      box-shadow: 0 0 10px var(--accent-glow);
+    }
+
+    .step-item.completed .step-dot {
+      border-color: var(--success);
+      background: var(--success);
+      color: white;
+    }
+
+    .step-name {
+      font-size: 10.5px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .wizard-step {
+      display: none;
+    }
+
+    .wizard-step.active {
+      display: block;
+      animation: fadeIn 0.2s ease-out;
+    }
+
+    .wizard-nav {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 18px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ─── Right Panel: Live Verification & Event Console ─── */
     .report-list {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 7px;
     }
 
     .report-item {
-      background: rgba(15, 23, 42, 0.6);
+      background: var(--card-inner);
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      padding: 9px 12px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       font-size: 12px;
+      transition: all 0.2s;
     }
 
     .report-label {
@@ -236,25 +557,25 @@
 
     .report-name {
       font-weight: 600;
-      color: #f1f5f9;
+      color: var(--text);
     }
 
     .report-val {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
+      font-size: 10.5px;
       color: var(--text-muted);
-      max-width: 180px;
+      max-width: 170px;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
 
     .status-badge {
-      padding: 3px 8px;
-      border-radius: 6px;
-      font-size: 10.5px;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 10px;
       font-weight: 700;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.04em;
     }
 
     .status-pass {
@@ -274,191 +595,704 @@
       color: var(--text-muted);
       border: 1px solid rgba(148, 163, 184, 0.2);
     }
+
+    /* Live Event Logger Terminal */
+    .event-logger {
+      margin-top: 18px;
+      background: #040711;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+    }
+
+    .logger-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      color: var(--text-muted);
+      font-size: 10.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .log-stream {
+      max-height: 110px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column-reverse;
+      gap: 4px;
+    }
+
+    .log-entry {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 10.5px;
+    }
+
+    .log-time {
+      color: var(--text-muted);
+    }
+
+    .log-tag {
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-size: 9.5px;
+      font-weight: 700;
+    }
+
+    .tag-input { background: rgba(99, 102, 241, 0.2); color: #818cf8; }
+    .tag-change { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+    .tag-blur { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+    .tag-drop { background: rgba(236, 72, 153, 0.2); color: #f472b6; }
+
+    /* Footer */
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11.5px;
+      color: var(--text-muted);
+      padding: 8px 4px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .footer a {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .footer a:hover {
+      color: var(--text);
+    }
   </style>
 </head>
 <body>
 
   <div class="container">
-    <div class="header">
-      <div class="header-title">
-        <h1>mock-form Testing Playground</h1>
-        <p>Halaman pengujian validasi pola khusus, regional Indonesia & algoritma QA.</p>
-      </div>
-      <div class="controls">
-        <button class="btn btn-secondary" id="btn-reset">Reset Form</button>
-        <button class="btn btn-primary" id="btn-simulate-fill">⚡ Tes Autofill Presets</button>
-      </div>
-    </div>
-
-    <div class="layout-grid">
-      <!-- FORM SECTION -->
-      <div class="card">
-        <div class="card-title">
-          <span>📋 Formulir Validasi Ketat</span>
+    <!-- HERO HEADER -->
+    <header class="header">
+      <div class="header-left">
+        <div class="logo-badge">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
         </div>
-
-        <form id="test-form" onsubmit="event.preventDefault();">
-          <div class="form-grid">
-            <!-- NIK -->
-            <div class="form-group full-width">
-              <label for="nik">Nomor Induk Kependudukan (NIK) <span class="badge">16 Digit</span></label>
-              <input type="text" id="nik" name="nik" placeholder="3171xxxxxxxxxxxx" required minlength="16" maxlength="16" pattern="^[0-9]{16}$">
-            </div>
-
-            <!-- NPWP -->
-            <div class="form-group full-width">
-              <label for="npwp">NPWP Wajib Pajak <span class="badge">Format Standar</span></label>
-              <input type="text" id="npwp" name="npwp" placeholder="01.234.567.8-901.000" required>
-            </div>
-
-            <!-- Credit Card -->
-            <div class="form-group full-width">
-              <label for="card_number">Nomor Kartu Kredit <span class="badge">Luhn Valid</span></label>
-              <input type="text" id="card_number" name="card_number" autocomplete="cc-number" placeholder="4242 4242 4242 4242" required>
-            </div>
-
-            <!-- CVV & Exp -->
-            <div class="form-group">
-              <label for="card_cvv">CVV / CVC <span class="badge">3 Digit</span></label>
-              <input type="text" id="card_cvv" name="card_cvv" placeholder="123" maxlength="4" required>
-            </div>
-            <div class="form-group">
-              <label for="card_exp">Kadaluarsa (MM/YY) <span class="badge">Masa Depan</span></label>
-              <input type="text" id="card_exp" name="card_exp" placeholder="12/28" required>
-            </div>
-
-            <!-- No HP -->
-            <div class="form-group full-width">
-              <label for="no_hp">No. WhatsApp / HP Indonesia <span class="badge">08xx / +628xx</span></label>
-              <input type="tel" id="no_hp" name="no_hp" placeholder="081234567890" required>
-            </div>
-
-            <!-- Tanggal Lahir -->
-            <div class="form-group">
-              <label for="tgl_lahir">Tanggal Lahir <span class="badge">Dewasa 18+</span></label>
-              <input type="date" id="tgl_lahir" name="tgl_lahir" required>
-            </div>
-
-            <!-- Kode Pos -->
-            <div class="form-group">
-              <label for="kode_pos">Kode Pos <span class="badge">5 Digit</span></label>
-              <input type="text" id="kode_pos" name="kodepos" placeholder="12930" maxlength="5" required>
-            </div>
-
-            <!-- HTML5 Pattern Custom Code -->
-            <div class="form-group full-width">
-              <label for="voucher_code">Kode Voucher <span class="badge">Regex: ^[A-Z]{3}-[0-9]{4}$</span></label>
-              <input type="text" id="voucher_code" name="voucher_code" pattern="^[A-Z]{3}-[0-9]{4}$" placeholder="PRO-2026" required>
-            </div>
-
-            <!-- UUID -->
-            <div class="form-group full-width">
-              <label for="uuid">Reference / Transaction UUID <span class="badge">RFC4122 v4</span></label>
-              <input type="text" id="uuid" name="uuid" placeholder="xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx">
-            </div>
-
-            <!-- IP Address -->
-            <div class="form-group full-width">
-              <label for="server_ip">Server IP Address <span class="badge">IPv4</span></label>
-              <input type="text" id="server_ip" name="server_ip" placeholder="192.168.1.1">
-            </div>
-          </div>
-        </form>
-      </div>
-
-      <!-- VALIDATION REPORT -->
-      <div class="card">
-        <div class="card-title">
-          <span>🔍 Hasil Verifikasi Real-time</span>
-        </div>
-
-        <div class="report-list" id="report-list">
-          <div class="report-item" data-field="nik">
-            <div class="report-label">
-              <span class="report-name">NIK 16-Digit</span>
-              <span class="report-val" id="val-nik">-</span>
-            </div>
-            <span class="status-badge status-pending" id="badge-nik">PENDING</span>
-          </div>
-
-          <div class="report-item" data-field="npwp">
-            <div class="report-label">
-              <span class="report-name">NPWP Indonesia</span>
-              <span class="report-val" id="val-npwp">-</span>
-            </div>
-            <span class="status-badge status-pending" id="badge-npwp">PENDING</span>
-          </div>
-
-          <div class="report-item" data-field="card_number">
-            <div class="report-label">
-              <span class="report-name">Credit Card (Luhn Check)</span>
-              <span class="report-val" id="val-card">-</span>
-            </div>
-            <span class="status-badge status-pending" id="badge-card">PENDING</span>
-          </div>
-
-          <div class="report-item" data-field="card_cvv">
-            <div class="report-label">
-              <span class="report-name">Card CVV (3-4 Digits)</span>
-              <span class="report-val" id="val-cvv">-</span>
-            </div>
-            <span class="status-badge status-pending" id="badge-cvv">PENDING</span>
-          </div>
-
-          <div class="report-item" data-field="card_exp">
-            <div class="report-label">
-              <span class="report-name">Expiry Date (MM/YY)</span>
-              <span class="report-val" id="val-exp">-</span>
-            </div>
-            <span class="status-badge status-pending" id="badge-exp">PENDING</span>
-          </div>
-
-          <div class="report-item" data-field="no_hp">
-            <div class="report-label">
-              <span class="report-name">No. HP Indonesia (08xx)</span>
-              <span class="report-val" id="val-hp">-</span>
-            </div>
-            <span class="status-badge status-pending" id="badge-hp">PENDING</span>
-          </div>
-
-          <div class="report-item" data-field="tgl_lahir">
-            <div class="report-label">
-              <span class="report-name">Tanggal Lahir (Usia 18+)</span>
-              <span class="report-val" id="val-dob">-</span>
-            </div>
-            <span class="status-badge status-pending" id="badge-dob">PENDING</span>
-          </div>
-
-          <div class="report-item" data-field="voucher_code">
-            <div class="report-label">
-              <span class="report-name">Pattern Matcher (ABC-1234)</span>
-              <span class="report-val" id="val-voucher">-</span>
-            </div>
-            <span class="status-badge status-pending" id="badge-voucher">PENDING</span>
-          </div>
-
-          <div class="report-item" data-field="uuid">
-            <div class="report-label">
-              <span class="report-name">UUID v4 Format</span>
-              <span class="report-val" id="val-uuid">-</span>
-            </div>
-            <span class="status-badge status-pending" id="badge-uuid">PENDING</span>
-          </div>
-
-          <div class="report-item" data-field="server_ip">
-            <div class="report-label">
-              <span class="report-name">IPv4 Address</span>
-              <span class="report-val" id="val-ip">-</span>
-            </div>
-            <span class="status-badge status-pending" id="badge-ip">PENDING</span>
-          </div>
+        <div class="header-title">
+          <h1>mock-form Playground <span class="badge-tag">v1.0.0</span></h1>
+          <p>Testing ground untuk autofill AI, preset lokal Indonesia & validasi framework modern</p>
         </div>
       </div>
-    </div>
+      <div class="header-actions">
+        <div class="pill-hint">
+          <span>⚡ Shortcut:</span>
+          <kbd>Alt + Shift + F</kbd>
+        </div>
+        <button class="btn btn-secondary" id="btn-theme-toggle" title="Toggle Tema">🌓</button>
+        <button class="btn btn-secondary" id="btn-reset-all">Reset</button>
+        <button class="btn btn-primary" id="btn-quick-fill">⚡ Tes Autofill</button>
+      </div>
+    </header>
+
+    <!-- TABS NAVIGATION -->
+    <nav class="nav-tabs">
+      <button class="tab-btn active" data-tab="tab-registration">
+        <span>📝 Registrasi Lengkap</span>
+      </button>
+      <button class="tab-btn" data-tab="tab-upload">
+        <span>🖼️ Suntik Foto & Avatar</span>
+      </button>
+      <button class="tab-btn" data-tab="tab-strict">
+        <span>🇮🇩 E-Commerce & Presets</span>
+      </button>
+      <button class="tab-btn" data-tab="tab-wizard">
+        <span>📑 Multi-Step Wizard</span>
+      </button>
+    </nav>
+
+    <!-- MAIN PLAYGROUND GRID -->
+    <main class="playground-grid">
+      
+      <!-- LEFT COLUMN: FORMS -->
+      <section class="card">
+        
+        <!-- 1. TAB: REGISTRASI LENGKAP -->
+        <div class="tab-content active" id="tab-registration">
+          <div class="card-header">
+            <span class="card-title">Form Registrasi Standar & Sinkronisasi Sandi</span>
+            <span class="badge-tag">HTML5 Reactive</span>
+          </div>
+
+          <form id="form-registration" onsubmit="event.preventDefault();">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="reg_fullname">Nama Lengkap</label>
+                <input type="text" id="reg_fullname" name="fullname" placeholder="John Doe" required>
+              </div>
+
+              <div class="form-group">
+                <label for="reg_username">Username</label>
+                <input type="text" id="reg_username" name="username" placeholder="johndoe24" required>
+              </div>
+
+              <div class="form-group full-width">
+                <label for="reg_email">Email Aktif</label>
+                <input type="email" id="reg_email" name="email" placeholder="john@example.com" required>
+              </div>
+
+              <!-- Password & Confirm Password Sync -->
+              <div class="form-group">
+                <label for="reg_password">Kata Sandi <span class="badge-tag">Password Sync</span></label>
+                <input type="password" id="reg_password" name="password" placeholder="••••••••" required>
+              </div>
+              <div class="form-group">
+                <label for="reg_confirm_password">Konfirmasi Kata Sandi</label>
+                <input type="password" id="reg_confirm_password" name="confirm_password" placeholder="••••••••" required>
+              </div>
+
+              <!-- Radio Gender -->
+              <div class="form-group">
+                <label>Jenis Kelamin</label>
+                <div class="options-group">
+                  <label class="option-label">
+                    <input type="radio" name="gender" value="male" checked> Pria
+                  </label>
+                  <label class="option-label">
+                    <input type="radio" name="gender" value="female"> Wanita
+                  </label>
+                </div>
+              </div>
+
+              <!-- Select Role -->
+              <div class="form-group">
+                <label for="reg_role">Role Pekerjaan</label>
+                <select id="reg_role" name="role">
+                  <option value="">Pilih Role...</option>
+                  <option value="frontend">Frontend Developer</option>
+                  <option value="backend">Backend Developer</option>
+                  <option value="fullstack">Fullstack Engineer</option>
+                  <option value="qa">QA Engineer / Tester</option>
+                  <option value="product">Product Manager</option>
+                </select>
+              </div>
+
+              <!-- Checkbox Interests -->
+              <div class="form-group full-width">
+                <label>Keahlian / Minat</label>
+                <div class="options-group">
+                  <label class="option-label"><input type="checkbox" name="skills" value="react"> React / Next.js</label>
+                  <label class="option-label"><input type="checkbox" name="skills" value="vue"> Vue / Nuxt</label>
+                  <label class="option-label"><input type="checkbox" name="skills" value="node"> Node.js</label>
+                  <label class="option-label"><input type="checkbox" name="skills" value="ai"> Gemini AI</label>
+                </div>
+              </div>
+
+              <!-- Range Slider & Color Picker -->
+              <div class="form-group">
+                <label for="reg_exp">Pengalaman (Tahun)</label>
+                <div class="range-wrap">
+                  <input type="range" id="reg_exp" name="experience" min="1" max="15" value="4">
+                  <span class="range-val" id="exp-val">4 thn</span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="reg_theme_color">Warna Profil Favorit</label>
+                <input type="color" id="reg_theme_color" name="theme_color" value="#6366f1">
+              </div>
+
+              <!-- Textarea Bio -->
+              <div class="form-group full-width">
+                <label for="reg_bio">Bio Singkat</label>
+                <textarea id="reg_bio" name="bio" rows="2" placeholder="Tuliskan pengalaman atau motivasi singkat..."></textarea>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- 2. TAB: SUNTIK FOTO & AVATAR -->
+        <div class="tab-content" id="tab-upload">
+          <div class="card-header">
+            <span class="card-title">Pengujian Upload Gambar & Avatar Dropzone</span>
+            <span class="badge-tag">Drag & Drop Supported</span>
+          </div>
+
+          <form id="form-upload" onsubmit="event.preventDefault();">
+            <div class="form-grid">
+              <!-- Standard Input File -->
+              <div class="form-group full-width">
+                <label for="native_file_input">1. Standard File Input (`&lt;input type="file"&gt;`)</label>
+                <input type="file" id="native_file_input" name="profile_avatar" accept="image/png, image/jpeg">
+              </div>
+
+              <!-- Custom Dropzone Area -->
+              <div class="form-group full-width">
+                <label>2. Custom Drag-and-Drop Area (Dropzone Component)</label>
+                <div class="dropzone-box" id="avatar-dropzone">
+                  <div class="dropzone-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                      <polyline points="17 8 12 3 7 8"></polyline>
+                      <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                  </div>
+                  <div>
+                    <strong style="font-size:13px;">Tarik & lepas foto di sini</strong>
+                    <p style="font-size:11px; color:var(--text-muted); margin-top:2px;">Atau gunakan tombol <em>"Suntik Foto"</em> pada ekstensi mock-form</p>
+                  </div>
+                  <img src="" id="dropzone-preview-img" class="dropzone-preview" alt="Preview Foto">
+                </div>
+              </div>
+
+              <div class="form-group full-width">
+                <label for="doc_title">Keterangan Gambar</label>
+                <input type="text" id="doc_title" name="document_title" placeholder="cth: Foto Profil Akun">
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- 3. TAB: E-COMMERCE & PRESETS -->
+        <div class="tab-content" id="tab-strict">
+          <div class="card-header">
+            <span class="card-title">E-Commerce, Checkout & Format Regional</span>
+            <span class="badge-tag">Regex & Luhn Valid</span>
+          </div>
+
+          <form id="form-strict" onsubmit="event.preventDefault();">
+            <div class="form-grid">
+              <!-- NIK -->
+              <div class="form-group full-width">
+                <label for="nik">NIK KTP <span class="badge-tag">16 Digit Valid</span></label>
+                <input type="text" id="nik" name="nik" placeholder="3171xxxxxxxxxxxx" required minlength="16" maxlength="16" pattern="^[0-9]{16}$">
+              </div>
+
+              <!-- NPWP -->
+              <div class="form-group full-width">
+                <label for="npwp">NPWP Wajib Pajak <span class="badge-tag">15/16 Digit</span></label>
+                <input type="text" id="npwp" name="npwp" placeholder="01.234.567.8-901.000" required>
+              </div>
+
+              <!-- Credit Card -->
+              <div class="form-group full-width">
+                <label for="card_number">Nomor Kartu Kredit <span class="badge-tag">Luhn Algorithm</span></label>
+                <input type="text" id="card_number" name="card_number" autocomplete="cc-number" placeholder="4242 4242 4242 4242" required>
+              </div>
+
+              <!-- CVV & Exp -->
+              <div class="form-group">
+                <label for="card_cvv">CVV / CVC <span class="badge-tag">3 Digit</span></label>
+                <input type="text" id="card_cvv" name="card_cvv" placeholder="789" maxlength="4" required>
+              </div>
+              <div class="form-group">
+                <label for="card_exp">Kadaluarsa (MM/YY)</label>
+                <input type="text" id="card_exp" name="card_exp" placeholder="12/28" required>
+              </div>
+
+              <!-- No HP -->
+              <div class="form-group full-width">
+                <label for="no_hp">WhatsApp / HP Indonesia <span class="badge-tag">08xx</span></label>
+                <input type="tel" id="no_hp" name="no_hp" placeholder="081234567890" required>
+              </div>
+
+              <!-- Tanggal Lahir -->
+              <div class="form-group">
+                <label for="tgl_lahir">Tanggal Lahir <span class="badge-tag">Usia 18+</span></label>
+                <input type="date" id="tgl_lahir" name="tgl_lahir" required>
+              </div>
+
+              <!-- Kode Pos -->
+              <div class="form-group">
+                <label for="kode_pos">Kode Pos <span class="badge-tag">5 Digit</span></label>
+                <input type="text" id="kode_pos" name="kodepos" placeholder="12930" maxlength="5" required>
+              </div>
+
+              <!-- HTML5 Pattern Custom Code -->
+              <div class="form-group full-width">
+                <label for="voucher_code">Kode Voucher <span class="badge-tag">Regex: ^[A-Z]{3}-[0-9]{4}$</span></label>
+                <input type="text" id="voucher_code" name="voucher_code" pattern="^[A-Z]{3}-[0-9]{4}$" placeholder="VIP-2026" required>
+              </div>
+
+              <!-- UUID -->
+              <div class="form-group full-width">
+                <label for="uuid">Transaction UUID <span class="badge-tag">RFC4122 v4</span></label>
+                <input type="text" id="uuid" name="uuid" placeholder="xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx">
+              </div>
+
+              <!-- IP Address -->
+              <div class="form-group full-width">
+                <label for="server_ip">Server IP Address <span class="badge-tag">IPv4</span></label>
+                <input type="text" id="server_ip" name="server_ip" placeholder="192.168.1.1">
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- 4. TAB: MULTI-STEP WIZARD -->
+        <div class="tab-content" id="tab-wizard">
+          <div class="card-header">
+            <span class="card-title">Simulasi Formulir Multi-Step (Wizard)</span>
+            <span class="badge-tag">Stepper Component</span>
+          </div>
+
+          <!-- Stepper Dots -->
+          <div class="stepper">
+            <div class="step-item active" id="step-dot-1">
+              <div class="step-dot">1</div>
+              <span class="step-name">Akun</span>
+            </div>
+            <div class="step-item" id="step-dot-2">
+              <div class="step-dot">2</div>
+              <span class="step-name">Profil</span>
+            </div>
+            <div class="step-item" id="step-dot-3">
+              <div class="step-dot">3</div>
+              <span class="step-name">Konfirmasi</span>
+            </div>
+          </div>
+
+          <form id="form-wizard" onsubmit="event.preventDefault();">
+            <!-- Step 1 -->
+            <div class="wizard-step active" id="wizard-step-1">
+              <div class="form-grid">
+                <div class="form-group full-width">
+                  <label for="wiz_email">Email Pendaftaran</label>
+                  <input type="email" id="wiz_email" name="wiz_email" placeholder="alex@company.com">
+                </div>
+                <div class="form-group full-width">
+                  <label for="wiz_password">Kata Sandi</label>
+                  <input type="password" id="wiz_password" name="wiz_password" placeholder="••••••••">
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="wizard-step" id="wizard-step-2">
+              <div class="form-grid">
+                <div class="form-group full-width">
+                  <label for="wiz_name">Nama Instansi / Perusahaan</label>
+                  <input type="text" id="wiz_name" name="company_name" placeholder="Acme Technologies Ltd">
+                </div>
+                <div class="form-group">
+                  <label for="wiz_city">Kota Operasional</label>
+                  <input type="text" id="wiz_city" name="city" placeholder="Jakarta Selatan">
+                </div>
+                <div class="form-group">
+                  <label for="wiz_country">Negara</label>
+                  <select id="wiz_country" name="country">
+                    <option value="ID">Indonesia</option>
+                    <option value="SG">Singapore</option>
+                    <option value="MY">Malaysia</option>
+                    <option value="US">United States</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="wizard-step" id="wizard-step-3">
+              <div class="form-grid">
+                <div class="form-group full-width">
+                  <label for="wiz_notes">Catatan & Ketentuan Khusus</label>
+                  <textarea id="wiz_notes" name="notes" rows="2" placeholder="Tambahkan catatan khusus untuk akun Anda..."></textarea>
+                </div>
+                <div class="form-group full-width">
+                  <label class="option-label">
+                    <input type="checkbox" name="terms" checked> Saya menyetujui syarat & ketentuan layanan
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Wizard Navigation Buttons -->
+            <div class="wizard-nav">
+              <button class="btn btn-secondary" id="wiz-btn-prev" disabled>← Kembali</button>
+              <button class="btn btn-primary" id="wiz-btn-next">Lanjut →</button>
+            </div>
+          </form>
+        </div>
+
+      </section>
+
+      <!-- RIGHT COLUMN: VERIFICATION REPORT & REACTIVE CONSOLE -->
+      <section style="display:flex; flex-direction:column; gap:20px;">
+        
+        <!-- VERIFICATION REPORT -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">🔍 Hasil Validasi Data Khusus</span>
+            <span class="badge-tag" id="pass-counter">0 / 10 PASS</span>
+          </div>
+
+          <div class="report-list" id="report-list">
+            <div class="report-item" data-field="nik">
+              <div class="report-label">
+                <span class="report-name">NIK 16-Digit</span>
+                <span class="report-val" id="val-nik">-</span>
+              </div>
+              <span class="status-badge status-pending" id="badge-nik">PENDING</span>
+            </div>
+
+            <div class="report-item" data-field="npwp">
+              <div class="report-label">
+                <span class="report-name">NPWP Indonesia</span>
+                <span class="report-val" id="val-npwp">-</span>
+              </div>
+              <span class="status-badge status-pending" id="badge-npwp">PENDING</span>
+            </div>
+
+            <div class="report-item" data-field="card_number">
+              <div class="report-label">
+                <span class="report-name">Credit Card (Luhn Check)</span>
+                <span class="report-val" id="val-card">-</span>
+              </div>
+              <span class="status-badge status-pending" id="badge-card">PENDING</span>
+            </div>
+
+            <div class="report-item" data-field="card_cvv">
+              <div class="report-label">
+                <span class="report-name">Card CVV (3-4 Digit)</span>
+                <span class="report-val" id="val-cvv">-</span>
+              </div>
+              <span class="status-badge status-pending" id="badge-cvv">PENDING</span>
+            </div>
+
+            <div class="report-item" data-field="card_exp">
+              <div class="report-label">
+                <span class="report-name">Expiry Date (MM/YY)</span>
+                <span class="report-val" id="val-exp">-</span>
+              </div>
+              <span class="status-badge status-pending" id="badge-exp">PENDING</span>
+            </div>
+
+            <div class="report-item" data-field="no_hp">
+              <div class="report-label">
+                <span class="report-name">No. HP Indonesia (08xx)</span>
+                <span class="report-val" id="val-hp">-</span>
+              </div>
+              <span class="status-badge status-pending" id="badge-hp">PENDING</span>
+            </div>
+
+            <div class="report-item" data-field="tgl_lahir">
+              <div class="report-label">
+                <span class="report-name">Tanggal Lahir (Usia 18+)</span>
+                <span class="report-val" id="val-dob">-</span>
+              </div>
+              <span class="status-badge status-pending" id="badge-dob">PENDING</span>
+            </div>
+
+            <div class="report-item" data-field="voucher_code">
+              <div class="report-label">
+                <span class="report-name">Pattern Matcher (VIP-2026)</span>
+                <span class="report-val" id="val-voucher">-</span>
+              </div>
+              <span class="status-badge status-pending" id="badge-voucher">PENDING</span>
+            </div>
+
+            <div class="report-item" data-field="uuid">
+              <div class="report-label">
+                <span class="report-name">UUID v4 Format</span>
+                <span class="report-val" id="val-uuid">-</span>
+              </div>
+              <span class="status-badge status-pending" id="badge-uuid">PENDING</span>
+            </div>
+
+            <div class="report-item" data-field="server_ip">
+              <div class="report-label">
+                <span class="report-name">IPv4 Address</span>
+                <span class="report-val" id="val-ip">-</span>
+              </div>
+              <span class="status-badge status-pending" id="badge-ip">PENDING</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- LIVE EVENT LOGGER TERMINAL -->
+        <div class="event-logger">
+          <div class="logger-header">
+            <span>⚡ Reactive Event Stream (React/Vue Sync)</span>
+            <span style="color:var(--success); font-weight:600;">LIVE</span>
+          </div>
+          <div class="log-stream" id="log-stream">
+            <div class="log-entry">
+              <span class="log-time">[Init]</span>
+              <span class="log-tag tag-input">READY</span>
+              <span style="color:var(--text-muted);">Menunggu interaksi form...</span>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div>
+        <strong>mock-form</strong> is an Open Source Project licensed under <a href="https://opensource.org/licenses/MIT" target="_blank">MIT License</a>.
+      </div>
+      <div>
+        Made for Developers, QA Engineers, & Power Users.
+      </div>
+    </footer>
   </div>
 
+  <!-- SCRIPT LOGIC -->
   <script>
-    // Validation Helper Functions
+    // 1. Theme Toggle
+    const themeBtn = document.getElementById('btn-theme-toggle');
+    themeBtn.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme');
+      const next = current === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', next);
+    });
+
+    // 2. Tab Navigation
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+        const target = document.getElementById(btn.dataset.tab);
+        if (target) target.classList.add('active');
+      });
+    });
+
+    // 3. Range Slider Label Update
+    const rangeExp = document.getElementById('reg_exp');
+    const rangeVal = document.getElementById('exp-val');
+    if (rangeExp && rangeVal) {
+      rangeExp.addEventListener('input', (e) => {
+        rangeVal.textContent = `${e.target.value} thn`;
+      });
+    }
+
+    // 4. Wizard Form Multi-Step State Machine
+    let currentStep = 1;
+    const totalSteps = 3;
+    const btnNext = document.getElementById('wiz-btn-next');
+    const btnPrev = document.getElementById('wiz-btn-prev');
+
+    function updateWizard() {
+      for (let i = 1; i <= totalSteps; i++) {
+        const stepEl = document.getElementById(`wizard-step-${i}`);
+        const dotEl = document.getElementById(`step-dot-${i}`);
+        if (stepEl) stepEl.classList.toggle('active', i === currentStep);
+        if (dotEl) {
+          dotEl.classList.toggle('active', i === currentStep);
+          dotEl.classList.toggle('completed', i < currentStep);
+        }
+      }
+      btnPrev.disabled = currentStep === 1;
+      btnNext.textContent = currentStep === totalSteps ? 'Selesai ✓' : 'Lanjut →';
+    }
+
+    btnNext.addEventListener('click', () => {
+      if (currentStep < totalSteps) {
+        currentStep++;
+        updateWizard();
+      } else {
+        alert('🎉 Formulir wizard berhasil diselesaikan!');
+      }
+    });
+
+    btnPrev.addEventListener('click', () => {
+      if (currentStep > 1) {
+        currentStep--;
+        updateWizard();
+      }
+    });
+
+    // 5. Reactive Event Logger
+    const logStream = document.getElementById('log-stream');
+    function logEvent(type, targetName) {
+      const now = new Date();
+      const timeStr = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}.${String(now.getMilliseconds()).padStart(3,'0')}`;
+      
+      const tagClass = `tag-${type}`;
+      const entry = document.createElement('div');
+      entry.className = 'log-entry';
+      entry.innerHTML = `
+        <span class="log-time">${timeStr}</span>
+        <span class="log-tag ${tagClass}">${type.toUpperCase()}</span>
+        <span style="color:var(--text-secondary);">${targetName || 'element'}</span>
+      `;
+      logStream.prepend(entry);
+      
+      // Limit entries to 25
+      if (logStream.children.length > 25) {
+        logStream.lastElementChild.remove();
+      }
+    }
+
+    // Attach event listeners to all inputs for reactivity logging
+    document.querySelectorAll('input, select, textarea').forEach(input => {
+      ['input', 'change', 'blur'].forEach(evtType => {
+        input.addEventListener(evtType, (e) => {
+          logEvent(evtType, e.target.name || e.target.id || e.target.tagName);
+          validateAll();
+        });
+      });
+    });
+
+    // 6. Custom Dropzone Drag and Drop
+    const dropzone = document.getElementById('avatar-dropzone');
+    const dropPreview = document.getElementById('dropzone-preview-img');
+    const fileInput = document.getElementById('native_file_input');
+
+    if (dropzone) {
+      ['dragenter', 'dragover'].forEach(name => {
+        dropzone.addEventListener(name, (e) => {
+          e.preventDefault();
+          dropzone.classList.add('dragover');
+        });
+      });
+
+      ['dragleave', 'drop'].forEach(name => {
+        dropzone.addEventListener(name, (e) => {
+          e.preventDefault();
+          dropzone.classList.remove('dragover');
+        });
+      });
+
+      dropzone.addEventListener('drop', (e) => {
+        logEvent('drop', 'avatar-dropzone');
+        const dt = e.dataTransfer;
+        if (dt && dt.files && dt.files.length > 0) {
+          const file = dt.files[0];
+          if (file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = (re) => {
+              dropPreview.src = re.target.result;
+              dropPreview.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+          }
+        }
+      });
+    }
+
+    if (fileInput) {
+      fileInput.addEventListener('change', (e) => {
+        if (e.target.files && e.target.files[0]) {
+          const reader = new FileReader();
+          reader.onload = (re) => {
+            if (dropPreview) {
+              dropPreview.src = re.target.result;
+              dropPreview.style.display = 'block';
+            }
+          };
+          reader.readAsDataURL(e.target.files[0]);
+        }
+      });
+    }
+
+    // 7. Special Formats Verification Logic (Luhn, NIK, NPWP, etc.)
     function isLuhnValid(cardNo) {
       const clean = String(cardNo).replace(/\D/g, '');
       if (clean.length < 13 || clean.length > 19) return false;
@@ -477,82 +1311,102 @@
     }
 
     function validateAll() {
+      let passCount = 0;
+
       // 1. NIK
-      const nik = document.getElementById('nik').value;
+      const nik = document.getElementById('nik')?.value || '';
       const nikValid = /^\d{16}$/.test(nik);
-      updateReport('nik', nik, nikValid);
+      if (updateReport('nik', nik, nikValid)) passCount++;
 
       // 2. NPWP
-      const npwp = document.getElementById('npwp').value;
+      const npwp = document.getElementById('npwp')?.value || '';
       const npwpValid = /^(\d{2}\.\d{3}\.\d{3}\.\d{1}-\d{3}\.\d{3}|\d{15,16})$/.test(npwp);
-      updateReport('npwp', npwp, npwpValid);
+      if (updateReport('npwp', npwp, npwpValid)) passCount++;
 
       // 3. Credit Card
-      const cc = document.getElementById('card_number').value;
+      const cc = document.getElementById('card_number')?.value || '';
       const ccValid = isLuhnValid(cc);
-      updateReport('card', cc, ccValid);
+      if (updateReport('card', cc, ccValid)) passCount++;
 
       // 4. CVV
-      const cvv = document.getElementById('card_cvv').value;
+      const cvv = document.getElementById('card_cvv')?.value || '';
       const cvvValid = /^\d{3,4}$/.test(cvv);
-      updateReport('cvv', cvv, cvvValid);
+      if (updateReport('cvv', cvv, cvvValid)) passCount++;
 
       // 5. Exp
-      const exp = document.getElementById('card_exp').value;
+      const exp = document.getElementById('card_exp')?.value || '';
       const expValid = /^(0[1-9]|1[0-2])\/?(2[5-9]|3[0-5])$/.test(exp);
-      updateReport('exp', exp, expValid);
+      if (updateReport('exp', exp, expValid)) passCount++;
 
       // 6. HP
-      const hp = document.getElementById('no_hp').value;
+      const hp = document.getElementById('no_hp')?.value || '';
       const hpValid = /^(\+62|0)8[1-9][0-9]{7,10}$/.test(hp.replace(/[^0-9+]/g, ''));
-      updateReport('hp', hp, hpValid);
+      if (updateReport('hp', hp, hpValid)) passCount++;
 
       // 7. DOB
-      const dob = document.getElementById('tgl_lahir').value;
+      const dob = document.getElementById('tgl_lahir')?.value || '';
       let dobValid = false;
       if (dob) {
         const year = parseInt(dob.split('-')[0], 10);
         dobValid = (new Date().getFullYear() - year) >= 18;
       }
-      updateReport('dob', dob, dobValid);
+      if (updateReport('dob', dob, dobValid)) passCount++;
 
       // 8. Voucher / Pattern
-      const voucher = document.getElementById('voucher_code').value;
+      const voucher = document.getElementById('voucher_code')?.value || '';
       const voucherValid = /^[A-Z]{3}-[0-9]{4}$/.test(voucher);
-      updateReport('voucher', voucher, voucherValid);
+      if (updateReport('voucher', voucher, voucherValid)) passCount++;
 
       // 9. UUID
-      const uuid = document.getElementById('uuid').value;
+      const uuid = document.getElementById('uuid')?.value || '';
       const uuidValid = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(uuid);
-      updateReport('uuid', uuid, uuidValid);
+      if (updateReport('uuid', uuid, uuidValid)) passCount++;
 
       // 10. IP
-      const ip = document.getElementById('server_ip').value;
+      const ip = document.getElementById('server_ip')?.value || '';
       const ipValid = /^(\d{1,3}\.){3}\d{1,3}$/.test(ip);
-      updateReport('ip', ip, ipValid);
+      if (updateReport('ip', ip, ipValid)) passCount++;
+
+      const counter = document.getElementById('pass-counter');
+      if (counter) {
+        counter.textContent = `${passCount} / 10 PASS`;
+        counter.style.color = passCount === 10 ? 'var(--success)' : '#818cf8';
+      }
     }
 
     function updateReport(id, val, isValid) {
       const valEl = document.getElementById(`val-${id}`);
       const badgeEl = document.getElementById(`badge-${id}`);
-      if (!valEl || !badgeEl) return;
+      if (!valEl || !badgeEl) return false;
 
       valEl.textContent = val || '-';
       if (!val) {
         badgeEl.className = 'status-badge status-pending';
         badgeEl.textContent = 'PENDING';
+        return false;
       } else if (isValid) {
         badgeEl.className = 'status-badge status-pass';
         badgeEl.textContent = 'PASS ✓';
+        return true;
       } else {
         badgeEl.className = 'status-badge status-fail';
         badgeEl.textContent = 'FAIL ✗';
+        return false;
       }
     }
 
-    // Generator logic identical to content.js
-    function simulateContentScriptFill() {
-      // 1. NIK
+    // 8. Quick Autofill Simulation for All Scenarios
+    function runQuickAutofill() {
+      // 1. Registrasi Form
+      document.getElementById('reg_fullname').value = 'Budi Wicaksono';
+      document.getElementById('reg_username').value = 'budi_wicaksono';
+      document.getElementById('reg_email').value = 'budi.wicaksono@example.com';
+      document.getElementById('reg_password').value = 'SecretPass123!';
+      document.getElementById('reg_confirm_password').value = 'SecretPass123!';
+      document.getElementById('reg_role').value = 'fullstack';
+      document.getElementById('reg_bio').value = 'Senior Software Engineer dengan spesialisasi pengembangan web fullstack dan arsitektur cloud modern.';
+      
+      // 2. Strict & Presets
       const provs = ['317101', '327301', '357801', '517101'];
       const p = provs[Math.floor(Math.random() * provs.length)];
       const d = String(Math.floor(Math.random() * 28) + 1).padStart(2, '0');
@@ -560,11 +1414,9 @@
       const y = String(Math.floor(Math.random() * 30) + 70).padStart(2, '0');
       const s = String(Math.floor(Math.random() * 90) + 1).padStart(4, '0');
       document.getElementById('nik').value = `${p}${d}${m}${y}${s}`;
-
-      // 2. NPWP
       document.getElementById('npwp').value = '01.234.567.8-901.000';
 
-      // 3. Card Luhn
+      // Luhn Card
       let digits = [4];
       while (digits.length < 15) digits.push(Math.floor(Math.random() * 10));
       let sum = 0;
@@ -575,45 +1427,48 @@
       }
       digits.push((10 - (sum % 10)) % 10);
       document.getElementById('card_number').value = digits.join('');
-
-      // 4. CVV & Exp
       document.getElementById('card_cvv').value = '789';
       document.getElementById('card_exp').value = '12/28';
-
-      // 5. HP
       document.getElementById('no_hp').value = '081234567890';
-
-      // 6. DOB
-      const birthYear = new Date().getFullYear() - 25;
+      
+      const birthYear = new Date().getFullYear() - 26;
       document.getElementById('tgl_lahir').value = `${birthYear}-08-17`;
-
-      // 7. Kode Pos
       document.getElementById('kode_pos').value = '12930';
-
-      // 8. Pattern Voucher
       document.getElementById('voucher_code').value = 'VIP-2026';
-
-      // 9. UUID
       document.getElementById('uuid').value = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
         const r = Math.random() * 16 | 0;
         return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
       });
-
-      // 10. IP
       document.getElementById('server_ip').value = '192.168.1.100';
+
+      // 3. Wizard Inputs
+      document.getElementById('wiz_email').value = 'budi@company.id';
+      document.getElementById('wiz_password').value = 'CompanyPass99!';
+      document.getElementById('wiz_name').value = 'Nusantara Global Tech';
+      document.getElementById('wiz_city').value = 'Jakarta Pusat';
+      document.getElementById('wiz_notes').value = 'Akun enterprise untuk deployment pipeline internal.';
+
+      // Dispatch synthetic events for reactivity
+      document.querySelectorAll('input, select, textarea').forEach(el => {
+        el.dispatchEvent(new Event('input', { bubbles: true }));
+        el.dispatchEvent(new Event('change', { bubbles: true }));
+      });
 
       validateAll();
     }
 
-    document.getElementById('btn-simulate-fill').addEventListener('click', simulateContentScriptFill);
-    document.getElementById('btn-reset').addEventListener('click', () => {
-      document.getElementById('test-form').reset();
+    document.getElementById('btn-quick-fill').addEventListener('click', runQuickAutofill);
+
+    document.getElementById('btn-reset-all').addEventListener('click', () => {
+      document.querySelectorAll('form').forEach(f => f.reset());
+      if (dropPreview) dropPreview.style.display = 'none';
+      currentStep = 1;
+      updateWizard();
       validateAll();
     });
 
-    document.querySelectorAll('input').forEach(input => {
-      input.addEventListener('input', validateAll);
-    });
+    // Run initial validation
+    validateAll();
   </script>
 </body>
 </html>
