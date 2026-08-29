@@ -29,6 +29,88 @@
       --radius-sm: 6px;
     }
 
+    [data-theme="dark"] {
+      --bg: #090d16;
+      --surface: #0f172a;
+      --border: #1e293b;
+      --border-dark: #334155;
+      --accent: #f8fafc;
+      --accent-hover: #e2e8f0;
+      --text: #f8fafc;
+      --text-secondary: #94a3b8;
+      --muted: #64748b;
+      --success: #34d399;
+      --success-bg: rgba(16, 185, 129, 0.12);
+      --success-text: #34d399;
+      --danger: #f87171;
+      --danger-bg: rgba(239, 68, 68, 0.12);
+      --danger-text: #f87171;
+      --ring: rgba(248, 250, 252, 0.15);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #090d16;
+        --surface: #0f172a;
+        --border: #1e293b;
+        --border-dark: #334155;
+        --accent: #f8fafc;
+        --accent-hover: #e2e8f0;
+        --text: #f8fafc;
+        --text-secondary: #94a3b8;
+        --muted: #64748b;
+        --success: #34d399;
+        --success-bg: rgba(16, 185, 129, 0.12);
+        --success-text: #34d399;
+        --danger: #f87171;
+        --danger-bg: rgba(239, 68, 68, 0.12);
+        --danger-text: #f87171;
+        --ring: rgba(248, 250, 252, 0.15);
+      }
+    }
+
+    [data-theme="dark"] .btn-primary,
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) .btn-primary {
+        background: var(--accent);
+        color: #090d16;
+      }
+    }
+
+    [data-theme="dark"] .tab-btn.active,
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) .tab-btn.active {
+        background: var(--accent);
+        color: #090d16;
+      }
+    }
+
+    [data-theme="dark"] .step-item.active .step-badge,
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) .step-item.active .step-badge {
+        background: var(--accent);
+        color: #090d16;
+      }
+    }
+
+    [data-theme="dark"] .logo-box,
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) .logo-box {
+        background: var(--accent);
+        color: #090d16;
+      }
+    }
+
+    [data-theme="dark"] .dropzone:hover,
+    [data-theme="dark"] .dropzone.dragover,
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) .dropzone:hover,
+      :root:not([data-theme="light"]) .dropzone.dragover {
+        background: #1e293b;
+        border-color: #38bdf8;
+      }
+    }
+
     * {
       box-sizing: border-box;
       margin: 0;
@@ -691,6 +773,7 @@
       </div>
 
       <div class="header-right">
+        <button class="btn btn-secondary" id="btn-theme-toggle" title="Ganti Tema">🌙 Gelap</button>
         <div class="shortcut-pill">
           <span>Shortcut:</span>
           <kbd>Alt + Shift + F</kbd>
@@ -1406,6 +1489,38 @@
       renderWizard();
       validateAll();
     });
+
+    // Theme toggle logic
+    const themeBtn = document.getElementById('btn-theme-toggle');
+    function updateThemeBtnText(theme) {
+      if (theme === 'dark') {
+        themeBtn.innerHTML = '☀️ Terang';
+      } else {
+        themeBtn.innerHTML = '🌙 Gelap';
+      }
+    }
+    
+    const savedTheme = localStorage.getItem('mockform-demo-theme');
+    if (savedTheme) {
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      updateThemeBtnText(savedTheme);
+    } else {
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      updateThemeBtnText(prefersDark ? 'dark' : 'light');
+    }
+
+    if (themeBtn) {
+      themeBtn.addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const isCurrentlyDark = currentTheme === 'dark' || (!currentTheme && prefersDark);
+        
+        const newTheme = isCurrentlyDark ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('mockform-demo-theme', newTheme);
+        updateThemeBtnText(newTheme);
+      });
+    }
 
     validateAll();
   </script>

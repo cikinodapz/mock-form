@@ -1162,6 +1162,46 @@
   });
 
   // ============================================================
+  // ============================================================
+  // DARK MODE DETECTION HELPER
+  // ============================================================
+  function isDarkElementOrPage(el) {
+    // 1. Check system prefers-color-scheme
+    const systemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    
+    // 2. Check html/body classes or attributes
+    const docEl = document.documentElement;
+    const bodyEl = document.body;
+    const isDarkAttr = (node) => {
+      if (!node) return false;
+      const cls = (node.className || '').toLowerCase();
+      const theme = (node.getAttribute('data-theme') || node.getAttribute('theme') || node.getAttribute('data-bs-theme') || node.getAttribute('data-mode') || '').toLowerCase();
+      return cls.includes('dark') || cls.includes('night') || theme === 'dark' || theme === 'night';
+    };
+    if (isDarkAttr(docEl) || isDarkAttr(bodyEl)) return true;
+
+    // 3. Inspect computed background color of element and ancestors
+    let curr = el || bodyEl;
+    for (let i = 0; i < 5 && curr && curr !== document; i++, curr = curr.parentElement) {
+      try {
+        const bg = window.getComputedStyle(curr).backgroundColor;
+        if (bg && bg !== 'transparent' && !bg.includes('rgba(0, 0, 0, 0)')) {
+          const m = bg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+          if (m) {
+            const r = parseInt(m[1], 10);
+            const g = parseInt(m[2], 10);
+            const b = parseInt(m[3], 10);
+            const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+            return brightness < 128;
+          }
+        }
+      } catch {}
+    }
+
+    return systemDark;
+  }
+
+  // ============================================================
   // WIDGET INJECTION
   // ============================================================
   let widgetContainer = null;
@@ -1173,6 +1213,7 @@
       return;
     }
 
+    const isDark = isDarkElementOrPage(document.body);
     widgetContainer = document.createElement('div');
     widgetContainer.id = 'mockform-widget-container';
     
@@ -1184,10 +1225,10 @@
       left: options.left || 'auto',
       width: '360px',
       height: '600px',
-      backgroundColor: 'white',
-      border: '1px solid #e2e8f0',
+      backgroundColor: isDark ? '#0f172a' : 'white',
+      border: isDark ? '1px solid #1e293b' : '1px solid #e2e8f0',
       borderRadius: '12px',
-      boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
+      boxShadow: isDark ? '0 12px 32px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.08)' : '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
       zIndex: '2147483647', // max z-index
       display: 'flex',
       flexDirection: 'column',
@@ -1197,15 +1238,16 @@
     const dragHandle = document.createElement('div');
     Object.assign(dragHandle.style, {
       height: '28px',
-      backgroundColor: '#f8fafc',
-      borderBottom: '1px solid #e2e8f0',
+      backgroundColor: isDark ? '#090d16' : '#f8fafc',
+      borderBottom: isDark ? '1px solid #1e293b' : '1px solid #e2e8f0',
       cursor: 'move',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      flexShrink: '0'
+      flexShrink: '0',
+      position: 'relative'
     });
-    dragHandle.innerHTML = '<div style="width: 40px; height: 5px; background: #cbd5e1; border-radius: 3px;"></div><div style="position:absolute; right:10px; cursor:pointer; font-family:sans-serif; font-size:14px; font-weight:bold; color:#94a3b8;" id="mockform-widget-close">✕</div>';
+    dragHandle.innerHTML = `<div style="width: 40px; height: 5px; background: ${isDark ? '#334155' : '#cbd5e1'}; border-radius: 3px;"></div><div style="position:absolute; right:10px; cursor:pointer; font-family:sans-serif; font-size:14px; font-weight:bold; color:${isDark ? '#64748b' : '#94a3b8'};" id="mockform-widget-close">✕</div>`;
 
     const iframe = document.createElement('iframe');
     iframe.src = chrome.runtime.getURL('popup.html');
@@ -1319,7 +1361,7 @@
       zIndex: '2147483646',
       filter: 'drop-shadow(0 2px 5px rgba(0,0,0,0.2))'
     });
-    setContextIconState('default');
+    setContextIconState('default', false);
     
     document.body.appendChild(contextIcon);
 
@@ -1353,12 +1395,12 @@
         fontSize: '13px',
         fontWeight: '500',
         fontFamily: 'system-ui, -apple-system, sans-serif',
-        boxShadow: '0 12px 32px rgba(0,0,0,0.35)',
+        boxShadow: '0 12px 32px rgba(0,0,0,0.45)',
         pointerEvents: 'none',
         whiteSpace: 'nowrap',
         transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
-        backdropFilter: 'blur(10px)',
-        webkitBackdropFilter: 'blur(10px)',
+        backdropFilter: 'blur(12px)',
+        webkitBackdropFilter: 'blur(12px)',
         display: 'none'
       });
       document.body.appendChild(contextToast);
@@ -1367,9 +1409,9 @@
     if (contextToastTimer) clearTimeout(contextToastTimer);
 
     const colors = {
-      info: { bg: 'rgba(15, 23, 42, 0.92)', text: '#f8fafc', border: 'rgba(51, 65, 85, 0.8)' },
-      success: { bg: 'rgba(9, 9, 11, 0.92)', text: '#f4f4f5', border: 'rgba(39, 39, 42, 0.8)' },
-      error: { bg: 'rgba(127, 29, 29, 0.92)', text: '#fef2f2', border: 'rgba(220, 38, 38, 0.8)' }
+      info: { bg: 'rgba(15, 23, 42, 0.94)', text: '#f8fafc', border: 'rgba(255, 255, 255, 0.18)' },
+      success: { bg: 'rgba(6, 78, 59, 0.94)', text: '#ecfdf5', border: 'rgba(52, 211, 153, 0.45)' },
+      error: { bg: 'rgba(127, 29, 29, 0.94)', text: '#fef2f2', border: 'rgba(248, 113, 113, 0.45)' }
     };
     const c = colors[type] || colors.info;
 
@@ -1403,22 +1445,25 @@
     }
   }
 
-  function setContextIconState(state) {
+  function setContextIconState(state, isDark = null) {
     if (!contextIcon) return;
+    if (isDark === null) {
+      isDark = activeInput ? isDarkElementOrPage(activeInput) : isDarkElementOrPage(document.body);
+    }
     const iconUrl = chrome.runtime.getURL('icons/logo-ui.png');
     if (state === 'loading') {
       contextIcon.innerHTML = `
-        <svg style="width: 20px; height: 20px; animation: mockform-spin 1s linear infinite;" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="3" stroke-linecap="round">
+        <svg style="width: 20px; height: 20px; animation: mockform-spin 1s linear infinite;" viewBox="0 0 24 24" fill="none" stroke="${isDark ? '#38bdf8' : '#6366f1'}" stroke-width="3" stroke-linecap="round">
           <circle cx="12" cy="12" r="10" stroke-opacity="0.25"></circle>
           <path d="M12 2 a10 10 0 0 1 10 10"></path>
         </svg>`;
     } else if (state === 'success') {
       contextIcon.innerHTML = `
-        <svg style="width: 22px; height: 22px; color: #09090b;" viewBox="0 0 24 24" fill="none" stroke="#09090b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+        <svg style="width: 22px; height: 22px;" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="20 6 9 17 4 12"></polyline>
         </svg>`;
     } else {
-      contextIcon.innerHTML = `<img src="${iconUrl}" style="width: 28px; height: 28px; object-fit: contain;" />`;
+      contextIcon.innerHTML = `<img src="${iconUrl}" style="width: 28px; height: 28px; object-fit: contain; filter: ${isDark ? 'brightness(0) invert(1)' : 'none'};" alt="mock-form" />`;
     }
   }
 
@@ -1450,6 +1495,7 @@
   }
 
   function showContextIcon(el) {
+    const isDark = isDarkElementOrPage(el);
     const rect = el.getBoundingClientRect();
     const scrollX = window.scrollX || window.pageXOffset;
     const scrollY = window.scrollY || window.pageYOffset;
@@ -1457,6 +1503,9 @@
     contextIcon.style.display = 'flex';
     contextIcon.style.top = `${rect.top + scrollY + (rect.height / 2) - 14}px`;
     contextIcon.style.left = `${rect.right + scrollX + 8}px`;
+    contextIcon.title = 'mock-form: Klik untuk isi form otomatis';
+
+    setContextIconState('default', isDark);
   }
 
   async function askGeminiForContentScript(apiKey, model, instruction, fields) {
