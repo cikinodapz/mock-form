@@ -1,0 +1,494 @@
+---
+const baseUrl = import.meta.env.BASE_URL.endsWith('/') 
+  ? import.meta.env.BASE_URL 
+  : `${import.meta.env.BASE_URL}/`;
+
+const githubRepo = "https://github.com/cikinodapz/mock-form";
+---
+
+<section class="hero-section">
+  <div class="container hero-container">
+    <!-- Hero Text Content -->
+    <div class="hero-content">
+      <div class="badge">
+        <span class="badge-dot"></span>
+        <span>Manifest V3 • Google Gemini AI • 100% Free & Open Source</span>
+      </div>
+
+      <h1 class="hero-title">
+        Intelligent Form Autofill & Mocking for Developers & QA
+      </h1>
+
+      <p class="hero-description">
+        Tired of manually filling out tedious checkout flows, signup forms, and enterprise inputs? 
+        <strong>mock-form</strong> inspects DOM fields, infers semantic context, generates realistic data, 
+        injects mock avatars, and formats Indonesia presets (NIK, NPWP, 08xx) with a single click or hotkey.
+      </p>
+
+      <div class="hero-ctas">
+        <a href="#install" class="btn btn-primary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          <span>Get Extension</span>
+        </a>
+
+        <a href={githubRepo} target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+          </svg>
+          <span>Star on GitHub</span>
+        </a>
+
+        <a href="#playground" class="btn btn-ghost">
+          <span>Live Playground →</span>
+        </a>
+      </div>
+
+      <div class="hero-stats">
+        <div class="stat-item">
+          <span class="stat-val">100%</span>
+          <span class="stat-lbl">Client-Side Privacy</span>
+        </div>
+        <div class="stat-separator"></div>
+        <div class="stat-item">
+          <span class="stat-val">8+</span>
+          <span class="stat-lbl">Gemini Models</span>
+        </div>
+        <div class="stat-separator"></div>
+        <div class="stat-item">
+          <span class="stat-val">&lt; 300ms</span>
+          <span class="stat-lbl">Flash Lite Response</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hero Interactive Simulator Mockup -->
+    <div class="hero-visual">
+      <div class="browser-mockup">
+        <!-- Window Chrome -->
+        <div class="browser-header">
+          <div class="window-dots">
+            <span class="dot dot-red"></span>
+            <span class="dot dot-yellow"></span>
+            <span class="dot dot-green"></span>
+          </div>
+          <div class="address-bar">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            <span>localhost:3000/employee-onboarding</span>
+          </div>
+          <div class="browser-ext-icon" title="mock-form active on tab">
+            <img src={`${baseUrl}icons/logo-ui.png`} alt="ext" width="16" height="16" />
+          </div>
+        </div>
+
+        <!-- Form Body Preview -->
+        <div class="mockup-body">
+          <!-- Floating Widget Indicator -->
+          <div class="floating-agent-bubble">
+            <img src={`${baseUrl}icons/logo-ui.png`} alt="agent" class="agent-logo" width="22" height="22" />
+            <div class="agent-pulse"></div>
+            <div class="agent-tooltip">mock-form AI ready</div>
+          </div>
+
+          <div class="mockup-form-header">
+            <div class="form-title">Employee Registration</div>
+            <div class="form-subtitle">Fill candidate data for testing validation</div>
+          </div>
+
+          <div class="mockup-grid">
+            <div class="mockup-field">
+              <label>Full Name</label>
+              <input type="text" id="hero-name" placeholder="e.g. John Doe" readonly />
+            </div>
+            <div class="mockup-field">
+              <label>Work Email</label>
+              <input type="email" id="hero-email" placeholder="e.g. john@corp.com" readonly />
+            </div>
+            <div class="mockup-field">
+              <label>ID / NIK (16 Digits)</label>
+              <input type="text" id="hero-nik" placeholder="3171xxxxxxxxxxxx" readonly />
+            </div>
+            <div class="mockup-field">
+              <label>WhatsApp / Phone</label>
+              <input type="text" id="hero-phone" placeholder="08xxxxxxxxxx" readonly />
+            </div>
+          </div>
+
+          <!-- Simulator Action Controls -->
+          <div class="mockup-footer">
+            <div class="mockup-controls">
+              <button type="button" id="hero-simulate-btn" class="btn btn-primary btn-sm">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path d="m13 2-2 2.5h3L11 9"/>
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                </svg>
+                <span>Simulate AI Autofill</span>
+              </button>
+              <button type="button" id="hero-reset-btn" class="btn btn-ghost btn-sm">
+                Reset
+              </button>
+            </div>
+            <div class="mockup-shortcut-hint">
+              or press <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>F</kbd>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero-section {
+    position: relative;
+    padding: 80px 0 60px;
+    overflow: hidden;
+  }
+
+  .hero-container {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 48px;
+    align-items: center;
+  }
+
+  .hero-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .hero-title {
+    font-size: 44px;
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    margin-top: 18px;
+    margin-bottom: 20px;
+    color: var(--text);
+  }
+
+  .hero-description {
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    margin-bottom: 32px;
+  }
+
+  .hero-description strong {
+    color: #ffffff;
+    font-weight: 600;
+  }
+
+  .hero-ctas {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+  }
+
+  .hero-stats {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    width: 100%;
+  }
+
+  .stat-item {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .stat-val {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .stat-lbl {
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+
+  .stat-separator {
+    width: 1px;
+    height: 28px;
+    background: var(--border);
+  }
+
+  /* Browser Mockup Visual */
+  .browser-mockup {
+    position: relative;
+    background: var(--surface);
+    border: 1px solid var(--border-hover);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg), var(--shadow-glow);
+    overflow: hidden;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+  }
+
+  .browser-mockup:hover {
+    border-color: rgba(255, 255, 255, 0.25);
+  }
+
+  .browser-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    background: rgba(0, 0, 0, 0.4);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .window-dots {
+    display: flex;
+    gap: 6px;
+  }
+
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+  .dot-red { background: #ef4444; opacity: 0.8; }
+  .dot-yellow { background: #eab308; opacity: 0.8; }
+  .dot-green { background: #22c55e; opacity: 0.8; }
+
+  .address-bar {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border-subtle);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 11px;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .browser-ext-icon img {
+    filter: brightness(0) invert(1);
+    opacity: 0.8;
+  }
+
+  /* Mockup Content */
+  .mockup-body {
+    position: relative;
+    padding: 24px;
+  }
+
+  .floating-agent-bubble {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(15, 23, 42, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 6px 12px;
+    border-radius: 9999px;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    animation: float 3s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+  }
+
+  .agent-logo {
+    filter: brightness(0) invert(1) drop-shadow(0 2px 5px rgba(0,0,0,0.2));
+  }
+
+  .agent-tooltip {
+    font-size: 11px;
+    font-weight: 500;
+    color: #f8fafc;
+  }
+
+  .mockup-form-header {
+    margin-bottom: 20px;
+  }
+
+  .form-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .form-subtitle {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  .mockup-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+
+  .mockup-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .mockup-field label {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-secondary);
+  }
+
+  .mockup-field input {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 8px 10px;
+    font-size: 12px;
+    color: #ffffff;
+    outline: none;
+    font-family: 'JetBrains Mono', monospace;
+    transition: all 0.2s ease;
+  }
+
+  .mockup-field input.highlight {
+    border-color: #ffffff;
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+  }
+
+  .mockup-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 16px;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .mockup-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-sm {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  .mockup-shortcut-hint {
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+
+  .mockup-shortcut-hint kbd {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--border);
+    padding: 1px 4px;
+    border-radius: 4px;
+    font-size: 10px;
+    color: var(--text-secondary);
+  }
+
+  @media (max-width: 960px) {
+    .hero-container {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+    .hero-title {
+      font-size: 34px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .mockup-grid {
+      grid-template-columns: 1fr;
+    }
+    .mockup-footer {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+  }
+</style>
+
+<script is:inline>
+  const simBtn = document.getElementById('hero-simulate-btn');
+  const resetBtn = document.getElementById('hero-reset-btn');
+  const nameInput = document.getElementById('hero-name');
+  const emailInput = document.getElementById('hero-email');
+  const nikInput = document.getElementById('hero-nik');
+  const phoneInput = document.getElementById('hero-phone');
+
+  const mockData = {
+    name: "Raditya Pratama",
+    email: "raditya.p@techcorp.id",
+    nik: "3171021408950002",
+    phone: "081289104421"
+  };
+
+  function typeText(input, text, delay = 25) {
+    input.classList.add('highlight');
+    input.value = '';
+    let i = 0;
+    return new Promise((resolve) => {
+      const timer = setInterval(() => {
+        if (i < text.length) {
+          input.value += text.charAt(i);
+          i++;
+        } else {
+          clearInterval(timer);
+          input.classList.remove('highlight');
+          resolve();
+        }
+      }, delay);
+    });
+  }
+
+  if (simBtn) {
+    simBtn.addEventListener('click', async () => {
+      simBtn.disabled = true;
+      if (window.showToast) {
+        window.showToast("⚡ Gemini 3.7 Flash: Inspecting fields...", "info", 1500);
+      }
+      
+      await typeText(nameInput, mockData.name, 20);
+      await typeText(emailInput, mockData.email, 15);
+      await typeText(nikInput, mockData.nik, 15);
+      await typeText(phoneInput, mockData.phone, 20);
+
+      if (window.showToast) {
+        window.showToast("✓ Autofilled 4 fields via Gemini AI", "success", 3000);
+      }
+      simBtn.disabled = false;
+    });
+  }
+
+  if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+      nameInput.value = '';
+      emailInput.value = '';
+      nikInput.value = '';
+      phoneInput.value = '';
+      if (window.showToast) {
+        window.showToast("Fields cleared", "info", 1200);
+      }
+    });
+  }
+</script>

@@ -1,0 +1,1410 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>mock-form - Testing Playground</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --border: #e2e8f0;
+      --border-dark: #cbd5e1;
+      --accent: #0f172a;
+      --accent-hover: #334155;
+      --text: #0f172a;
+      --text-secondary: #475569;
+      --muted: #94a3b8;
+      --success: #10b981;
+      --success-bg: #ecfdf5;
+      --success-text: #065f46;
+      --danger: #ef4444;
+      --danger-bg: #fef2f2;
+      --danger-text: #991b1b;
+      --ring: rgba(15, 23, 42, 0.08);
+      --radius: 8px;
+      --radius-sm: 6px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 13px;
+      line-height: 1.5;
+      min-height: 100vh;
+      padding: 32px 20px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1040px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* ─── Header ─── */
+    .header {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-box {
+      width: 32px;
+      height: 32px;
+      background: var(--accent);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+    }
+
+    .logo-box svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .header-title h1 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+
+    .header-title p {
+      font-size: 11.5px;
+      color: var(--muted);
+      margin-top: 1px;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .shortcut-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 10px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 11.5px;
+      color: var(--text-secondary);
+    }
+
+    .shortcut-pill kbd {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1px 5px;
+      font-size: 10.5px;
+      font-family: inherit;
+      font-weight: 600;
+      color: var(--accent);
+      box-shadow: 0 1px 0 rgba(0,0,0,0.04);
+    }
+
+    /* ─── Buttons ─── */
+    .btn {
+      padding: 7px 12px;
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.15s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      user-select: none;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+    }
+
+    .btn-secondary {
+      background: var(--surface);
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: var(--bg);
+      color: var(--text);
+      border-color: var(--border-dark);
+    }
+
+    /* ─── Navigation Tabs ─── */
+    .tabs-bar {
+      display: flex;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 4px;
+      gap: 4px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+      overflow-x: auto;
+    }
+
+    .tab-btn {
+      flex: 1;
+      min-width: 140px;
+      padding: 8px 12px;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-secondary);
+      background: var(--bg);
+    }
+
+    .tab-btn.active {
+      background: var(--accent);
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    /* ─── Main Grid Layout ─── */
+    .layout-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 860px) {
+      .layout-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .card-title {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .card-badge {
+      font-size: 10.5px;
+      font-weight: 500;
+      color: var(--muted);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 2px 6px;
+    }
+
+    /* ─── Forms & Inputs ─── */
+    .tab-pane {
+      display: none;
+    }
+
+    .tab-pane.active {
+      display: block;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .full-width {
+      grid-column: span 2;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    label {
+      font-size: 11.5px;
+      font-weight: 500;
+      color: var(--text);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .label-hint {
+      font-size: 10.5px;
+      color: var(--muted);
+      font-weight: 400;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="password"],
+    input[type="date"],
+    input[type="number"],
+    select,
+    textarea {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 12.5px;
+      padding: 7px 10px;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: var(--muted);
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px var(--ring);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 56px;
+      line-height: 1.4;
+    }
+
+    select {
+      appearance: auto;
+      cursor: pointer;
+    }
+
+    /* Option Group */
+    .options-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding: 4px 0;
+    }
+
+    .option-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+
+    .option-label input {
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    /* Range & Color */
+    .range-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    input[type="range"] {
+      flex: 1;
+      accent-color: var(--accent);
+    }
+
+    .range-number {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      color: var(--text-secondary);
+      font-weight: 500;
+      min-width: 42px;
+    }
+
+    input[type="color"] {
+      height: 32px;
+      padding: 2px 4px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+    }
+
+    /* ─── Dropzone ─── */
+    .dropzone {
+      border: 1.5px dashed var(--border-dark);
+      border-radius: var(--radius);
+      padding: 22px 14px;
+      text-align: center;
+      background: var(--bg);
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .dropzone:hover, .dropzone.dragover {
+      border-color: var(--accent);
+      background: #f1f5f9;
+    }
+
+    .dropzone-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+    }
+
+    .dropzone-img {
+      display: none;
+      max-width: 120px;
+      max-height: 120px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      object-fit: cover;
+      margin-top: 6px;
+    }
+
+    /* ─── Stepper ─── */
+    .stepper {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      position: relative;
+    }
+
+    .stepper::before {
+      content: '';
+      position: absolute;
+      top: 13px;
+      left: 20px;
+      right: 20px;
+      height: 1px;
+      background: var(--border);
+      z-index: 1;
+    }
+
+    .step-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .step-badge {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--surface);
+      border: 1px solid var(--border-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+      transition: all 0.15s;
+    }
+
+    .step-item.active .step-badge {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: #ffffff;
+    }
+
+    .step-item.done .step-badge {
+      border-color: var(--success);
+      background: var(--success);
+      color: #ffffff;
+    }
+
+    .step-title {
+      font-size: 10.5px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .step-item.active .step-title {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .wizard-pane {
+      display: none;
+    }
+
+    .wizard-pane.active {
+      display: block;
+    }
+
+    .wizard-actions {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 16px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ─── Right Column: Verification & Console ─── */
+    .side-col {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .status-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .status-row {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 7px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11.5px;
+    }
+
+    .status-info {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      min-width: 0;
+    }
+
+    .status-title {
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .status-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      color: var(--muted);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 170px;
+    }
+
+    .pill {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 1px 6px;
+      border-radius: 4px;
+      letter-spacing: 0.02em;
+    }
+
+    .pill-pass {
+      background: var(--success-bg);
+      color: var(--success-text);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+
+    .pill-fail {
+      background: var(--danger-bg);
+      color: var(--danger-text);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+
+    .pill-pending {
+      background: var(--surface);
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+
+    /* Event Console */
+    .event-terminal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+    }
+
+    .terminal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .terminal-logs {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      max-height: 100px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column-reverse;
+      gap: 3px;
+    }
+
+    .log-line {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-secondary);
+    }
+
+    .log-time {
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .log-tag {
+      font-size: 9.5px;
+      font-weight: 600;
+      padding: 0 4px;
+      border-radius: 3px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--accent);
+    }
+
+    /* ─── Footer ─── */
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 4px 6px;
+      font-size: 11px;
+      color: var(--muted);
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .footer a {
+      color: var(--text-secondary);
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <!-- HEADER -->
+    <header class="header">
+      <div class="header-left">
+        <div class="logo-box">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+        </div>
+        <div class="header-title">
+          <h1>mock-form Playground</h1>
+          <p>Testing ground untuk autofill AI, preset format lokal & reaktivitas framework</p>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <div class="shortcut-pill">
+          <span>Shortcut:</span>
+          <kbd>Alt + Shift + F</kbd>
+        </div>
+        <button class="btn btn-secondary" id="btn-reset">Reset</button>
+        <button class="btn btn-primary" id="btn-fill">⚡ Tes Autofill</button>
+      </div>
+    </header>
+
+    <!-- TABS BAR -->
+    <nav class="tabs-bar">
+      <button class="tab-btn active" data-tab="tab-reg">1. Registrasi Lengkap</button>
+      <button class="tab-btn" data-tab="tab-photo">2. Suntik Foto & File</button>
+      <button class="tab-btn" data-tab="tab-presets">3. E-Commerce & Presets</button>
+      <button class="tab-btn" data-tab="tab-stepper">4. Multi-Step Wizard</button>
+    </nav>
+
+    <!-- LAYOUT GRID -->
+    <main class="layout-grid">
+      
+      <!-- FORMS COLUMN -->
+      <section class="card">
+        
+        <!-- 1. TAB REGISTRASI -->
+        <div class="tab-pane active" id="tab-reg">
+          <div class="card-header">
+            <span class="card-title">Form Registrasi Akun</span>
+            <span class="card-badge">Standard HTML5</span>
+          </div>
+
+          <form id="form-reg" onsubmit="event.preventDefault();">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="fullname">Nama Lengkap</label>
+                <input type="text" id="fullname" name="fullname" placeholder="John Doe" required>
+              </div>
+
+              <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" placeholder="johndoe" required>
+              </div>
+
+              <div class="form-group full-width">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="john@example.com" required>
+              </div>
+
+              <div class="form-group">
+                <label for="password">Kata Sandi <span class="label-hint">Password Sync</span></label>
+                <input type="password" id="password" name="password" placeholder="••••••••" required>
+              </div>
+
+              <div class="form-group">
+                <label for="confirm_password">Konfirmasi Sandi</label>
+                <input type="password" id="confirm_password" name="confirm_password" placeholder="••••••••" required>
+              </div>
+
+              <div class="form-group">
+                <label>Jenis Kelamin</label>
+                <div class="options-group">
+                  <label class="option-label"><input type="radio" name="gender" value="male" checked> Laki-laki</label>
+                  <label class="option-label"><input type="radio" name="gender" value="female"> Perempuan</label>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="role">Role Pekerjaan</label>
+                <select id="role" name="role">
+                  <option value="">Pilih Role...</option>
+                  <option value="frontend">Frontend Developer</option>
+                  <option value="backend">Backend Developer</option>
+                  <option value="fullstack">Fullstack Engineer</option>
+                  <option value="qa">QA Engineer / Tester</option>
+                </select>
+              </div>
+
+              <div class="form-group full-width">
+                <label>Minat / Keahlian</label>
+                <div class="options-group">
+                  <label class="option-label"><input type="checkbox" name="skills" value="react"> React</label>
+                  <label class="option-label"><input type="checkbox" name="skills" value="vue"> Vue.js</label>
+                  <label class="option-label"><input type="checkbox" name="skills" value="node"> Node.js</label>
+                  <label class="option-label"><input type="checkbox" name="skills" value="ai"> Gemini AI</label>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="exp">Pengalaman</label>
+                <div class="range-box">
+                  <input type="range" id="exp" name="experience" min="1" max="15" value="3">
+                  <span class="range-number" id="exp-label">3 thn</span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="theme_color">Warna Profil</label>
+                <input type="color" id="theme_color" name="theme_color" value="#0f172a">
+              </div>
+
+              <div class="form-group full-width">
+                <label for="bio">Bio Singkat</label>
+                <textarea id="bio" name="bio" rows="2" placeholder="Tuliskan pengalaman singkat..."></textarea>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- 2. TAB SUNTIK FOTO -->
+        <div class="tab-pane" id="tab-photo">
+          <div class="card-header">
+            <span class="card-title">Suntik Foto & File Upload</span>
+            <span class="card-badge">File & Dropzone</span>
+          </div>
+
+          <form id="form-photo" onsubmit="event.preventDefault();">
+            <div class="form-grid">
+              <div class="form-group full-width">
+                <label for="avatar_file">Input File Standar (`&lt;input type="file"&gt;`)</label>
+                <input type="file" id="avatar_file" name="avatar_file" accept="image/png, image/jpeg">
+              </div>
+
+              <div class="form-group full-width">
+                <label>Custom Drag & Drop Area</label>
+                <div class="dropzone" id="dropzone-box">
+                  <div class="dropzone-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                      <polyline points="17 8 12 3 7 8"></polyline>
+                      <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                  </div>
+                  <div>
+                    <strong style="font-size:12px; color:var(--text);">Drag & drop gambar di sini</strong>
+                    <p style="font-size:10.5px; color:var(--muted); margin-top:2px;">Atau gunakan tombol <em>"Suntik Foto"</em> pada ekstensi mock-form</p>
+                  </div>
+                  <img src="" id="drop-preview" class="dropzone-img" alt="Preview Foto">
+                </div>
+              </div>
+
+              <div class="form-group full-width">
+                <label for="photo_title">Judul Dokumen / Gambar</label>
+                <input type="text" id="photo_title" name="photo_title" placeholder="cth: Avatar Profil Pengguna">
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- 3. TAB E-COMMERCE & PRESETS -->
+        <div class="tab-pane" id="tab-presets">
+          <div class="card-header">
+            <span class="card-title">E-Commerce & Preset Regional</span>
+            <span class="card-badge">Indonesia & QA Strict</span>
+          </div>
+
+          <form id="form-presets" onsubmit="event.preventDefault();">
+            <div class="form-grid">
+              <div class="form-group full-width">
+                <label for="nik">NIK KTP <span class="label-hint">16 Digit Valid</span></label>
+                <input type="text" id="nik" name="nik" placeholder="3171xxxxxxxxxxxx" required minlength="16" maxlength="16" pattern="^[0-9]{16}$">
+              </div>
+
+              <div class="form-group full-width">
+                <label for="npwp">NPWP Wajib Pajak <span class="label-hint">Format 15/16 Digit</span></label>
+                <input type="text" id="npwp" name="npwp" placeholder="01.234.567.8-901.000" required>
+              </div>
+
+              <div class="form-group full-width">
+                <label for="card_number">Nomor Kartu Kredit <span class="label-hint">Luhn Check</span></label>
+                <input type="text" id="card_number" name="card_number" autocomplete="cc-number" placeholder="4242 4242 4242 4242" required>
+              </div>
+
+              <div class="form-group">
+                <label for="card_cvv">CVV / CVC <span class="label-hint">3 Digit</span></label>
+                <input type="text" id="card_cvv" name="card_cvv" placeholder="123" maxlength="4" required>
+              </div>
+
+              <div class="form-group">
+                <label for="card_exp">Kadaluarsa (MM/YY)</label>
+                <input type="text" id="card_exp" name="card_exp" placeholder="12/28" required>
+              </div>
+
+              <div class="form-group full-width">
+                <label for="no_hp">WhatsApp / No. HP <span class="label-hint">08xx / +628xx</span></label>
+                <input type="tel" id="no_hp" name="no_hp" placeholder="081234567890" required>
+              </div>
+
+              <div class="form-group">
+                <label for="tgl_lahir">Tanggal Lahir <span class="label-hint">Usia 18+</span></label>
+                <input type="date" id="tgl_lahir" name="tgl_lahir" required>
+              </div>
+
+              <div class="form-group">
+                <label for="kode_pos">Kode Pos <span class="label-hint">5 Digit</span></label>
+                <input type="text" id="kode_pos" name="kodepos" placeholder="12930" maxlength="5" required>
+              </div>
+
+              <div class="form-group full-width">
+                <label for="voucher_code">Kode Voucher <span class="label-hint">Pattern: ^[A-Z]{3}-[0-9]{4}$</span></label>
+                <input type="text" id="voucher_code" name="voucher_code" pattern="^[A-Z]{3}-[0-9]{4}$" placeholder="VIP-2026" required>
+              </div>
+
+              <div class="form-group full-width">
+                <label for="uuid">UUID v4 <span class="label-hint">RFC4122</span></label>
+                <input type="text" id="uuid" name="uuid" placeholder="xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx">
+              </div>
+
+              <div class="form-group full-width">
+                <label for="server_ip">Server IP <span class="label-hint">IPv4</span></label>
+                <input type="text" id="server_ip" name="server_ip" placeholder="192.168.1.1">
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- 4. TAB MULTI-STEP WIZARD -->
+        <div class="tab-pane" id="tab-stepper">
+          <div class="card-header">
+            <span class="card-title">Simulasi Multi-Step Form</span>
+            <span class="card-badge">Wizard Stepper</span>
+          </div>
+
+          <div class="stepper">
+            <div class="step-item active" id="step-1">
+              <div class="step-badge">1</div>
+              <span class="step-title">Akun</span>
+            </div>
+            <div class="step-item" id="step-2">
+              <div class="step-badge">2</div>
+              <span class="step-title">Profil</span>
+            </div>
+            <div class="step-item" id="step-3">
+              <div class="step-badge">3</div>
+              <span class="step-title">Konfirmasi</span>
+            </div>
+          </div>
+
+          <form id="form-wizard" onsubmit="event.preventDefault();">
+            <!-- Step 1 -->
+            <div class="wizard-pane active" id="pane-1">
+              <div class="form-grid">
+                <div class="form-group full-width">
+                  <label for="wiz_email">Email Pendaftaran</label>
+                  <input type="email" id="wiz_email" name="wiz_email" placeholder="user@company.com">
+                </div>
+                <div class="form-group full-width">
+                  <label for="wiz_password">Kata Sandi</label>
+                  <input type="password" id="wiz_password" name="wiz_password" placeholder="••••••••">
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="wizard-pane" id="pane-2">
+              <div class="form-grid">
+                <div class="form-group full-width">
+                  <label for="wiz_org">Nama Perusahaan / Organisasi</label>
+                  <input type="text" id="wiz_org" name="organization" placeholder="Acme Corporation">
+                </div>
+                <div class="form-group">
+                  <label for="wiz_city">Kota</label>
+                  <input type="text" id="wiz_city" name="city" placeholder="Jakarta Selatan">
+                </div>
+                <div class="form-group">
+                  <label for="wiz_country">Negara</label>
+                  <select id="wiz_country" name="country">
+                    <option value="ID">Indonesia</option>
+                    <option value="SG">Singapore</option>
+                    <option value="MY">Malaysia</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="wizard-pane" id="pane-3">
+              <div class="form-grid">
+                <div class="form-group full-width">
+                  <label for="wiz_note">Catatan Tambahan</label>
+                  <textarea id="wiz_note" name="notes" rows="2" placeholder="Catatan pengajuan akun..."></textarea>
+                </div>
+                <div class="form-group full-width">
+                  <label class="option-label">
+                    <input type="checkbox" name="agree" checked> Saya menyetujui syarat dan ketentuan
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="wizard-actions">
+              <button class="btn btn-secondary" id="wiz-prev" disabled>← Kembali</button>
+              <button class="btn btn-primary" id="wiz-next">Lanjut →</button>
+            </div>
+          </form>
+        </div>
+
+      </section>
+
+      <!-- SIDE COLUMN: VERIFICATION & EVENT LOGGER -->
+      <section class="side-col">
+        
+        <!-- VERIFICATION LIST -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Hasil Validasi Data</span>
+            <span class="card-badge" id="pass-count">0 / 10 PASS</span>
+          </div>
+
+          <div class="status-list">
+            <div class="status-row">
+              <div class="status-info">
+                <span class="status-title">NIK 16-Digit</span>
+                <span class="status-val" id="val-nik">-</span>
+              </div>
+              <span class="pill pill-pending" id="badge-nik">PENDING</span>
+            </div>
+
+            <div class="status-row">
+              <div class="status-info">
+                <span class="status-title">NPWP Indonesia</span>
+                <span class="status-val" id="val-npwp">-</span>
+              </div>
+              <span class="pill pill-pending" id="badge-npwp">PENDING</span>
+            </div>
+
+            <div class="status-row">
+              <div class="status-info">
+                <span class="status-title">Kartu Kredit (Luhn)</span>
+                <span class="status-val" id="val-card">-</span>
+              </div>
+              <span class="pill pill-pending" id="badge-card">PENDING</span>
+            </div>
+
+            <div class="status-row">
+              <div class="status-info">
+                <span class="status-title">CVV (3 Digit)</span>
+                <span class="status-val" id="val-cvv">-</span>
+              </div>
+              <span class="pill pill-pending" id="badge-cvv">PENDING</span>
+            </div>
+
+            <div class="status-row">
+              <div class="status-info">
+                <span class="status-title">Kadaluarsa (MM/YY)</span>
+                <span class="status-val" id="val-exp">-</span>
+              </div>
+              <span class="pill pill-pending" id="badge-exp">PENDING</span>
+            </div>
+
+            <div class="status-row">
+              <div class="status-info">
+                <span class="status-title">No. HP Indonesia</span>
+                <span class="status-val" id="val-hp">-</span>
+              </div>
+              <span class="pill pill-pending" id="badge-hp">PENDING</span>
+            </div>
+
+            <div class="status-row">
+              <div class="status-info">
+                <span class="status-title">Tanggal Lahir (18+)</span>
+                <span class="status-val" id="val-dob">-</span>
+              </div>
+              <span class="pill pill-pending" id="badge-dob">PENDING</span>
+            </div>
+
+            <div class="status-row">
+              <div class="status-info">
+                <span class="status-title">Pattern (VIP-2026)</span>
+                <span class="status-val" id="val-voucher">-</span>
+              </div>
+              <span class="pill pill-pending" id="badge-voucher">PENDING</span>
+            </div>
+
+            <div class="status-row">
+              <div class="status-info">
+                <span class="status-title">UUID v4</span>
+                <span class="status-val" id="val-uuid">-</span>
+              </div>
+              <span class="pill pill-pending" id="badge-uuid">PENDING</span>
+            </div>
+
+            <div class="status-row">
+              <div class="status-info">
+                <span class="status-title">IPv4 Address</span>
+                <span class="status-val" id="val-ip">-</span>
+              </div>
+              <span class="pill pill-pending" id="badge-ip">PENDING</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- EVENT LOG -->
+        <div class="event-terminal">
+          <div class="terminal-header">
+            <span>Reactivity Event Logger</span>
+            <span style="color:var(--success); font-weight:600;">ACTIVE</span>
+          </div>
+          <div class="terminal-logs" id="terminal-logs">
+            <div class="log-line">
+              <span class="log-time">[Ready]</span>
+              <span class="log-tag">INIT</span>
+              <span>Menunggu event input...</span>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div>
+        <strong>mock-form</strong> &bull; Open-source under <a href="https://opensource.org/licenses/MIT" target="_blank">MIT License</a>
+      </div>
+    </footer>
+
+  </div>
+
+  <script>
+    // 1. Tab Navigation
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        const target = document.getElementById(btn.dataset.tab);
+        if (target) target.classList.add('active');
+      });
+    });
+
+    // 2. Range Label
+    const rangeExp = document.getElementById('exp');
+    const labelExp = document.getElementById('exp-label');
+    if (rangeExp && labelExp) {
+      rangeExp.addEventListener('input', (e) => {
+        labelExp.textContent = `${e.target.value} thn`;
+      });
+    }
+
+    // 3. Wizard Stepper Logic
+    let curStep = 1;
+    const maxSteps = 3;
+    const btnWizNext = document.getElementById('wiz-next');
+    const btnWizPrev = document.getElementById('wiz-prev');
+
+    function renderWizard() {
+      for (let i = 1; i <= maxSteps; i++) {
+        const pane = document.getElementById(`pane-${i}`);
+        const step = document.getElementById(`step-${i}`);
+        if (pane) pane.classList.toggle('active', i === curStep);
+        if (step) {
+          step.classList.toggle('active', i === curStep);
+          step.classList.toggle('done', i < curStep);
+        }
+      }
+      btnWizPrev.disabled = curStep === 1;
+      btnWizNext.textContent = curStep === maxSteps ? 'Selesai ✓' : 'Lanjut →';
+    }
+
+    btnWizNext.addEventListener('click', () => {
+      if (curStep < maxSteps) {
+        curStep++;
+        renderWizard();
+      } else {
+        alert('Formulir wizard selesai diisi!');
+      }
+    });
+
+    btnWizPrev.addEventListener('click', () => {
+      if (curStep > 1) {
+        curStep--;
+        renderWizard();
+      }
+    });
+
+    // 4. Reactive Event Logger
+    const terminalLogs = document.getElementById('terminal-logs');
+    function logAction(type, name) {
+      const now = new Date();
+      const timeStr = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
+      const line = document.createElement('div');
+      line.className = 'log-line';
+      line.innerHTML = `
+        <span class="log-time">[${timeStr}]</span>
+        <span class="log-tag">${type.toUpperCase()}</span>
+        <span>${name || 'field'}</span>
+      `;
+      terminalLogs.prepend(line);
+      if (terminalLogs.children.length > 20) {
+        terminalLogs.lastElementChild.remove();
+      }
+    }
+
+    document.querySelectorAll('input, select, textarea').forEach(el => {
+      ['input', 'change', 'blur'].forEach(evt => {
+        el.addEventListener(evt, (e) => {
+          logAction(evt, e.target.name || e.target.id);
+          validateAll();
+        });
+      });
+    });
+
+    // 5. Dropzone File Preview
+    const dropzone = document.getElementById('dropzone-box');
+    const dropImg = document.getElementById('drop-preview');
+    const nativeFile = document.getElementById('avatar_file');
+
+    if (dropzone) {
+      ['dragenter', 'dragover'].forEach(n => {
+        dropzone.addEventListener(n, (e) => {
+          e.preventDefault();
+          dropzone.classList.add('dragover');
+        });
+      });
+      ['dragleave', 'drop'].forEach(n => {
+        dropzone.addEventListener(n, (e) => {
+          e.preventDefault();
+          dropzone.classList.remove('dragover');
+        });
+      });
+      dropzone.addEventListener('drop', (e) => {
+        logAction('drop', 'dropzone');
+        const files = e.dataTransfer?.files;
+        if (files && files[0] && files[0].type.startsWith('image/')) {
+          const r = new FileReader();
+          r.onload = ev => {
+            dropImg.src = ev.target.result;
+            dropImg.style.display = 'block';
+          };
+          r.readAsDataURL(files[0]);
+        }
+      });
+    }
+
+    if (nativeFile) {
+      nativeFile.addEventListener('change', (e) => {
+        if (e.target.files && e.target.files[0]) {
+          const r = new FileReader();
+          r.onload = ev => {
+            if (dropImg) {
+              dropImg.src = ev.target.result;
+              dropImg.style.display = 'block';
+            }
+          };
+          r.readAsDataURL(e.target.files[0]);
+        }
+      });
+    }
+
+    // 6. Luhn Validation
+    function isLuhnValid(cardNo) {
+      const clean = String(cardNo).replace(/\D/g, '');
+      if (clean.length < 13 || clean.length > 19) return false;
+      let sum = 0;
+      let shouldDouble = false;
+      for (let i = clean.length - 1; i >= 0; i--) {
+        let digit = parseInt(clean.charAt(i), 10);
+        if (shouldDouble) {
+          digit *= 2;
+          if (digit > 9) digit -= 9;
+        }
+        sum += digit;
+        shouldDouble = !shouldDouble;
+      }
+      return (sum % 10) === 0;
+    }
+
+    function validateAll() {
+      let pass = 0;
+
+      // 1. NIK
+      const nik = document.getElementById('nik')?.value || '';
+      if (updateRow('nik', nik, /^\d{16}$/.test(nik))) pass++;
+
+      // 2. NPWP
+      const npwp = document.getElementById('npwp')?.value || '';
+      if (updateRow('npwp', npwp, /^(\d{2}\.\d{3}\.\d{3}\.\d{1}-\d{3}\.\d{3}|\d{15,16})$/.test(npwp))) pass++;
+
+      // 3. Card
+      const cc = document.getElementById('card_number')?.value || '';
+      if (updateRow('card', cc, isLuhnValid(cc))) pass++;
+
+      // 4. CVV
+      const cvv = document.getElementById('card_cvv')?.value || '';
+      if (updateRow('cvv', cvv, /^\d{3,4}$/.test(cvv))) pass++;
+
+      // 5. Exp
+      const exp = document.getElementById('card_exp')?.value || '';
+      if (updateRow('exp', exp, /^(0[1-9]|1[0-2])\/?(2[5-9]|3[0-5])$/.test(exp))) pass++;
+
+      // 6. HP
+      const hp = document.getElementById('no_hp')?.value || '';
+      if (updateRow('hp', hp, /^(\+62|0)8[1-9][0-9]{7,10}$/.test(hp.replace(/[^0-9+]/g, '')))) pass++;
+
+      // 7. DOB
+      const dob = document.getElementById('tgl_lahir')?.value || '';
+      let dobOk = false;
+      if (dob) {
+        const y = parseInt(dob.split('-')[0], 10);
+        dobOk = (new Date().getFullYear() - y) >= 18;
+      }
+      if (updateRow('dob', dob, dobOk)) pass++;
+
+      // 8. Pattern
+      const voucher = document.getElementById('voucher_code')?.value || '';
+      if (updateRow('voucher', voucher, /^[A-Z]{3}-[0-9]{4}$/.test(voucher))) pass++;
+
+      // 9. UUID
+      const uuid = document.getElementById('uuid')?.value || '';
+      if (updateRow('uuid', uuid, /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(uuid))) pass++;
+
+      // 10. IP
+      const ip = document.getElementById('server_ip')?.value || '';
+      if (updateRow('ip', ip, /^(\d{1,3}\.){3}\d{1,3}$/.test(ip))) pass++;
+
+      const countEl = document.getElementById('pass-count');
+      if (countEl) {
+        countEl.textContent = `${pass} / 10 PASS`;
+        countEl.style.color = pass === 10 ? 'var(--success)' : 'var(--text-secondary)';
+      }
+    }
+
+    function updateRow(id, val, isOk) {
+      const vEl = document.getElementById(`val-${id}`);
+      const bEl = document.getElementById(`badge-${id}`);
+      if (!vEl || !bEl) return false;
+
+      vEl.textContent = val || '-';
+      if (!val) {
+        bEl.className = 'pill pill-pending';
+        bEl.textContent = 'PENDING';
+        return false;
+      } else if (isOk) {
+        bEl.className = 'pill pill-pass';
+        bEl.textContent = 'PASS ✓';
+        return true;
+      } else {
+        bEl.className = 'pill pill-fail';
+        bEl.textContent = 'FAIL ✗';
+        return false;
+      }
+    }
+
+    // 7. Quick Fill Simulation
+    function fillPlayground() {
+      // 1. Registrasi
+      document.getElementById('fullname').value = 'Budi Wicaksono';
+      document.getElementById('username').value = 'budiwicaksono';
+      document.getElementById('email').value = 'budi@example.com';
+      document.getElementById('password').value = 'Katasandi123!';
+      document.getElementById('confirm_password').value = 'Katasandi123!';
+      document.getElementById('role').value = 'fullstack';
+      document.getElementById('bio').value = 'Software engineer yang berfokus pada arsitektur web modern dan kualitas testing.';
+
+      // 2. Presets
+      const provs = ['317101', '327301', '357801', '517101'];
+      const p = provs[Math.floor(Math.random() * provs.length)];
+      const d = String(Math.floor(Math.random() * 28) + 1).padStart(2, '0');
+      const m = String(Math.floor(Math.random() * 12) + 1).padStart(2, '0');
+      const y = String(Math.floor(Math.random() * 30) + 70).padStart(2, '0');
+      const s = String(Math.floor(Math.random() * 90) + 1).padStart(4, '0');
+      document.getElementById('nik').value = `${p}${d}${m}${y}${s}`;
+      document.getElementById('npwp').value = '01.234.567.8-901.000';
+
+      let digits = [4];
+      while (digits.length < 15) digits.push(Math.floor(Math.random() * 10));
+      let sum = 0;
+      for (let i = 0; i < digits.length; i++) {
+        let digit = digits[digits.length - 1 - i];
+        if (i % 2 === 0) { digit *= 2; if (digit > 9) digit -= 9; }
+        sum += digit;
+      }
+      digits.push((10 - (sum % 10)) % 10);
+      document.getElementById('card_number').value = digits.join('');
+      document.getElementById('card_cvv').value = '789';
+      document.getElementById('card_exp').value = '12/28';
+      document.getElementById('no_hp').value = '081234567890';
+      
+      const birthYear = new Date().getFullYear() - 25;
+      document.getElementById('tgl_lahir').value = `${birthYear}-08-17`;
+      document.getElementById('kode_pos').value = '12930';
+      document.getElementById('voucher_code').value = 'VIP-2026';
+      document.getElementById('uuid').value = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+        const r = Math.random() * 16 | 0;
+        return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+      });
+      document.getElementById('server_ip').value = '192.168.1.100';
+
+      // 3. Wizard
+      document.getElementById('wiz_email').value = 'budi@corp.id';
+      document.getElementById('wiz_password').value = 'AdminPass99!';
+      document.getElementById('wiz_org').value = 'Nusantara Tech';
+      document.getElementById('wiz_city').value = 'Jakarta Selatan';
+      document.getElementById('wiz_note').value = 'Akun enterprise testing.';
+
+      // Dispatch native events
+      document.querySelectorAll('input, select, textarea').forEach(el => {
+        el.dispatchEvent(new Event('input', { bubbles: true }));
+        el.dispatchEvent(new Event('change', { bubbles: true }));
+      });
+
+      validateAll();
+    }
+
+    document.getElementById('btn-fill').addEventListener('click', fillPlayground);
+    document.getElementById('btn-reset').addEventListener('click', () => {
+      document.querySelectorAll('form').forEach(f => f.reset());
+      if (dropImg) dropImg.style.display = 'none';
+      curStep = 1;
+      renderWizard();
+      validateAll();
+    });
+
+    validateAll();
+  </script>
+</body>
+</html>

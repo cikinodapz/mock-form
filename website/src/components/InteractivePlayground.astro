@@ -1,0 +1,356 @@
+---
+const baseUrl = import.meta.env.BASE_URL.endsWith('/') 
+  ? import.meta.env.BASE_URL 
+  : `${import.meta.env.BASE_URL}/`;
+---
+
+<section id="playground" class="playground-section">
+  <div class="container">
+    <div class="section-header">
+      <div class="badge">
+        <span class="badge-dot"></span>
+        <span>Live Interactive Sandbox</span>
+      </div>
+      <h2 class="section-title">Test Forms in Real-Time</h2>
+      <p class="section-subtitle">
+        Already loaded the extension? Simply click the floating widget or press <kbd>Alt + Shift + F</kbd>. 
+        Haven't installed it yet? Click <strong>Simulate AI Fill</strong> to see realistic data generation in action.
+      </p>
+    </div>
+
+    <!-- Playground Card Container -->
+    <div class="playground-card">
+      <div class="playground-topbar">
+        <div class="playground-status">
+          <span class="status-indicator"></span>
+          <span>DOM Form Detection Active</span>
+        </div>
+        <div class="playground-actions">
+          <button type="button" id="pg-simulate-btn" class="btn btn-primary btn-sm">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="m13 2-2 2.5h3L11 9"/>
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+            </svg>
+            <span>Simulate AI Fill</span>
+          </button>
+          <button type="button" id="pg-clear-btn" class="btn btn-secondary btn-sm">
+            Clear Form
+          </button>
+          <a href={`${baseUrl}playground.html`} target="_blank" rel="noopener noreferrer" class="btn btn-ghost btn-sm full-pg-link">
+            <span>Full 100+ Inputs Testbed ↗</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Live Form Grid -->
+      <form id="interactive-demo-form" class="demo-form" onsubmit="return false;">
+        <!-- Group 1: Personal & Account -->
+        <div class="form-group-section">
+          <h4 class="group-title">1. Account & Identity</h4>
+          <div class="fields-row">
+            <div class="field-item">
+              <label for="pg-fullname">Full Name</label>
+              <input type="text" id="pg-fullname" name="fullname" placeholder="e.g. Raditya Pratama" autocomplete="name" />
+            </div>
+            <div class="field-item">
+              <label for="pg-email">Email Address</label>
+              <input type="email" id="pg-email" name="email" placeholder="e.g. raditya@domain.id" autocomplete="email" />
+            </div>
+            <div class="field-item">
+              <label for="pg-username">Username</label>
+              <input type="text" id="pg-username" name="username" placeholder="e.g. raditya_dev" autocomplete="username" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Group 2: Regional Indonesia & Contact -->
+        <div class="form-group-section">
+          <h4 class="group-title">2. Regional Presets (Indonesia)</h4>
+          <div class="fields-row">
+            <div class="field-item">
+              <label for="pg-nik">NIK (16-Digit KTP)</label>
+              <input type="text" id="pg-nik" name="nik" placeholder="3171012304950001" maxlength="16" />
+            </div>
+            <div class="field-item">
+              <label for="pg-npwp">NPWP (Tax ID)</label>
+              <input type="text" id="pg-npwp" name="npwp" placeholder="01.234.567.8-123.000" />
+            </div>
+            <div class="field-item">
+              <label for="pg-phone">WhatsApp / Phone (08xx)</label>
+              <input type="tel" id="pg-phone" name="phone" placeholder="081289104421" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Group 3: QA & Financial Simulation -->
+        <div class="form-group-section">
+          <h4 class="group-title">3. QA Validation & Financial Mock</h4>
+          <div class="fields-row">
+            <div class="field-item flex-2">
+              <label for="pg-card">Dummy Credit Card (Luhn Valid)</label>
+              <input type="text" id="pg-card" name="card_number" placeholder="4532 •••• •••• ••••" />
+            </div>
+            <div class="field-item">
+              <label for="pg-exp">Expiry (MM/YY)</label>
+              <input type="text" id="pg-exp" name="exp_date" placeholder="12/28" />
+            </div>
+            <div class="field-item">
+              <label for="pg-cvv">CVV</label>
+              <input type="text" id="pg-cvv" name="cvv" placeholder="842" maxlength="4" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Group 4: Options & Notes -->
+        <div class="form-group-section">
+          <h4 class="group-title">4. Framework Options & Bio</h4>
+          <div class="fields-row">
+            <div class="field-item">
+              <label for="pg-role">Engineering Role</label>
+              <select id="pg-role" name="role">
+                <option value="">-- Select Role --</option>
+                <option value="frontend">Senior Frontend Engineer</option>
+                <option value="backend">Staff Backend Architect</option>
+                <option value="qa">Lead QA Automation Engineer</option>
+                <option value="devops">DevOps & Platform Specialist</option>
+              </select>
+            </div>
+            <div class="field-item flex-2">
+              <label for="pg-bio">Bio & Persona Instruction</label>
+              <textarea id="pg-bio" name="bio" rows="2" placeholder="Tell us about your testing profile or background..."></textarea>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<style>
+  .playground-section {
+    padding: 80px 0;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .playground-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+  }
+
+  .playground-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    background: rgba(0, 0, 0, 0.4);
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .playground-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .status-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #f8fafc;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+    animation: blink 2.5s infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .playground-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .full-pg-link {
+    color: var(--text);
+  }
+
+  .demo-form {
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .form-group-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .group-title {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .fields-row {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .field-item {
+    flex: 1;
+    min-width: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .field-item.flex-2 {
+    flex: 2;
+    min-width: 280px;
+  }
+
+  .field-item label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+  }
+
+  .field-item input,
+  .field-item select,
+  .field-item textarea {
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+    font-size: 13px;
+    color: #ffffff;
+    outline: none;
+    transition: all 0.2s ease;
+  }
+
+  .field-item input:focus,
+  .field-item select:focus,
+  .field-item textarea:focus {
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.08);
+  }
+
+  .field-item input.populated,
+  .field-item select.populated,
+  .field-item textarea.populated {
+    border-color: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  @media (max-width: 768px) {
+    .fields-row {
+      flex-direction: column;
+    }
+    .field-item, .field-item.flex-2 {
+      min-width: 100%;
+    }
+    .playground-actions {
+      width: 100%;
+      justify-content: flex-start;
+    }
+  }
+</style>
+
+<script is:inline>
+  const pgSimBtn = document.getElementById('pg-simulate-btn');
+  const pgClearBtn = document.getElementById('pg-clear-btn');
+
+  const sampleDatasets = [
+    {
+      fullname: "Anisa Rahmawati",
+      email: "anisa.rahma@fintech.co.id",
+      username: "anisarahma",
+      nik: "3273014508930004",
+      npwp: "02.456.789.1-423.000",
+      phone: "081389201948",
+      card: "4532 8920 1823 4910",
+      exp: "08/29",
+      cvv: "712",
+      role: "qa",
+      bio: "Lead QA Automation Engineer specializing in Cypress, Playwright, and Gemini AI validation."
+    },
+    {
+      fullname: "Bambang Wijaya",
+      email: "bambang.w@logistics.id",
+      username: "bambangw",
+      nik: "3174021903880002",
+      npwp: "01.987.654.3-122.000",
+      phone: "085712398472",
+      card: "5424 1829 3920 1928",
+      exp: "11/27",
+      cvv: "349",
+      role: "backend",
+      bio: "Distributed systems engineer testing high-throughput checkout and enterprise billing forms."
+    }
+  ];
+
+  let sampleIndex = 0;
+
+  if (pgSimBtn) {
+    pgSimBtn.addEventListener('click', () => {
+      const data = sampleDatasets[sampleIndex % sampleDatasets.length];
+      sampleIndex++;
+
+      const fields = [
+        { el: document.getElementById('pg-fullname'), val: data.fullname },
+        { el: document.getElementById('pg-email'), val: data.email },
+        { el: document.getElementById('pg-username'), val: data.username },
+        { el: document.getElementById('pg-nik'), val: data.nik },
+        { el: document.getElementById('pg-npwp'), val: data.npwp },
+        { el: document.getElementById('pg-phone'), val: data.phone },
+        { el: document.getElementById('pg-card'), val: data.card },
+        { el: document.getElementById('pg-exp'), val: data.exp },
+        { el: document.getElementById('pg-cvv'), val: data.cvv },
+        { el: document.getElementById('pg-role'), val: data.role },
+        { el: document.getElementById('pg-bio'), val: data.bio }
+      ];
+
+      fields.forEach((item, index) => {
+        if (!item.el) return;
+        setTimeout(() => {
+          item.el.value = item.val;
+          item.el.classList.add('populated');
+          item.el.dispatchEvent(new Event('input', { bubbles: true }));
+          item.el.dispatchEvent(new Event('change', { bubbles: true }));
+          setTimeout(() => item.el.classList.remove('populated'), 1000);
+        }, index * 40);
+      });
+
+      if (window.showToast) {
+        window.showToast(`✓ Populated 11 fields via Gemini Mock Simulation`, "success", 2800);
+      }
+    });
+  }
+
+  if (pgClearBtn) {
+    pgClearBtn.addEventListener('click', () => {
+      const form = document.getElementById('interactive-demo-form');
+      if (form) form.reset();
+      if (window.showToast) {
+        window.showToast("All playground inputs reset", "info", 1500);
+      }
+    });
+  }
+</script>

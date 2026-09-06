@@ -1,0 +1,206 @@
+---
+const baseUrl = import.meta.env.BASE_URL.endsWith('/') 
+  ? import.meta.env.BASE_URL 
+  : `${import.meta.env.BASE_URL}/`;
+
+const githubRepo = "https://github.com/cikinodapz/mock-form";
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="container footer-container">
+    <div class="footer-top">
+      <!-- Brand & Mission -->
+      <div class="footer-brand">
+        <a href={`${baseUrl}`} class="brand">
+          <img 
+            src={`${baseUrl}icons/logo-ui.png`} 
+            alt="mock-form logo" 
+            class="brand-icon" 
+            width="24" 
+            height="24" 
+          />
+          <span class="brand-text">mock-form</span>
+        </a>
+        <p class="brand-sub">
+          Lightweight, privacy-first open source Chrome extension powered by Google Gemini AI for developers, QA engineers, and testers.
+        </p>
+        <div class="license-badge">
+          Released under the <strong>MIT License</strong>
+        </div>
+      </div>
+
+      <!-- Footer Columns -->
+      <div class="footer-links-grid">
+        <div class="footer-col">
+          <h4 class="col-title">Product</h4>
+          <a href="#features" class="footer-link">Features</a>
+          <a href="#playground" class="footer-link">Live Playground</a>
+          <a href="#models" class="footer-link">Gemini Models</a>
+          <a href="#shortcuts" class="footer-link">Hotkeys</a>
+          <a href="#install" class="footer-link">Installation</a>
+        </div>
+
+        <div class="footer-col">
+          <h4 class="col-title">Open Source</h4>
+          <a href={githubRepo} target="_blank" rel="noopener noreferrer" class="footer-link">
+            GitHub Repository ↗
+          </a>
+          <a href={`${githubRepo}/issues`} target="_blank" rel="noopener noreferrer" class="footer-link">
+            Report an Issue ↗
+          </a>
+          <a href={`${githubRepo}/pulls`} target="_blank" rel="noopener noreferrer" class="footer-link">
+            Pull Requests ↗
+          </a>
+          <a href={`${githubRepo}/blob/main/LICENSE`} target="_blank" rel="noopener noreferrer" class="footer-link">
+            MIT License ↗
+          </a>
+        </div>
+
+        <div class="footer-col">
+          <h4 class="col-title">Ecosystem</h4>
+          <a href="https://aistudio.google.com/" target="_blank" rel="noopener noreferrer" class="footer-link">
+            Google AI Studio ↗
+          </a>
+          <a href="https://developer.chrome.com/docs/extensions/mv3/" target="_blank" rel="noopener noreferrer" class="footer-link">
+            Chrome Manifest V3 ↗
+          </a>
+          <a href={`${baseUrl}playground.html`} target="_blank" rel="noopener noreferrer" class="footer-link">
+            100+ Inputs Testbed ↗
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="copyright">
+        © {currentYear} <strong>mock-form</strong>. Built for developers with high standards.
+      </div>
+      <div class="bottom-links">
+        <span class="privacy-tag">100% Client-Side Privacy Guaranteed</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    border-top: 1px solid var(--border);
+    background: #09090b;
+    padding: 60px 0 32px;
+    margin-top: auto;
+  }
+
+  .footer-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 48px;
+    margin-bottom: 48px;
+    flex-wrap: wrap;
+  }
+
+  .footer-brand {
+    max-width: 320px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .brand-icon {
+    filter: brightness(0) invert(1) drop-shadow(0 2px 5px rgba(0,0,0,0.2));
+  }
+
+  .brand-text {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .brand-sub {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--text-muted);
+  }
+
+  .license-badge {
+    font-size: 11px;
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .footer-links-grid {
+    display: flex;
+    gap: 56px;
+    flex-wrap: wrap;
+  }
+
+  .footer-col {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .col-title {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+    margin-bottom: 4px;
+  }
+
+  .footer-link {
+    font-size: 13px;
+    color: var(--text-muted);
+    transition: color 0.15s ease;
+  }
+
+  .footer-link:hover {
+    color: var(--text);
+  }
+
+  .footer-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 24px;
+    border-top: 1px solid var(--border-subtle);
+    font-size: 12px;
+    color: var(--text-dim);
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .copyright strong {
+    color: var(--text-secondary);
+  }
+
+  .privacy-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    background: rgba(255, 255, 255, 0.04);
+    padding: 3px 8px;
+    border-radius: 4px;
+    border: 1px solid var(--border-subtle);
+  }
+
+  @media (max-width: 768px) {
+    .footer-top {
+      flex-direction: column;
+      gap: 36px;
+    }
+    .footer-links-grid {
+      gap: 36px;
+      justify-content: space-between;
+      width: 100%;
+    }
+  }
+</style>

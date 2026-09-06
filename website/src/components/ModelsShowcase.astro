@@ -1,0 +1,216 @@
+---
+const models = [
+  {
+    name: "Gemini 3.7 Flash",
+    tag: "Recommended",
+    speed: "Ultra Fast",
+    reasoning: "Hybrid Reasoning",
+    useCase: "State-of-the-art hybrid reasoning & high-speed form filling",
+    free: true
+  },
+  {
+    name: "Gemini 3.1 Flash Lite",
+    tag: "Fastest",
+    speed: "Sub-second",
+    reasoning: "High Throughput",
+    useCase: "Instantaneous form population for high-speed automated testing",
+    free: true
+  },
+  {
+    name: "Gemini 2.5 Flash",
+    tag: "Balanced",
+    speed: "Very Fast",
+    reasoning: "High Quality",
+    useCase: "Solid all-rounder with excellent multimodal & structured JSON output",
+    free: true
+  },
+  {
+    name: "Gemini 3 Flash",
+    tag: "Complex Forms",
+    speed: "Very Fast",
+    reasoning: "Deep Inference",
+    useCase: "Deep contextual inference for multi-step enterprise onboarding forms",
+    free: true
+  }
+];
+---
+
+<section id="models" class="models-section">
+  <div class="container">
+    <div class="section-header">
+      <div class="badge">
+        <span class="badge-dot"></span>
+        <span>Model Flexibility</span>
+      </div>
+      <h2 class="section-title">Powered by Google Gemini Models</h2>
+      <p class="section-subtitle">
+        Seamlessly switch between Google's state-of-the-art AI models directly in the extension settings tab. 
+        Zero API subscription fees — runs on Google AI Studio's generous free tier.
+      </p>
+    </div>
+
+    <div class="models-grid">
+      {models.map((model) => (
+        <div class="model-card">
+          <div class="model-header">
+            <h3 class="model-name">{model.name}</h3>
+            <span class="model-tag">{model.tag}</span>
+          </div>
+          <p class="model-desc">{model.useCase}</p>
+          <div class="model-specs">
+            <div class="spec-row">
+              <span class="spec-label">Response Speed</span>
+              <span class="spec-value">{model.speed}</span>
+            </div>
+            <div class="spec-row">
+              <span class="spec-label">Reasoning Tier</span>
+              <span class="spec-value">{model.reasoning}</span>
+            </div>
+            <div class="spec-row">
+              <span class="spec-label">AI Studio Cost</span>
+              <span class="spec-value spec-free">Free Tier</span>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <div class="model-hint-card">
+      <div class="hint-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M12 16v-4"/>
+          <path d="M12 8h.01"/>
+        </svg>
+      </div>
+      <div class="hint-text">
+        <strong>Legacy & Additional Models Available:</strong> Gemini 3.6 Flash, 2.5 Flash Lite, 2.0 Flash, and 1.5 Flash are also supported in the extension dropdown for full backward compatibility.
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .models-section {
+    padding: 80px 0;
+    border-top: 1px solid var(--border-subtle);
+    background: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.02) 0%, transparent 60%);
+  }
+
+  .models-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .model-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: all 0.2s ease;
+  }
+
+  .model-card:hover {
+    border-color: var(--border-hover);
+    transform: translateY(-2px);
+    background: var(--surface-elevated);
+  }
+
+  .model-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .model-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .model-tag {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+  }
+
+  .model-desc {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin-bottom: 20px;
+    flex: 1;
+  }
+
+  .model-specs {
+    border-top: 1px solid var(--border-subtle);
+    padding-top: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .spec-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 11px;
+  }
+
+  .spec-label {
+    color: var(--text-dim);
+  }
+
+  .spec-value {
+    color: var(--text);
+    font-weight: 500;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .spec-free {
+    color: #f8fafc;
+    font-weight: 600;
+  }
+
+  .model-hint-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: rgba(15, 23, 42, 0.5);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  .hint-icon {
+    color: var(--text);
+    display: flex;
+    align-items: center;
+  }
+
+  @media (max-width: 1024px) {
+    .models-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 600px) {
+    .models-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,25 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Hero from '../components/Hero.astro';
+import Features from '../components/Features.astro';
+import InteractivePlayground from '../components/InteractivePlayground.astro';
+import ModelsShowcase from '../components/ModelsShowcase.astro';
+import InstallGuide from '../components/InstallGuide.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout 
+  title="mock-form | AI-Powered Form Autofill & Mocking Chrome Extension"
+  description="Open-source browser extension powered by Google Gemini AI to inspect, mock, and auto-fill web forms, Indonesian regional IDs (NIK, NPWP), and inject mock avatar images."
+>
+  <Navbar />
+  <main>
+    <Hero />
+    <Features />
+    <InteractivePlayground />
+    <ModelsShowcase />
+    <InstallGuide />
+  </main>
+  <Footer />
+</Layout>

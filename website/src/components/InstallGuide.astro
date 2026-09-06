@@ -1,0 +1,315 @@
+---
+const githubRepo = "https://github.com/cikinodapz/mock-form";
+---
+
+<section id="install" class="install-section">
+  <div class="container">
+    <div class="section-header">
+      <div class="badge">
+        <span class="badge-dot"></span>
+        <span>Quick Setup</span>
+      </div>
+      <h2 class="section-title">Install in Under 2 Minutes</h2>
+      <p class="section-subtitle">
+        mock-form is 100% open source under the MIT License. Install unpacked in Chrome with zero build steps required.
+      </p>
+    </div>
+
+    <!-- 3 Step Installation Flow -->
+    <div class="steps-grid">
+      <!-- Step 1 -->
+      <div class="step-card">
+        <div class="step-number">01</div>
+        <h3 class="step-title">Clone or Download</h3>
+        <p class="step-desc">
+          Clone the GitHub repository to your local computer, or download the latest ZIP release archive.
+        </p>
+        <div class="code-box">
+          <code>git clone {githubRepo}.git</code>
+          <button type="button" class="copy-btn" data-copy={`git clone ${githubRepo}.git`} aria-label="Copy clone command">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
+              <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="step-card">
+        <div class="step-number">02</div>
+        <h3 class="step-title">Load Unpacked in Chrome</h3>
+        <p class="step-desc">
+          Open Chrome, navigate to <code>chrome://extensions</code>, toggle <strong>Developer mode</strong> (top right), and click <strong>Load unpacked</strong> to select the folder.
+        </p>
+        <div class="code-box">
+          <code>chrome://extensions</code>
+          <button type="button" class="copy-btn" data-copy="chrome://extensions" aria-label="Copy chrome URL">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
+              <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="step-card">
+        <div class="step-number">03</div>
+        <h3 class="step-title">Add Free Gemini API Key</h3>
+        <p class="step-desc">
+          Generate a free API key from <strong>Google AI Studio</strong>, paste it into the extension Settings tab, and start autofilling immediately.
+        </p>
+        <div class="action-box">
+          <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" style="width: 100%;">
+            <span>Get Gemini API Key ↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Shortcuts & Productivity Callout -->
+    <div id="shortcuts" class="shortcuts-card">
+      <div class="shortcuts-header">
+        <div class="shortcuts-title-group">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 3a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3H6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3V6a3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/>
+          </svg>
+          <h3>Keyboard Productivity Shortcuts</h3>
+        </div>
+        <span class="badge">Speed Run</span>
+      </div>
+
+      <div class="shortcuts-list">
+        <div class="shortcut-item">
+          <div class="shortcut-keys">
+            <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>F</kbd>
+            <span class="shortcut-alt">(macOS: <kbd>⌥</kbd> + <kbd>⇧</kbd> + <kbd>F</kbd>)</span>
+          </div>
+          <div class="shortcut-desc">
+            <strong>Instant Autofill:</strong> Triggers context-aware autofill on the active page immediately without opening any popup or drawer.
+          </div>
+        </div>
+
+        <div class="shortcut-item">
+          <div class="shortcut-keys">
+            <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>M</kbd>
+            <span class="shortcut-alt">(macOS: <kbd>⌥</kbd> + <kbd>⇧</kbd> + <kbd>M</kbd>)</span>
+          </div>
+          <div class="shortcut-desc">
+            <strong>Open mock-form Panel:</strong> Access custom prompt instructions, profile selector, field inspector, and avatar injector.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .install-section {
+    padding: 80px 0;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .steps-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 40px;
+  }
+
+  .step-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  .step-number {
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+    line-height: 1;
+    margin-bottom: 16px;
+  }
+
+  .step-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+
+  .step-desc {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+    flex: 1;
+  }
+
+  .step-desc code {
+    background: rgba(255, 255, 255, 0.08);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 11px;
+    color: #f8fafc;
+  }
+
+  .code-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 8px 12px;
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+
+  .code-box code {
+    font-family: 'JetBrains Mono', monospace;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .copy-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 4px;
+    border-radius: 4px;
+    transition: all 0.15s ease;
+  }
+
+  .copy-btn:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .action-box {
+    margin-top: auto;
+  }
+
+  /* Shortcuts Card */
+  .shortcuts-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    box-shadow: var(--shadow-md);
+  }
+
+  .shortcuts-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .shortcuts-title-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .shortcuts-title-group h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .shortcuts-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .shortcut-item {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 16px;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+  }
+
+  .shortcut-keys {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .shortcut-keys kbd {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 3px 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #ffffff;
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.6);
+  }
+
+  .shortcut-alt {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-left: 4px;
+  }
+
+  .shortcut-alt kbd {
+    padding: 2px 6px;
+    font-size: 11px;
+  }
+
+  .shortcut-desc {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  .shortcut-desc strong {
+    color: var(--text);
+  }
+
+  @media (max-width: 960px) {
+    .steps-grid {
+      grid-template-columns: 1fr;
+    }
+    .shortcuts-list {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script is:inline>
+  document.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const text = btn.getAttribute('data-copy');
+      if (!text) return;
+      try {
+        await navigator.clipboard.writeText(text);
+        if (window.showToast) {
+          window.showToast("Copied to clipboard!", "success");
+        }
+      } catch (err) {
+        if (window.showToast) {
+          window.showToast("Failed to copy", "error");
+        }
+      }
+    });
+  });
+</script>
