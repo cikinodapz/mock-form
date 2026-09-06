@@ -31,6 +31,35 @@
   --shadow-glow: 0 0 50px -10px rgba(255, 255, 255, 0.05);
 }
 
+html.light {
+  --bg: #ffffff;
+  --bg-subtle: #f8fafc;
+  --surface: #ffffff;
+  --surface-elevated: #f8fafc;
+  --surface-hover: #f1f5f9;
+  --border: rgba(15, 23, 42, 0.1);
+  --border-subtle: rgba(15, 23, 42, 0.05);
+  --border-hover: rgba(15, 23, 42, 0.2);
+  --border-active: rgba(15, 23, 42, 0.4);
+  
+  --text: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+  --text-dim: #94a3b8;
+  
+  --accent: #0f172a;
+  --accent-foreground: #f8fafc;
+  
+  --code-bg: #f1f5f9;
+  
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px -2px rgba(15, 23, 42, 0.08), 0 2px 6px -2px rgba(15, 23, 42, 0.04);
+  --shadow-lg: 0 12px 30px -4px rgba(15, 23, 42, 0.12), 0 4px 12px -2px rgba(15, 23, 42, 0.06);
+  --shadow-glow: 0 0 50px -10px rgba(15, 23, 42, 0.06);
+  
+  color-scheme: light;
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -258,4 +287,173 @@ button, input, select, textarea {
     white-space: normal;
     text-align: left;
   }
+}
+
+/* ==========================================================================
+   LIGHT MODE OVERRIDES (Strict adherence to AGENTS.md)
+   ========================================================================== */
+html.light body {
+  background-color: var(--bg);
+  background-image: 
+    radial-gradient(circle at 50% 0%, rgba(15, 23, 42, 0.03) 0%, transparent 60%),
+    linear-gradient(to bottom, rgba(15, 23, 42, 0.02) 1px, transparent 1px),
+    linear-gradient(to right, rgba(15, 23, 42, 0.02) 1px, transparent 1px);
+}
+
+html.light .btn-primary {
+  background: #0f172a;
+  color: #f8fafc;
+  border-color: #0f172a;
+}
+html.light .btn-primary:hover {
+  background: #1e293b;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.2);
+}
+
+html.light .btn-secondary {
+  background: rgba(15, 23, 42, 0.04);
+  color: #0f172a;
+  border-color: rgba(15, 23, 42, 0.12);
+}
+html.light .btn-secondary:hover {
+  background: rgba(15, 23, 42, 0.08);
+  border-color: rgba(15, 23, 42, 0.22);
+}
+
+html.light .badge {
+  background: rgba(15, 23, 42, 0.04);
+  color: #334155;
+  border-color: rgba(15, 23, 42, 0.12);
+}
+html.light .badge-dot {
+  background: #0f172a;
+  box-shadow: 0 0 8px rgba(15, 23, 42, 0.4);
+}
+
+/* AGENTS.md: Light Mode renders dark logo with filter: none */
+html.light .brand-icon,
+html.light .agent-logo,
+html.light .browser-ext-icon img {
+  filter: none !important;
+}
+
+html.light .navbar-wrapper {
+  background: rgba(255, 255, 255, 0.88);
+  border-bottom-color: rgba(15, 23, 42, 0.1);
+}
+html.light .mobile-menu {
+  background: #ffffff;
+  border-bottom-color: rgba(15, 23, 42, 0.1);
+}
+html.light .hero-description strong {
+  color: #0f172a;
+}
+
+html.light .browser-mockup {
+  background: #ffffff;
+  border-color: rgba(15, 23, 42, 0.12);
+}
+html.light .browser-header {
+  background: #f8fafc;
+  border-bottom-color: rgba(15, 23, 42, 0.1);
+}
+html.light .address-bar {
+  background: #ffffff;
+  border-color: rgba(15, 23, 42, 0.12);
+  color: #64748b;
+}
+html.light .floating-agent-bubble {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(15, 23, 42, 0.15);
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.1);
+}
+html.light .agent-tooltip {
+  color: #0f172a;
+}
+
+html.light .mockup-field input,
+html.light .field-item input,
+html.light .field-item select,
+html.light .field-item textarea {
+  background: #ffffff;
+  border-color: rgba(15, 23, 42, 0.15);
+  color: #0f172a;
+}
+html.light .mockup-field input.highlight,
+html.light .field-item input.populated,
+html.light .field-item select.populated,
+html.light .field-item textarea.populated {
+  border-color: #0f172a;
+  background: rgba(15, 23, 42, 0.04);
+}
+
+html.light .mockup-shortcut-hint kbd,
+html.light .shortcut-keys kbd {
+  background: #f1f5f9;
+  border-color: rgba(15, 23, 42, 0.15);
+  color: #0f172a;
+  box-shadow: 0 2px 0 rgba(15, 23, 42, 0.15);
+}
+
+html.light .playground-card,
+html.light .feature-card,
+html.light .model-card,
+html.light .step-card,
+html.light .shortcuts-card {
+  background: #ffffff;
+  border-color: rgba(15, 23, 42, 0.1);
+  box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.05);
+}
+html.light .feature-card:hover,
+html.light .model-card:hover {
+  background: #f8fafc;
+  border-color: rgba(15, 23, 42, 0.2);
+}
+html.light .feature-icon {
+  background: rgba(15, 23, 42, 0.04);
+  border-color: rgba(15, 23, 42, 0.1);
+  color: #0f172a;
+}
+
+html.light .playground-topbar {
+  background: #f8fafc;
+  border-bottom-color: rgba(15, 23, 42, 0.1);
+}
+html.light .status-indicator {
+  background: #0f172a;
+  box-shadow: 0 0 10px rgba(15, 23, 42, 0.5);
+}
+
+html.light .model-hint-card {
+  background: rgba(15, 23, 42, 0.03);
+  border-color: rgba(15, 23, 42, 0.1);
+  color: #334155;
+}
+html.light .shortcut-item {
+  background: #f8fafc;
+  border-color: rgba(15, 23, 42, 0.1);
+}
+
+html.light .code-box {
+  background: #f1f5f9;
+  border-color: rgba(15, 23, 42, 0.12);
+  color: #0f172a;
+}
+html.light .code-box code {
+  color: #0f172a;
+}
+html.light .step-desc code {
+  background: #f1f5f9;
+  color: #0f172a;
+  border: 1px solid rgba(15, 23, 42, 0.1);
+}
+
+html.light .footer {
+  background: #f8fafc;
+  border-top-color: rgba(15, 23, 42, 0.1);
+}
+html.light .privacy-tag {
+  background: #ffffff;
+  border-color: rgba(15, 23, 42, 0.1);
+  color: #64748b;
 }

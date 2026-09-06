@@ -260,8 +260,15 @@ const githubRepo = "https://github.com/cikinodapz/mock-form";
     padding: 3px 8px;
     font-size: 12px;
     font-weight: 600;
-    color: #ffffff;
+    color: var(--text);
     box-shadow: 0 2px 0 rgba(0, 0, 0, 0.6);
+  }
+
+  :global(html.light) .shortcut-keys kbd {
+    background: #f1f5f9;
+    border-color: rgba(15, 23, 42, 0.18);
+    color: #0f172a;
+    box-shadow: 0 2px 0 rgba(15, 23, 42, 0.15);
   }
 
   .shortcut-alt {

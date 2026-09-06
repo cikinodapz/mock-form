@@ -361,16 +361,29 @@ const githubRepo = "https://github.com/cikinodapz/mock-form";
     border-radius: var(--radius-sm);
     padding: 8px 10px;
     font-size: 12px;
-    color: #ffffff;
+    color: var(--text);
     outline: none;
     font-family: 'JetBrains Mono', monospace;
     transition: all 0.2s ease;
   }
 
+  :global(html.light) .mockup-field input {
+    background: #ffffff;
+    border-color: rgba(15, 23, 42, 0.18);
+    color: #0f172a;
+  }
+
   .mockup-field input.highlight {
-    border-color: #ffffff;
+    border-color: var(--text);
     background: rgba(255, 255, 255, 0.05);
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+  }
+
+  :global(html.light) .mockup-field input.highlight {
+    border-color: #0f172a;
+    background: rgba(15, 23, 42, 0.05);
+    box-shadow: 0 0 10px rgba(15, 23, 42, 0.1);
+    color: #0f172a;
   }
 
   .mockup-footer {

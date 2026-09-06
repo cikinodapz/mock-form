@@ -240,9 +240,22 @@ const baseUrl = import.meta.env.BASE_URL.endsWith('/')
     border-radius: var(--radius-sm);
     padding: 10px 12px;
     font-size: 13px;
-    color: #ffffff;
+    color: var(--text);
     outline: none;
     transition: all 0.2s ease;
+  }
+
+  :global(html.light) .field-item input,
+  :global(html.light) .field-item select,
+  :global(html.light) .field-item textarea {
+    background: #ffffff;
+    border-color: rgba(15, 23, 42, 0.2);
+    color: #0f172a;
+  }
+
+  .field-item select option {
+    background: var(--surface);
+    color: var(--text);
   }
 
   .field-item input:focus,
@@ -252,11 +265,26 @@ const baseUrl = import.meta.env.BASE_URL.endsWith('/')
     box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.08);
   }
 
+  :global(html.light) .field-item input:focus,
+  :global(html.light) .field-item select:focus,
+  :global(html.light) .field-item textarea:focus {
+    border-color: #0f172a;
+    box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.1);
+  }
+
   .field-item input.populated,
   .field-item select.populated,
   .field-item textarea.populated {
     border-color: rgba(255, 255, 255, 0.8);
     background: rgba(255, 255, 255, 0.04);
+  }
+
+  :global(html.light) .field-item input.populated,
+  :global(html.light) .field-item select.populated,
+  :global(html.light) .field-item textarea.populated {
+    border-color: #0f172a;
+    background: rgba(15, 23, 42, 0.05);
+    color: #0f172a;
   }
 
   @media (max-width: 768px) {
