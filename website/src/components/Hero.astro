@@ -409,21 +409,81 @@ const githubRepo = "https://github.com/cikinodapz/mock-form";
   @media (max-width: 960px) {
     .hero-container {
       grid-template-columns: 1fr;
-      gap: 40px;
+      gap: 36px;
     }
     .hero-title {
-      font-size: 34px;
+      font-size: 36px;
     }
   }
 
-  @media (max-width: 480px) {
+  @media (max-width: 640px) {
+    .hero-section {
+      padding: 36px 0 32px;
+    }
+    .hero-title {
+      font-size: 27px;
+      line-height: 1.25;
+      margin-top: 14px;
+      margin-bottom: 14px;
+      letter-spacing: -0.02em;
+    }
+    .hero-description {
+      font-size: 14px;
+      line-height: 1.55;
+      margin-bottom: 24px;
+    }
+    .hero-ctas {
+      flex-direction: column;
+      width: 100%;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+    .hero-ctas .btn {
+      width: 100%;
+      justify-content: center;
+      padding: 12px 18px;
+    }
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      padding-top: 18px;
+      text-align: center;
+    }
+    .stat-separator {
+      display: none;
+    }
+    .stat-val {
+      font-size: 16px;
+    }
+    .stat-lbl {
+      font-size: 10px;
+    }
     .mockup-grid {
       grid-template-columns: 1fr;
     }
     .mockup-footer {
       flex-direction: column;
       align-items: flex-start;
-      gap: 10px;
+      gap: 12px;
+    }
+    .mockup-controls {
+      width: 100%;
+    }
+    .mockup-controls .btn {
+      flex: 1;
+    }
+  }
+
+  @media (max-width: 400px) {
+    .hero-title {
+      font-size: 24px;
+    }
+    .hero-stats {
+      gap: 4px;
+    }
+    .stat-val {
+      font-size: 14px;
     }
   }
 </style>

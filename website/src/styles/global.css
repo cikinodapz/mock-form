@@ -238,10 +238,24 @@ button, input, select, textarea {
 }
 
 @media (max-width: 768px) {
+  .container {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .section-header {
+    margin-bottom: 36px;
+  }
   .section-title {
-    font-size: 26px;
+    font-size: 24px;
   }
   .section-subtitle {
     font-size: 14px;
+  }
+  .badge {
+    font-size: 10px;
+    padding: 3px 8px;
+    line-height: 1.4;
+    white-space: normal;
+    text-align: left;
   }
 }
